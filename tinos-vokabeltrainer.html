@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Tinos Vokabeltrainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #F7F1E3;
+    --paper-line: #E3D9C0;
+    --ink: #1F3A5F;
+    --ink-soft: #3A5578;
+    --margin-red: #C0392B;
+    --good: #2F7A4F;
+    --good-bg: #E4F3EA;
+    --bad: #C0392B;
+    --bad-bg: #FBE9E7;
+    --gold: #E3A72F;
+    --amber-text: #92700B;
+    --amber-bg: #FFF3D9;
+    --charcoal: #2B2B2B;
+    --card-radius: 22px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0; padding:0; height:100%;}
+  body{
+    background: #EDE4CE;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,0.4), transparent 60%),
+      radial-gradient(circle at 80% 80%, rgba(0,0,0,0.03), transparent 60%);
+    font-family:'Nunito', sans-serif;
+    color: var(--charcoal);
+    min-height:100%;
+    display:flex;
+    justify-content:center;
+    padding: 18px 14px 40px;
+  }
+  #app{ width:100%; max-width: 460px; }
+
+  .eyebrow{
+    font-family:'Nunito', sans-serif;
+    font-weight:800;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    font-size:12px;
+    color: var(--ink-soft);
+    text-align:center;
+    margin: 4px 0 2px;
+  }
+  h1.title{
+    font-family:'Patrick Hand', cursive;
+    font-size: 40px;
+    text-align:center;
+    color: var(--ink);
+    margin: 0 0 18px;
+    line-height:1;
+  }
+
+  /* Notebook card */
+  .notebook{
+    position:relative;
+    background: var(--paper);
+    border-radius: var(--card-radius);
+    box-shadow: 0 10px 0 rgba(0,0,0,0.05), 0 18px 34px rgba(45,30,10,0.18);
+    padding: 30px 22px 26px 40px;
+    overflow:hidden;
+    margin-bottom: 18px;
+  }
+  .notebook::before{ /* spiral holes */
+    content:"";
+    position:absolute;
+    top:0; left:0; bottom:0; width:26px;
+    background-image: radial-gradient(circle, #cfc4a4 0 4px, transparent 4.5px);
+    background-size: 100% 34px;
+    background-position: 10px 6px;
+    background-repeat: repeat-y;
+  }
+  .notebook::after{ /* red margin line */
+    content:"";
+    position:absolute;
+    top:0; bottom:0; left: 34px;
+    width: 2px;
+    background: var(--margin-red);
+    opacity:0.55;
+  }
+  .notebook-lines{
+    position:absolute; left:34px; right:0; top:0; bottom:0;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 33px,
+      var(--paper-line) 34px
+    );
+    pointer-events:none;
+    opacity:0.6;
+  }
+
+  /* HOME SCREEN */
+  .home-intro{ font-size:15px; color:var(--ink-soft); text-align:center; margin: 0 0 6px; position:relative; z-index:1;}
+  .stats-row{
+    display:flex; gap:10px; margin: 14px 0 20px; position:relative; z-index:1;
+  }
+  .stat-pill{
+    flex:1; background:#fff; border-radius:14px; padding:10px 8px; text-align:center;
+    box-shadow: inset 0 0 0 1px rgba(31,58,95,0.08);
+  }
+  .stat-pill .num{ font-family:'Patrick Hand',cursive; font-size:26px; color:var(--ink); line-height:1;}
+  .stat-pill .lbl{ font-size:11px; color:var(--ink-soft); font-weight:700; text-transform:uppercase; letter-spacing:0.5px;}
+
+  .cat-list{ position:relative; z-index:1; display:flex; flex-direction:column; gap:10px; }
+  .cat-btn{
+    display:flex; align-items:center; justify-content:space-between;
+    background:#fff; border:none; border-radius:16px; padding:14px 16px;
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:16px; color:var(--ink);
+    cursor:pointer; text-align:left;
+    box-shadow: inset 0 0 0 1px rgba(31,58,95,0.08);
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .cat-btn:active{ transform: scale(0.98); }
+  .cat-btn .cat-right{ display:flex; align-items:center; gap:8px; }
+  .cat-btn .cat-emoji{ font-size:20px; }
+  .cat-progress{
+    font-size:12px; font-weight:700; color:#fff; background: var(--ink);
+    border-radius:20px; padding:3px 9px;
+  }
+  .cat-progress.done{ background: var(--good); }
+  .cat-btn.all{
+    background: var(--ink); color:#fff; box-shadow:none;
+  }
+  .cat-btn.all .cat-progress{ background: rgba(255,255,255,0.25); }
+
+  /* QUIZ SCREEN */
+  .quiz-topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    position:relative; z-index:1; margin-bottom: 18px;
+  }
+  .back-btn{
+    background:none; border:none; font-family:'Nunito'; font-weight:800; color:var(--ink-soft);
+    font-size:14px; cursor:pointer; padding:6px 4px;
+  }
+  .progress-track{
+    flex:1; height:8px; background:#E3D9C0; border-radius:6px; margin:0 12px; overflow:hidden;
+  }
+  .progress-fill{ height:100%; background: var(--gold); border-radius:6px; transition: width .25s ease;}
+  .counter{ font-size:13px; font-weight:800; color:var(--ink-soft); white-space:nowrap;}
+
+  .de-word-wrap{ position:relative; z-index:1; text-align:center; margin: 26px 0 8px; }
+  .de-label{ font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--margin-red); }
+  .de-word{
+    font-family:'Patrick Hand', cursive;
+    font-size: 44px;
+    color: var(--ink);
+    margin: 6px 0 0;
+    word-break: break-word;
+  }
+
+  .answer-row{ position:relative; z-index:1; margin: 22px 0 6px; }
+  .answer-label{ font-size:12px; font-weight:800; color:var(--ink-soft); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;}
+  #answer-input{
+    width:100%;
+    font-family:'Patrick Hand', cursive;
+    font-size: 26px;
+    color: var(--ink);
+    background: transparent;
+    border:none;
+    border-bottom: 3px solid var(--ink);
+    padding: 4px 2px 8px;
+    outline:none;
+  }
+  #answer-input.correct{ border-color: var(--good); color: var(--good);}
+  #answer-input.wrong{ border-color: var(--bad); color: var(--bad);}
+  #answer-input.close{ border-color: var(--gold); color: var(--amber-text);}
+  #answer-input:disabled{ opacity:0.9; }
+
+  .feedback{
+    position:relative; z-index:1;
+    min-height: 30px;
+    margin-top: 10px;
+    font-weight:800;
+    font-size:15px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .feedback.good{ color: var(--good); }
+  .feedback.bad{ color: var(--bad); }
+  .feedback.close{ color: var(--amber-text); }
+  .feedback .stamp{ font-size:20px; }
+
+  .action-row{ position:relative; z-index:1; margin-top: 20px; display:flex; gap:10px; }
+  .btn{
+    flex:1; border:none; border-radius:16px; padding:14px 10px;
+    font-family:'Nunito'; font-weight:800; font-size:16px; cursor:pointer;
+    transition: transform .12s ease;
+  }
+  .btn:active{ transform: scale(0.97); }
+  .btn-primary{ background: var(--ink); color:#fff; }
+  .btn-primary:disabled{ background:#B9C3D1; }
+  .btn-ghost{ background:#fff; color:var(--ink); box-shadow: inset 0 0 0 1px rgba(31,58,95,0.15); }
+
+  /* SUMMARY SCREEN */
+  .summary-emoji{ text-align:center; font-size:52px; margin: 10px 0 6px; position:relative; z-index:1;}
+  .summary-title{
+    font-family:'Patrick Hand', cursive; font-size:32px; text-align:center; color:var(--ink);
+    margin:0 0 4px; position:relative; z-index:1;
+  }
+  .summary-sub{ text-align:center; color:var(--ink-soft); font-weight:700; font-size:14px; margin-bottom:18px; position:relative; z-index:1;}
+  .mistake-list{ position:relative; z-index:1; display:flex; flex-direction:column; gap:8px; margin-bottom: 18px;}
+  .mistake-item{
+    background:#fff; border-radius:12px; padding:10px 14px;
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:14px; box-shadow: inset 0 0 0 1px rgba(192,57,43,0.15);
+  }
+  .mistake-item .de{ font-weight:800; color:var(--ink); display:flex; align-items:center; }
+  .mistake-item .en{ color: var(--good); font-weight:700; }
+  .mistake-item.close{ box-shadow: inset 0 0 0 1px rgba(227,167,47,0.35); }
+  .dot{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:7px; flex-shrink:0; }
+  .dot.wrong{ background: var(--bad); }
+  .dot.close{ background: var(--gold); }
+  .tag-label{ font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; border-radius:8px; padding:2px 6px; margin: 0 8px; }
+  .tag-label.wrong{ color: var(--bad); background: var(--bad-bg); }
+  .tag-label.close{ color: var(--amber-text); background: var(--amber-bg); }
+
+  .hidden{ display:none !important; }
+  ::selection{ background: var(--gold); color:#fff; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="eyebrow">Englisch Vokabelheft</div>
+  <h1 class="title">Tinos Vokabeltrainer</h1>
+
+  <!-- HOME -->
+  <div id="screen-home">
+    <div class="notebook">
+      <div class="notebook-lines"></div>
+      <p class="home-intro">Deutsches Wort lesen &rarr; englische Übersetzung schreiben.</p>
+      <div class="stats-row">
+        <div class="stat-pill"><div class="num" id="stat-mastered">0</div><div class="lbl">Gekonnt</div></div>
+        <div class="stat-pill"><div class="num" id="stat-total">0</div><div class="lbl">Vokabeln</div></div>
+        <div class="stat-pill"><div class="num" id="stat-streak">0</div><div class="lbl">Bestserie</div></div>
+      </div>
+      <div class="cat-list" id="cat-list"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="hidden">
+    <div class="notebook">
+      <div class="notebook-lines"></div>
+      <div class="quiz-topbar">
+        <button class="back-btn" id="quiz-exit">&larr; Zurück</button>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="counter" id="quiz-counter">1/10</div>
+      </div>
+
+      <div class="de-word-wrap">
+        <div class="de-label">Deutsch</div>
+        <div class="de-word" id="de-word">Wort</div>
+      </div>
+
+      <div class="answer-row">
+        <div class="answer-label">Englisch</div>
+        <input id="answer-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="hier schreiben ...">
+      </div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <div class="action-row">
+        <button class="btn btn-primary" id="check-btn">Prüfen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div id="screen-summary" class="hidden">
+    <div class="notebook">
+      <div class="notebook-lines"></div>
+      <div class="summary-emoji" id="summary-emoji">🌟</div>
+      <div class="summary-title" id="summary-title">Super gemacht!</div>
+      <div class="summary-sub" id="summary-sub">8 von 10 richtig</div>
+      <div class="mistake-list" id="mistake-list"></div>
+      <div class="action-row">
+        <button class="btn btn-ghost" id="retry-mistakes">Fehler üben</button>
+        <button class="btn btn-primary" id="back-home">Zur Übersicht</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ---------------- Vokabeldaten (Deutsch -> Englisch) ---------------- */
+const VOCAB = [
+  // Begrüßung & Sätze
+  {de:"Hallo", en:["hello","hi"], cat:"begruessung"},
+  {de:"Ich heiße", en:["my name is"], cat:"begruessung"},
+  {de:"sein", en:["to be"], cat:"begruessung"},
+  {de:"Wie heißt du?", en:["what's your name","whats your name"], cat:"begruessung"},
+  {de:"Ich bin", en:["i'm","i am"], cat:"begruessung"},
+  {de:"Woher kommst du?", en:["where are you from"], cat:"begruessung"},
+  {de:"Ich bin aus", en:["i'm from","i am from"], cat:"begruessung"},
+  {de:"Ich wohne in", en:["i live in"], cat:"begruessung"},
+  {de:"wohnen, leben", en:["to live"], cat:"begruessung"},
+  {de:"Wie alt bist du?", en:["how old are you"], cat:"begruessung"},
+  {de:"ich auch", en:["me too"], cat:"begruessung"},
+  {de:"Bis dann", en:["see you"], cat:"begruessung"},
+  {de:"sehen", en:["to see"], cat:"begruessung"},
+  {de:"Tschüss", en:["bye"], cat:"begruessung"},
+  {de:"neu", en:["new"], cat:"begruessung"},
+  {de:"Freund/in", en:["friend"], cat:"begruessung"},
+
+  // Zahlen
+  {de:"null", en:["zero"], cat:"zahlen"},
+  {de:"eins", en:["one"], cat:"zahlen"},
+  {de:"zwei", en:["two"], cat:"zahlen"},
+  {de:"drei", en:["three"], cat:"zahlen"},
+  {de:"vier", en:["four"], cat:"zahlen"},
+  {de:"fünf", en:["five"], cat:"zahlen"},
+  {de:"sechs", en:["six"], cat:"zahlen"},
+  {de:"sieben", en:["seven"], cat:"zahlen"},
+  {de:"acht", en:["eight"], cat:"zahlen"},
+  {de:"neun", en:["nine"], cat:"zahlen"},
+  {de:"zehn", en:["ten"], cat:"zahlen"},
+  {de:"elf", en:["eleven"], cat:"zahlen"},
+  {de:"zwölf", en:["twelve"], cat:"zahlen"},
+
+  // Sätze & kleine Wörter
+  {de:"Willkommen in", en:["welcome to"], cat:"saetze"},
+  {de:"Was kannst du hören?", en:["what can you hear"], cat:"saetze"},
+  {de:"hören", en:["to hear"], cat:"saetze"},
+  {de:"der/die/das", en:["the"], cat:"saetze"},
+  {de:"Ich kann", en:["i can"], cat:"saetze"},
+  {de:"ein/eine", en:["a"], cat:"saetze"},
+  {de:"auf/an/in", en:["on"], cat:"saetze"},
+  {de:"ein Picknick machen", en:["to have a picnic"], cat:"saetze"},
+  {de:"lesen", en:["to read"], cat:"saetze"},
+  {de:"spielen", en:["to play"], cat:"saetze"},
+  {de:"Fahrrad fahren", en:["to ride a bike"], cat:"saetze"},
+  {de:"reden mit", en:["to talk to"], cat:"saetze"},
+
+  // Tiere & Natur
+  {de:"Boot", en:["boat"], cat:"tiere"},
+  {de:"Blume", en:["flower"], cat:"tiere"},
+  {de:"Inlineskates", en:["skates"], cat:"tiere"},
+  {de:"Hund", en:["dog"], cat:"tiere"},
+  {de:"Katze", en:["cat"], cat:"tiere"},
+  {de:"Vogel", en:["bird"], cat:"tiere"},
+  {de:"Schmetterling", en:["butterfly"], cat:"tiere"},
+  {de:"Biene", en:["bee"], cat:"tiere"},
+  {de:"Baum", en:["tree"], cat:"tiere"},
+  {de:"Gras", en:["grass"], cat:"tiere"},
+  {de:"Fahrrad", en:["bike","bicycle"], cat:"tiere"},
+  {de:"Buch", en:["book"], cat:"tiere"},
+  {de:"Pferd", en:["horse"], cat:"tiere"},
+
+  // Familie & Freunde
+  {de:"Mädchen", en:["girl"], cat:"familie"},
+  {de:"Junge", en:["boy"], cat:"familie"},
+  {de:"Mutter", en:["mother"], cat:"familie"},
+  {de:"Vater", en:["father"], cat:"familie"},
+  {de:"Schwester", en:["sister"], cat:"familie"},
+  {de:"Bruder", en:["brother"], cat:"familie"},
+  {de:"Zwilling(e)", en:["twin"], cat:"familie"},
+  {de:"Haustier", en:["pet"], cat:"familie"},
+
+  // Farben
+  {de:"schwarz", en:["black"], cat:"farben"},
+  {de:"blau", en:["blue"], cat:"farben"},
+  {de:"braun", en:["brown"], cat:"farben"},
+  {de:"grün", en:["green"], cat:"farben"},
+  {de:"grau", en:["grey","gray"], cat:"farben"},
+  {de:"orange", en:["orange"], cat:"farben"},
+  {de:"rosa", en:["pink"], cat:"farben"},
+  {de:"lila", en:["purple"], cat:"farben"},
+  {de:"rot", en:["red"], cat:"farben"},
+  {de:"weiß", en:["white"], cat:"farben"},
+  {de:"gelb", en:["yellow"], cat:"farben"},
+
+  // Hobbys & Sätze
+  {de:"Mein/e Lieblings...", en:["my favorite","my favourite"], cat:"hobbys"},
+  {de:"Mir gefällt / ich mag", en:["i like"], cat:"hobbys"},
+  {de:"mögen, gerne haben", en:["to like"], cat:"hobbys"},
+  {de:"Fotos machen", en:["to take photos"], cat:"hobbys"},
+  {de:"großartig, toll, super", en:["great"], cat:"hobbys"},
+  {de:"groß", en:["big"], cat:"hobbys"},
+  {de:"beste/r/s", en:["best"], cat:"hobbys"},
+  {de:"und", en:["and"], cat:"hobbys"},
+  {de:"wir sind", en:["we're","we are"], cat:"hobbys"},
+  {de:"haben", en:["to have"], cat:"hobbys"},
+  {de:"lustig, witzig", en:["funny"], cat:"hobbys"},
+  {de:"Fußball", en:["football","soccer"], cat:"hobbys"},
+  {de:"Essen", en:["food"], cat:"hobbys"},
+  {de:"kochen", en:["to cook"], cat:"hobbys"},
+  {de:"Korbball", en:["netball"], cat:"hobbys"},
+  {de:"er ist", en:["he's","he is"], cat:"hobbys"},
+  {de:"gut", en:["good"], cat:"hobbys"},
+  {de:"Wer ist es?", en:["who is it"], cat:"hobbys"},
+  {de:"oder", en:["or"], cat:"hobbys"},
+  {de:"Hobby", en:["hobby"], cat:"hobbys"},
+  {de:"Du/ihr/Sie auch", en:["you too"], cat:"hobbys"},
+  {de:"du bist", en:["you're","you are"], cat:"hobbys"},
+  {de:"Ich bin dran", en:["my turn"], cat:"hobbys"},
+  {de:"zeichnen", en:["to draw"], cat:"hobbys"},
+  {de:"Bild/Foto", en:["picture"], cat:"hobbys"},
+  {de:"Spiel", en:["game"], cat:"hobbys"},
+  {de:"singen", en:["to sing"], cat:"hobbys"},
+];
+VOCAB.forEach((w,i)=> w.id = "w"+i);
+
+const CATEGORIES = [
+  {key:"begruessung", label:"Begrüßung & Sätze", emoji:"👋"},
+  {key:"zahlen", label:"Zahlen", emoji:"🔢"},
+  {key:"saetze", label:"Sätze & kleine Wörter", emoji:"💬"},
+  {key:"tiere", label:"Tiere & Natur", emoji:"🐝"},
+  {key:"familie", label:"Familie & Freunde", emoji:"👨‍👩‍👧"},
+  {key:"farben", label:"Farben", emoji:"🎨"},
+  {key:"hobbys", label:"Hobbys & mehr", emoji:"⚽"},
+];
+
+/* ---------------- Fortschritt (persistent storage) ----------------
+   Zwei Speicherwege, je nachdem wie die App geöffnet wird:
+   1) window.storage – wenn die Datei innerhalb von Claude geöffnet wird
+   2) localStorage    – wenn die Datei als eigene Datei / vom Homescreen
+                         aus geöffnet wird (dann ist window.storage nicht
+                         verfügbar). So bleibt der Fortschritt auf dem
+                         jeweiligen Gerät erhalten, auch offline.
+------------------------------------------------------------------- */
+const STORAGE_KEY = "vokabel-progress-v1";
+let progress = {}; // { wordId: {streak, seen, correct} }
+
+async function loadProgress(){
+  try{
+    if(window.storage){
+      const res = await window.storage.get(STORAGE_KEY, false);
+      if(res && res.value){ progress = JSON.parse(res.value); return; }
+    }
+  }catch(e){ /* window.storage nicht verfügbar -> weiter mit localStorage */ }
+  try{
+    const local = localStorage.getItem(STORAGE_KEY);
+    if(local){ progress = JSON.parse(local); }
+  }catch(e){ progress = {}; }
+}
+async function saveProgress(){
+  const json = JSON.stringify(progress);
+  try{
+    if(window.storage){ await window.storage.set(STORAGE_KEY, json, false); }
+  }catch(e){ /* ignorieren, localStorage greift trotzdem */ }
+  try{ localStorage.setItem(STORAGE_KEY, json); }
+  catch(e){ /* Speicher hier nicht verfügbar - App funktioniert trotzdem für die Sitzung */ }
+}
+function getStat(id){ return progress[id] || {streak:0, seen:0, correct:0}; }
+function isMastered(id){ return getStat(id).streak >= 2; }
+
+/* ---------------- Normalisierung & Vergleich ---------------- */
+function normalize(str){
+  return str.toLowerCase().trim()
+    .replace(/[’‘]/g,"'")
+    .replace(/\s+/g," ")
+    .replace(/[.!?]+$/,"");
+}
+function levenshtein(a,b){
+  const m=a.length,n=b.length;
+  const d=Array.from({length:m+1},()=>new Array(n+1).fill(0));
+  for(let i=0;i<=m;i++) d[i][0]=i;
+  for(let j=0;j<=n;j++) d[0][j]=j;
+  for(let i=1;i<=m;i++){
+    for(let j=1;j<=n;j++){
+      const cost = a[i-1]===b[j-1] ? 0 : 1;
+      d[i][j]=Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+cost);
+    }
+  }
+  return d[m][n];
+}
+function checkAnswer(input, accepted){
+  const norm = normalize(input);
+  if(!norm) return {status:"empty"};
+  for(const acc of accepted){
+    if(norm === normalize(acc)) return {status:"correct"};
+  }
+  let closest = Infinity;
+  for(const acc of accepted){
+    closest = Math.min(closest, levenshtein(norm, normalize(acc)));
+  }
+  // Bei kurzen Wörtern (<=4 Buchstaben) ist 1 Buchstabe Unterschied die Grenze,
+  // sonst zählen bis zu 2 Buchstaben Unterschied noch als "fast richtig".
+  const shortest = Math.min(...accepted.map(a=>normalize(a).length));
+  const threshold = shortest <= 4 ? 1 : 2;
+  if(closest > 0 && closest <= threshold) return {status:"close"};
+  return {status:"wrong"};
+}
+
+/* ---------------- App-Status ---------------- */
+let session = { words:[], index:0, correctCount:0, closeCount:0, wrongCount:0, mistakes:[] };
+let currentCatKey = "alle";
+
+const screenHome = document.getElementById("screen-home");
+const screenQuiz = document.getElementById("screen-quiz");
+const screenSummary = document.getElementById("screen-summary");
+
+function show(screen){
+  [screenHome, screenQuiz, screenSummary].forEach(s=>s.classList.add("hidden"));
+  screen.classList.remove("hidden");
+}
+
+/* ---------------- Home Screen ---------------- */
+function renderHome(){
+  const total = VOCAB.length;
+  const masteredCount = VOCAB.filter(w=>isMastered(w.id)).length;
+  let bestStreak = 0;
+  VOCAB.forEach(w=> bestStreak = Math.max(bestStreak, getStat(w.id).streak));
+
+  document.getElementById("stat-mastered").textContent = masteredCount;
+  document.getElementById("stat-total").textContent = total;
+  document.getElementById("stat-streak").textContent = bestStreak;
+
+  const list = document.getElementById("cat-list");
+  list.innerHTML = "";
+
+  const allBtn = document.createElement("button");
+  allBtn.className = "cat-btn all";
+  allBtn.innerHTML = `<span>📓 Alle Vokabeln</span>
+    <span class="cat-right"><span class="cat-progress">${masteredCount}/${total}</span></span>`;
+  allBtn.onclick = ()=> startSession("alle");
+  list.appendChild(allBtn);
+
+  CATEGORIES.forEach(cat=>{
+    const words = VOCAB.filter(w=>w.cat===cat.key);
+    const mastered = words.filter(w=>isMastered(w.id)).length;
+    const btn = document.createElement("button");
+    btn.className = "cat-btn";
+    const done = mastered === words.length;
+    btn.innerHTML = `<span class="cat-right"><span class="cat-emoji">${cat.emoji}</span> ${cat.label}</span>
+      <span class="cat-progress ${done?'done':''}">${mastered}/${words.length}</span>`;
+    btn.onclick = ()=> startSession(cat.key);
+    list.appendChild(btn);
+  });
+}
+
+/* ---------------- Quiz Screen ---------------- */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function startSession(catKey, wordsOverride){
+  currentCatKey = catKey;
+  let pool = wordsOverride || (catKey==="alle" ? VOCAB : VOCAB.filter(w=>w.cat===catKey));
+  // Wörter, die noch nicht "gekonnt" sind, zuerst / öfter drankommen
+  pool = shuffle(pool);
+  session = { words: pool, index:0, correctCount:0, closeCount:0, wrongCount:0, mistakes:[] };
+  show(screenQuiz);
+  renderQuestion();
+}
+
+const deWordEl = document.getElementById("de-word");
+const answerInput = document.getElementById("answer-input");
+const feedbackEl = document.getElementById("feedback");
+const checkBtn = document.getElementById("check-btn");
+const progressFill = document.getElementById("progress-fill");
+const quizCounter = document.getElementById("quiz-counter");
+
+function renderQuestion(){
+  const w = session.words[session.index];
+  deWordEl.textContent = w.de;
+  answerInput.value = "";
+  answerInput.className = "";
+  answerInput.disabled = false;
+  feedbackEl.textContent = "";
+  feedbackEl.className = "feedback";
+  checkBtn.textContent = "Prüfen";
+  checkBtn.disabled = false;
+  progressFill.style.width = (session.index/session.words.length*100)+"%";
+  quizCounter.textContent = (session.index+1)+"/"+session.words.length;
+  setTimeout(()=>answerInput.focus(), 50);
+}
+
+let awaitingNext = false;
+
+function submitAnswer(){
+  if(awaitingNext){ nextQuestion(); return; }
+  const w = session.words[session.index];
+  const val = answerInput.value;
+  if(!val.trim()) { answerInput.focus(); return; }
+
+  const result = checkAnswer(val, w.en);
+  if(result.status === "empty"){ answerInput.focus(); return; }
+
+  const stat = getStat(w.id);
+  stat.seen = (stat.seen||0)+1;
+
+  if(result.status === "correct"){
+    stat.streak = (stat.streak||0)+1;
+    stat.correct = (stat.correct||0)+1;
+    session.correctCount++;
+    answerInput.className = "correct";
+    feedbackEl.className = "feedback good";
+    feedbackEl.innerHTML = `<span class="stamp">✓</span> Richtig!`;
+  } else if(result.status === "close"){
+    // Streak bleibt unverändert: zählt weder als Fehler noch als sichere Beherrschung
+    session.closeCount++;
+    session.mistakes.push({...w, _tag:"close"});
+    answerInput.className = "close";
+    feedbackEl.className = "feedback close";
+    feedbackEl.innerHTML = `<span class="stamp">〜</span> Fast richtig! Kleiner Schreibfehler. Richtig geschrieben: "${w.en[0]}"`;
+  } else {
+    stat.streak = 0;
+    session.wrongCount++;
+    session.mistakes.push({...w, _tag:"wrong"});
+    answerInput.className = "wrong";
+    feedbackEl.className = "feedback bad";
+    feedbackEl.innerHTML = `<span class="stamp">✗</span> Richtig wäre: "${w.en[0]}"`;
+  }
+  answerInput.disabled = true;
+  progress[w.id] = stat;
+  saveProgress();
+
+  checkBtn.textContent = (session.index < session.words.length-1) ? "Weiter" : "Fertig";
+  awaitingNext = true;
+}
+
+function nextQuestion(){
+  awaitingNext = false;
+  session.index++;
+  if(session.index >= session.words.length){
+    finishSession();
+  } else {
+    renderQuestion();
+  }
+}
+
+checkBtn.addEventListener("click", submitAnswer);
+answerInput.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter"){ e.preventDefault(); submitAnswer(); }
+});
+document.getElementById("quiz-exit").addEventListener("click", ()=>{
+  show(screenHome);
+  renderHome();
+});
+
+/* ---------------- Summary Screen ---------------- */
+function finishSession(){
+  const total = session.words.length;
+  const correct = session.correctCount;
+  const close = session.closeCount;
+  const wrong = session.wrongCount;
+  const pct = Math.round(correct/total*100);
+
+  let emoji = "🙂", title = "Gut gemacht!";
+  if(pct === 100){ emoji="🏆"; title="Perfekt!"; }
+  else if(pct >= 80){ emoji="🌟"; title="Super gemacht!"; }
+  else if(pct >= 50){ emoji="👍"; title="Gut gemacht!"; }
+  else{ emoji="💪"; title="Weiter üben!"; }
+
+  document.getElementById("summary-emoji").textContent = emoji;
+  document.getElementById("summary-title").textContent = title;
+  const subParts = [`${correct} richtig`];
+  if(close) subParts.push(`${close} fast richtig`);
+  if(wrong) subParts.push(`${wrong} falsch`);
+  document.getElementById("summary-sub").textContent = subParts.join(" · ");
+
+  const list = document.getElementById("mistake-list");
+  list.innerHTML = "";
+  if(session.mistakes.length){
+    session.mistakes.forEach(w=>{
+      const item = document.createElement("div");
+      item.className = "mistake-item " + w._tag;
+      const tagLabel = w._tag === "close" ? "fast" : "falsch";
+      item.innerHTML = `<span class="de"><span class="dot ${w._tag}"></span>${w.de}</span>
+        <span class="tag-label ${w._tag}">${tagLabel}</span>
+        <span class="en">${w.en[0]}</span>`;
+      list.appendChild(item);
+    });
+  }
+  document.getElementById("retry-mistakes").classList.toggle("hidden", session.mistakes.length===0);
+
+  show(screenSummary);
+}
+
+document.getElementById("retry-mistakes").addEventListener("click", ()=>{
+  startSession(currentCatKey, shuffle(session.mistakes));
+});
+document.getElementById("back-home").addEventListener("click", ()=>{
+  show(screenHome);
+  renderHome();
+});
+
+/* ---------------- Start ---------------- */
+(async function init(){
+  await loadProgress();
+  renderHome();
+  show(screenHome);
+})();
+</script>
+</body>
+</html>
