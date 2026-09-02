@@ -20,6 +20,7 @@
     --gold: #E3A72F;
     --amber-text: #92700B;
     --amber-bg: #FFF3D9;
+    --reveal-bg: #EDEAE0;
     --charcoal: #2B2B2B;
     --card-radius: 22px;
   }
@@ -172,6 +173,7 @@
   #answer-input.correct{ border-color: var(--good); color: var(--good);}
   #answer-input.wrong{ border-color: var(--bad); color: var(--bad);}
   #answer-input.close{ border-color: var(--gold); color: var(--amber-text);}
+  #answer-input.shown{ border-color: var(--ink-soft); color: var(--ink-soft);}
   #answer-input:disabled{ opacity:0.9; }
 
   .feedback{
@@ -185,6 +187,7 @@
   .feedback.good{ color: var(--good); }
   .feedback.bad{ color: var(--bad); }
   .feedback.close{ color: var(--amber-text); }
+  .feedback.shown{ color: var(--ink-soft); }
   .feedback .stamp{ font-size:20px; }
 
   .action-row{ position:relative; z-index:1; margin-top: 20px; display:flex; gap:10px; }
@@ -217,9 +220,18 @@
   .dot{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:7px; flex-shrink:0; }
   .dot.wrong{ background: var(--bad); }
   .dot.close{ background: var(--gold); }
+  .dot.shown{ background: var(--ink-soft); }
   .tag-label{ font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; border-radius:8px; padding:2px 6px; margin: 0 8px; }
   .tag-label.wrong{ color: var(--bad); background: var(--bad-bg); }
   .tag-label.close{ color: var(--amber-text); background: var(--amber-bg); }
+  .tag-label.shown{ color: var(--ink-soft); background: var(--reveal-bg); }
+
+  .secondary-row{ position:relative; z-index:1; margin-top: 14px; text-align:center; }
+  .dontknow-btn{
+    background:none; border:none; color: var(--ink-soft); font-family:'Nunito'; font-weight:700;
+    font-size:14px; text-decoration:underline; cursor:pointer; padding:6px;
+  }
+  .dontknow-btn:disabled{ opacity:0.4; text-decoration:none; }
 
   .hidden{ display:none !important; }
   ::selection{ background: var(--gold); color:#fff; }
@@ -269,6 +281,9 @@
 
       <div class="action-row">
         <button class="btn btn-primary" id="check-btn">Prüfen</button>
+      </div>
+      <div class="secondary-row">
+        <button class="dontknow-btn" id="dontknow-btn">Ich weiß es nicht 🤔</button>
       </div>
     </div>
   </div>
@@ -406,6 +421,97 @@ const VOCAB = [
   {de:"Bild/Foto", en:["picture"], cat:"hobbys"},
   {de:"Spiel", en:["game"], cat:"hobbys"},
   {de:"singen", en:["to sing"], cat:"hobbys"},
+
+  // Schulsachen
+  {de:"Übungsheft", en:["exercise book"], cat:"schulsachen"},
+  {de:"Leuchtstift", en:["marker"], cat:"schulsachen"},
+  {de:"Füller", en:["pen"], cat:"schulsachen"},
+  {de:"Bleistift, Buntstift", en:["pencil"], cat:"schulsachen"},
+  {de:"Federmäppchen, Mäppchen", en:["pencil case"], cat:"schulsachen"},
+  {de:"Radiergummi", en:["rubber","eraser"], cat:"schulsachen"},
+  {de:"Lineal", en:["ruler"], cat:"schulsachen"},
+  {de:"Schultasche", en:["schoolbag","school bag"], cat:"schulsachen"},
+  {de:"Klebstift", en:["glue"], cat:"schulsachen"},
+  {de:"Spitzer", en:["sharpener"], cat:"schulsachen"},
+  {de:"Schere", en:["scissors"], cat:"schulsachen"},
+  {de:"Ding, Sache", en:["thing"], cat:"schulsachen"},
+  {de:"Handbuch, Kalender", en:["planner"], cat:"schulsachen"},
+  {de:"Stundenplan", en:["timetable","time table"], cat:"schulsachen"},
+  {de:"Stadtplan, Landkarte", en:["map"], cat:"schulsachen"},
+  {de:"Regel", en:["rule"], cat:"schulsachen"},
+  {de:"Unterricht", en:["lesson"], cat:"schulsachen"},
+  {de:"Bücherei", en:["library"], cat:"schulsachen"},
+  {de:"Versammlung", en:["assembly"], cat:"schulsachen"},
+
+  // Schule & Orte
+  {de:"Klassenzimmer", en:["classroom"], cat:"schulorte"},
+  {de:"Saal", en:["hall"], cat:"schulorte"},
+  {de:"Turnhalle", en:["gym"], cat:"schulorte"},
+  {de:"Tonstudio", en:["recording studio"], cat:"schulorte"},
+  {de:"Cafeteria", en:["cafeteria"], cat:"schulorte"},
+  {de:"Raum", en:["room"], cat:"schulorte"},
+  {de:"Sportplatz", en:["sports ground","sports field"], cat:"schulorte"},
+
+  // Gefühle & Beschreibungen
+  {de:"froh", en:["happy"], cat:"gefuehle"},
+  {de:"wütend", en:["angry"], cat:"gefuehle"},
+  {de:"überrascht", en:["surprised"], cat:"gefuehle"},
+  {de:"nervös", en:["nervous"], cat:"gefuehle"},
+  {de:"langweilig", en:["boring"], cat:"gefuehle"},
+  {de:"hässlich", en:["ugly"], cat:"gefuehle"},
+  {de:"dumm, doof, albern", en:["silly"], cat:"gefuehle"},
+  {de:"streng", en:["strict"], cat:"gefuehle"},
+  {de:"freundlich, nett", en:["friendly"], cat:"gefuehle"},
+  {de:"verrückt", en:["crazy"], cat:"gefuehle"},
+
+  // Alltag & Sätze
+  {de:"Komm schon!", en:["come on"], cat:"alltag"},
+  {de:"kommen", en:["to come"], cat:"alltag"},
+  {de:"Es ist Zeit für", en:["it's time for","its time for"], cat:"alltag"},
+  {de:"Eis", en:["ice cream"], cat:"alltag"},
+  {de:"kann nicht", en:["can't","cant"], cat:"alltag"},
+  {de:"mich, mir", en:["me"], cat:"alltag"},
+  {de:"anschauen", en:["to look at"], cat:"alltag"},
+  {de:"uns", en:["us"], cat:"alltag"},
+  {de:"schauen", en:["to look"], cat:"alltag"},
+  {de:"da drüben", en:["over there"], cat:"alltag"},
+  {de:"Keine Sorge", en:["don't worry","dont worry"], cat:"alltag"},
+  {de:"sitzen", en:["to sit"], cat:"alltag"},
+  {de:"zusammen", en:["together"], cat:"alltag"},
+  {de:"warum", en:["why"], cat:"alltag"},
+  {de:"Frau", en:["mrs"], cat:"alltag"},
+  {de:"Lehrer/in", en:["teacher"], cat:"alltag"},
+  {de:"bitte", en:["please"], cat:"alltag"},
+  {de:"nehmen", en:["to take"], cat:"alltag"},
+  {de:"zu Hause", en:["home"], cat:"alltag"},
+  {de:"Schau", en:["look"], cat:"alltag"},
+  {de:"Das ist", en:["that's","thats"], cat:"alltag"},
+  {de:"vor", en:["in front of"], cat:"alltag"},
+  {de:"denken", en:["to think"], cat:"alltag"},
+  {de:"Guten Morgen", en:["good morning"], cat:"alltag"},
+  {de:"nein", en:["no"], cat:"alltag"},
+  {de:"nicht", en:["not"], cat:"alltag"},
+  {de:"helfen", en:["to help"], cat:"alltag"},
+  {de:"Frage", en:["question"], cat:"alltag"},
+  {de:"Komm nicht zu spät zur Schule", en:["don't be late for school","dont be late for school"], cat:"alltag"},
+  {de:"zeigen", en:["to show"], cat:"alltag"},
+  {de:"Tour", en:["tour"], cat:"alltag"},
+  {de:"zu Mittag essen", en:["to have lunch"], cat:"alltag"},
+  {de:"Entschuldigung", en:["excuse me"], cat:"alltag"},
+  {de:"Kunst", en:["art"], cat:"alltag"},
+  {de:"sagen", en:["to say"], cat:"alltag"},
+  {de:"da, dort", en:["there"], cat:"alltag"},
+  {de:"Schüler", en:["student"], cat:"alltag"},
+  {de:"mögen", en:["to want"], cat:"alltag"},
+  {de:"Getränk", en:["drink"], cat:"alltag"},
+  {de:"heute", en:["today"], cat:"alltag"},
+  {de:"Schlafzimmer", en:["bedroom"], cat:"alltag"},
+  {de:"unter", en:["under"], cat:"alltag"},
+  {de:"Bett", en:["bed"], cat:"alltag"},
+  {de:"suchen nach", en:["to look for"], cat:"alltag"},
+  {de:"kein/e", en:["no","none"], cat:"alltag"},
+  {de:"Jahr", en:["year"], cat:"alltag"},
+  {de:"Uniform", en:["uniform"], cat:"alltag"},
 ];
 VOCAB.forEach((w,i)=> w.id = "w"+i);
 
@@ -417,6 +523,10 @@ const CATEGORIES = [
   {key:"familie", label:"Familie & Freunde", emoji:"👨‍👩‍👧"},
   {key:"farben", label:"Farben", emoji:"🎨"},
   {key:"hobbys", label:"Hobbys & mehr", emoji:"⚽"},
+  {key:"schulsachen", label:"Schulsachen", emoji:"✏️"},
+  {key:"schulorte", label:"Schule & Orte", emoji:"🏫"},
+  {key:"gefuehle", label:"Gefühle & Beschreibungen", emoji:"😊"},
+  {key:"alltag", label:"Alltag & Sätze", emoji:"💬"},
 ];
 
 /* ---------------- Fortschritt (persistent storage) ----------------
@@ -492,7 +602,7 @@ function checkAnswer(input, accepted){
 }
 
 /* ---------------- App-Status ---------------- */
-let session = { words:[], index:0, correctCount:0, closeCount:0, wrongCount:0, mistakes:[] };
+let session = { words:[], index:0, correctCount:0, closeCount:0, wrongCount:0, shownCount:0, mistakes:[], revealedIds:new Set() };
 let currentCatKey = "alle";
 
 const screenHome = document.getElementById("screen-home");
@@ -553,7 +663,7 @@ function startSession(catKey, wordsOverride){
   let pool = wordsOverride || (catKey==="alle" ? VOCAB : VOCAB.filter(w=>w.cat===catKey));
   // Wörter, die noch nicht "gekonnt" sind, zuerst / öfter drankommen
   pool = shuffle(pool);
-  session = { words: pool, index:0, correctCount:0, closeCount:0, wrongCount:0, mistakes:[] };
+  session = { words: pool, index:0, correctCount:0, closeCount:0, wrongCount:0, shownCount:0, mistakes:[], revealedIds:new Set() };
   show(screenQuiz);
   renderQuestion();
 }
@@ -562,6 +672,7 @@ const deWordEl = document.getElementById("de-word");
 const answerInput = document.getElementById("answer-input");
 const feedbackEl = document.getElementById("feedback");
 const checkBtn = document.getElementById("check-btn");
+const dontknowBtn = document.getElementById("dontknow-btn");
 const progressFill = document.getElementById("progress-fill");
 const quizCounter = document.getElementById("quiz-counter");
 
@@ -575,6 +686,7 @@ function renderQuestion(){
   feedbackEl.className = "feedback";
   checkBtn.textContent = "Prüfen";
   checkBtn.disabled = false;
+  dontknowBtn.disabled = false;
   progressFill.style.width = (session.index/session.words.length*100)+"%";
   quizCounter.textContent = (session.index+1)+"/"+session.words.length;
   setTimeout(()=>answerInput.focus(), 50);
@@ -617,6 +729,7 @@ function submitAnswer(){
     feedbackEl.innerHTML = `<span class="stamp">✗</span> Richtig wäre: "${w.en[0]}"`;
   }
   answerInput.disabled = true;
+  dontknowBtn.disabled = true;
   progress[w.id] = stat;
   saveProgress();
 
@@ -638,6 +751,34 @@ checkBtn.addEventListener("click", submitAnswer);
 answerInput.addEventListener("keydown", (e)=>{
   if(e.key === "Enter"){ e.preventDefault(); submitAnswer(); }
 });
+dontknowBtn.addEventListener("click", ()=>{
+  if(awaitingNext) return;
+  const w = session.words[session.index];
+  const stat = getStat(w.id);
+  stat.seen = (stat.seen||0)+1;
+  stat.streak = 0;
+  progress[w.id] = stat;
+  saveProgress();
+
+  session.shownCount++;
+  session.mistakes.push({...w, _tag:"shown"});
+
+  // Vokabel kommt in dieser Runde noch einmal dran (nur einmal pro Vokabel erneut einreihen)
+  if(!session.revealedIds.has(w.id)){
+    session.revealedIds.add(w.id);
+    session.words.push({...w});
+  }
+
+  answerInput.value = "";
+  answerInput.className = "shown";
+  answerInput.disabled = true;
+  feedbackEl.className = "feedback shown";
+  feedbackEl.innerHTML = `<span class="stamp">👀</span> Kein Problem – das ist: "${w.en[0]}". Kommt gleich nochmal dran!`;
+
+  checkBtn.textContent = (session.index < session.words.length-1) ? "Weiter" : "Fertig";
+  dontknowBtn.disabled = true;
+  awaitingNext = true;
+});
 document.getElementById("quiz-exit").addEventListener("click", ()=>{
   show(screenHome);
   renderHome();
@@ -649,6 +790,7 @@ function finishSession(){
   const correct = session.correctCount;
   const close = session.closeCount;
   const wrong = session.wrongCount;
+  const shown = session.shownCount;
   const pct = Math.round(correct/total*100);
 
   let emoji = "🙂", title = "Gut gemacht!";
@@ -661,6 +803,7 @@ function finishSession(){
   document.getElementById("summary-title").textContent = title;
   const subParts = [`${correct} richtig`];
   if(close) subParts.push(`${close} fast richtig`);
+  if(shown) subParts.push(`${shown} aufgedeckt`);
   if(wrong) subParts.push(`${wrong} falsch`);
   document.getElementById("summary-sub").textContent = subParts.join(" · ");
 
@@ -670,7 +813,7 @@ function finishSession(){
     session.mistakes.forEach(w=>{
       const item = document.createElement("div");
       item.className = "mistake-item " + w._tag;
-      const tagLabel = w._tag === "close" ? "fast" : "falsch";
+      const tagLabel = w._tag === "close" ? "fast" : (w._tag === "shown" ? "aufgedeckt" : "falsch");
       item.innerHTML = `<span class="de"><span class="dot ${w._tag}"></span>${w.de}</span>
         <span class="tag-label ${w._tag}">${tagLabel}</span>
         <span class="en">${w.en[0]}</span>`;
