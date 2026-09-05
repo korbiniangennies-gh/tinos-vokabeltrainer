@@ -131,6 +131,14 @@
     background: var(--ink); color:#fff; box-shadow:none;
   }
   .cat-btn.all .cat-progress{ background: rgba(255,255,255,0.25); }
+  .cat-btn.daily{
+    background: var(--gold); color:#fff; box-shadow:none; width:100%; margin-bottom:2px;
+  }
+  .cat-btn.daily .cat-progress{ background: rgba(255,255,255,0.3); color:#fff; }
+  .daily-sub{
+    position:relative; z-index:1; font-size:12px; color:var(--ink-soft); text-align:center;
+    margin: 4px 0 16px; line-height:1.4;
+  }
 
   /* QUIZ SCREEN */
   .quiz-topbar{
@@ -253,6 +261,11 @@
         <div class="stat-pill"><div class="num" id="stat-total">0</div><div class="lbl">Vokabeln</div></div>
         <div class="stat-pill"><div class="num" id="stat-streak">0</div><div class="lbl">Bestserie</div></div>
       </div>
+      <button class="cat-btn daily" id="daily-btn">
+        <span>🎲 Tages-Herausforderung</span>
+        <span class="cat-right"><span class="cat-progress">20 Vokabeln</span></span>
+      </button>
+      <p class="daily-sub">Meist Vokabeln, die noch wackeln – dazu ein paar sichere zur Auffrischung. Üben, bis alle 20 auf Grün stehen!</p>
       <div class="cat-list" id="cat-list"></div>
     </div>
   </div>
@@ -514,6 +527,8 @@ const VOCAB = [
   {de:"Uniform", en:["uniform"], cat:"alltag"},
 ];
 VOCAB.forEach((w,i)=> w.id = "w"+i);
+const VOCAB_BY_ID = {};
+VOCAB.forEach(w=> VOCAB_BY_ID[w.id] = w);
 
 const CATEGORIES = [
   {key:"begruessung", label:"Begrüßung & Sätze", emoji:"👋"},
@@ -560,8 +575,73 @@ async function saveProgress(){
   try{ localStorage.setItem(STORAGE_KEY, json); }
   catch(e){ /* Speicher hier nicht verfügbar - App funktioniert trotzdem für die Sitzung */ }
 }
-function getStat(id){ return progress[id] || {streak:0, seen:0, correct:0}; }
+function getStat(id){ return progress[id] || {streak:0, seen:0, correct:0, mistakeCount:0}; }
 function isMastered(id){ return getStat(id).streak >= 2; }
+
+/* ---------------- Tages-Herausforderung (20 zufällige Vokabeln) ----------------
+   Die Auswahl wird für den jeweiligen Kalendertag festgehalten, damit an
+   einem Tag immer dieselben 20 Vokabeln drankommen, am nächsten Tag aber
+   eine neue zufällige Auswahl - unabhängig vom bisherigen Lernstand.
+------------------------------------------------------------------- */
+const DAILY_KEY = "vokabel-daily-v1";
+const DAILY_COUNT = 20;
+const DAILY_REINFORCE_COUNT = 5; // davon: schon sicher gelernte, zur Auffrischung
+const DAILY_STRUGGLE_COUNT = DAILY_COUNT - DAILY_REINFORCE_COUNT; // Rest: wacklige Vokabeln
+
+function getTodayKey(){
+  const d = new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+
+// Baut die Tagesauswahl: überwiegend Vokabeln, die schon mal falsch/fast richtig/
+// aufgedeckt waren, dazu ein paar bereits sicher gelernte zur Auffrischung.
+// Wird erst zu wenig Auswahl gefunden (z.B. am Anfang), mit unbekannten Vokabeln aufgefüllt.
+function buildDailySelection(){
+  const masteredWords = VOCAB.filter(w=>isMastered(w.id));
+  const struggleWords = VOCAB.filter(w=> !isMastered(w.id) && (getStat(w.id).mistakeCount||0) > 0);
+  const untouchedWords = VOCAB.filter(w=> !isMastered(w.id) && !((getStat(w.id).mistakeCount||0) > 0));
+
+  let reinforce = shuffle(masteredWords).slice(0, DAILY_REINFORCE_COUNT);
+  let majority = shuffle(struggleWords).slice(0, DAILY_STRUGGLE_COUNT);
+
+  if(majority.length < DAILY_STRUGGLE_COUNT){
+    const need = DAILY_STRUGGLE_COUNT - majority.length;
+    majority = majority.concat(shuffle(untouchedWords).slice(0, need));
+  }
+  if(reinforce.length < DAILY_REINFORCE_COUNT){
+    const need = DAILY_REINFORCE_COUNT - reinforce.length;
+    const usedIds = new Set(majority.map(w=>w.id).concat(reinforce.map(w=>w.id)));
+    const filler = VOCAB.filter(w=>!usedIds.has(w.id));
+    reinforce = reinforce.concat(shuffle(filler).slice(0, need));
+  }
+  return shuffle(majority.concat(reinforce)).map(w=>w.id);
+}
+
+async function getDailyWordIds(){
+  const todayKey = getTodayKey();
+  let stored = null;
+  try{
+    if(window.storage){
+      const res = await window.storage.get(DAILY_KEY, false);
+      if(res && res.value){ stored = JSON.parse(res.value); }
+    }
+  }catch(e){ /* weiter mit localStorage */ }
+  if(!stored){
+    try{
+      const local = localStorage.getItem(DAILY_KEY);
+      if(local){ stored = JSON.parse(local); }
+    }catch(e){ /* ignorieren */ }
+  }
+  if(stored && stored.date === todayKey && Array.isArray(stored.ids) && stored.ids.length){
+    return stored.ids;
+  }
+  // Neuer Tag (oder erster Aufruf) -> frisch auswählen: gemischt aus wackligen + sicheren Vokabeln
+  const ids = buildDailySelection();
+  const payload = JSON.stringify({date: todayKey, ids});
+  try{ if(window.storage){ await window.storage.set(DAILY_KEY, payload, false); } }catch(e){}
+  try{ localStorage.setItem(DAILY_KEY, payload); }catch(e){}
+  return ids;
+}
 
 /* ---------------- Normalisierung & Vergleich ---------------- */
 function normalize(str){
@@ -602,7 +682,7 @@ function checkAnswer(input, accepted){
 }
 
 /* ---------------- App-Status ---------------- */
-let session = { words:[], index:0, correctCount:0, closeCount:0, wrongCount:0, shownCount:0, mistakes:[], revealedIds:new Set() };
+let session = { words:[], index:0, correctCount:0, closeCount:0, wrongCount:0, shownCount:0, mistakes:[], revealedIds:new Set(), mode:"normal", remainingIds:null, dailyTotal:0 };
 let currentCatKey = "alle";
 
 const screenHome = document.getElementById("screen-home");
@@ -635,6 +715,8 @@ function renderHome(){
   allBtn.onclick = ()=> startSession("alle");
   list.appendChild(allBtn);
 
+  document.getElementById("daily-btn").onclick = startDailySession;
+
   CATEGORIES.forEach(cat=>{
     const words = VOCAB.filter(w=>w.cat===cat.key);
     const mastered = words.filter(w=>isMastered(w.id)).length;
@@ -663,7 +745,19 @@ function startSession(catKey, wordsOverride){
   let pool = wordsOverride || (catKey==="alle" ? VOCAB : VOCAB.filter(w=>w.cat===catKey));
   // Wörter, die noch nicht "gekonnt" sind, zuerst / öfter drankommen
   pool = shuffle(pool);
-  session = { words: pool, index:0, correctCount:0, closeCount:0, wrongCount:0, shownCount:0, mistakes:[], revealedIds:new Set() };
+  session = { words: pool, index:0, correctCount:0, closeCount:0, wrongCount:0, shownCount:0, mistakes:[], revealedIds:new Set(), mode:"normal", remainingIds:null, dailyTotal:0 };
+  show(screenQuiz);
+  renderQuestion();
+}
+
+async function startDailySession(){
+  const ids = await getDailyWordIds();
+  const pool = ids.map(id=>VOCAB_BY_ID[id]).filter(Boolean);
+  currentCatKey = "daily";
+  session = {
+    words: shuffle(pool), index:0, correctCount:0, closeCount:0, wrongCount:0, shownCount:0,
+    mistakes:[], revealedIds:new Set(), mode:"daily", remainingIds:new Set(ids), dailyTotal:ids.length
+  };
   show(screenQuiz);
   renderQuestion();
 }
@@ -687,8 +781,14 @@ function renderQuestion(){
   checkBtn.textContent = "Prüfen";
   checkBtn.disabled = false;
   dontknowBtn.disabled = false;
-  progressFill.style.width = (session.index/session.words.length*100)+"%";
-  quizCounter.textContent = (session.index+1)+"/"+session.words.length;
+  if(session.mode === "daily"){
+    const masteredCount = session.dailyTotal - session.remainingIds.size;
+    progressFill.style.width = (masteredCount/session.dailyTotal*100)+"%";
+    quizCounter.textContent = "Grün: "+masteredCount+"/"+session.dailyTotal;
+  } else {
+    progressFill.style.width = (session.index/session.words.length*100)+"%";
+    quizCounter.textContent = (session.index+1)+"/"+session.words.length;
+  }
   setTimeout(()=>answerInput.focus(), 50);
 }
 
@@ -713,20 +813,25 @@ function submitAnswer(){
     answerInput.className = "correct";
     feedbackEl.className = "feedback good";
     feedbackEl.innerHTML = `<span class="stamp">✓</span> Richtig!`;
+    if(session.mode === "daily"){ session.remainingIds.delete(w.id); }
   } else if(result.status === "close"){
     // Streak bleibt unverändert: zählt weder als Fehler noch als sichere Beherrschung
     session.closeCount++;
     session.mistakes.push({...w, _tag:"close"});
+    stat.mistakeCount = (stat.mistakeCount||0)+1;
     answerInput.className = "close";
     feedbackEl.className = "feedback close";
     feedbackEl.innerHTML = `<span class="stamp">〜</span> Fast richtig! Kleiner Schreibfehler. Richtig geschrieben: "${w.en[0]}"`;
+    if(session.mode === "daily"){ session.words.push({...w}); }
   } else {
     stat.streak = 0;
     session.wrongCount++;
     session.mistakes.push({...w, _tag:"wrong"});
+    stat.mistakeCount = (stat.mistakeCount||0)+1;
     answerInput.className = "wrong";
     feedbackEl.className = "feedback bad";
     feedbackEl.innerHTML = `<span class="stamp">✗</span> Richtig wäre: "${w.en[0]}"`;
+    if(session.mode === "daily"){ session.words.push({...w}); }
   }
   answerInput.disabled = true;
   dontknowBtn.disabled = true;
@@ -740,6 +845,20 @@ function submitAnswer(){
 function nextQuestion(){
   awaitingNext = false;
   session.index++;
+  if(session.mode === "daily"){
+    // bereits gemeisterte Duplikate in der Warteschlange überspringen
+    while(session.index < session.words.length && !session.remainingIds.has(session.words[session.index].id)){
+      session.index++;
+    }
+    if(session.remainingIds.size === 0){ finishSession(); return; }
+    if(session.index >= session.words.length){
+      // Sicherheitsnetz: verbleibende Vokabeln erneut einreihen
+      const remaining = Array.from(session.remainingIds).map(id=>VOCAB_BY_ID[id]).filter(Boolean);
+      session.words = session.words.concat(shuffle(remaining));
+    }
+    renderQuestion();
+    return;
+  }
   if(session.index >= session.words.length){
     finishSession();
   } else {
@@ -757,14 +876,18 @@ dontknowBtn.addEventListener("click", ()=>{
   const stat = getStat(w.id);
   stat.seen = (stat.seen||0)+1;
   stat.streak = 0;
+  stat.mistakeCount = (stat.mistakeCount||0)+1;
   progress[w.id] = stat;
   saveProgress();
 
   session.shownCount++;
   session.mistakes.push({...w, _tag:"shown"});
 
-  // Vokabel kommt in dieser Runde noch einmal dran (nur einmal pro Vokabel erneut einreihen)
-  if(!session.revealedIds.has(w.id)){
+  if(session.mode === "daily"){
+    // im Tages-Modus so oft erneut einreihen, bis sie richtig getippt wird
+    session.words.push({...w});
+  } else if(!session.revealedIds.has(w.id)){
+    // sonst: nur einmal pro Vokabel erneut in dieser Runde einreihen
     session.revealedIds.add(w.id);
     session.words.push({...w});
   }
@@ -786,6 +909,31 @@ document.getElementById("quiz-exit").addEventListener("click", ()=>{
 
 /* ---------------- Summary Screen ---------------- */
 function finishSession(){
+  if(session.mode === "daily"){
+    document.getElementById("summary-emoji").textContent = "🎉";
+    document.getElementById("summary-title").textContent = "Tages-Herausforderung geschafft!";
+    document.getElementById("summary-sub").textContent = `Alle ${session.dailyTotal} Vokabeln stehen jetzt auf Grün`;
+
+    const list = document.getElementById("mistake-list");
+    list.innerHTML = "";
+    const counts = {};
+    session.mistakes.forEach(w=>{
+      if(!counts[w.id]){ counts[w.id] = {de:w.de, en:w.en, n:0}; }
+      counts[w.id].n++;
+    });
+    Object.values(counts).sort((a,b)=>b.n-a.n).forEach(item=>{
+      const el = document.createElement("div");
+      el.className = "mistake-item close";
+      el.innerHTML = `<span class="de">${item.de}</span>
+        <span class="tag-label close">${item.n}× geübt</span>
+        <span class="en">${item.en[0]}</span>`;
+      list.appendChild(el);
+    });
+    document.getElementById("retry-mistakes").classList.add("hidden");
+    show(screenSummary);
+    return;
+  }
+
   const total = session.words.length;
   const correct = session.correctCount;
   const close = session.closeCount;
