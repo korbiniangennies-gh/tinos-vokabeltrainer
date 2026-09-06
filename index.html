@@ -139,6 +139,10 @@
     position:relative; z-index:1; font-size:12px; color:var(--ink-soft); text-align:center;
     margin: 4px 0 16px; line-height:1.4;
   }
+  .super-score{
+    position:relative; z-index:1; text-align:center; font-weight:800; color:var(--gold);
+    font-size:14px; margin: -8px 0 16px;
+  }
 
   /* QUIZ SCREEN */
   .quiz-topbar{
@@ -243,29 +247,44 @@
 
   .hidden{ display:none !important; }
   ::selection{ background: var(--gold); color:#fff; }
+
+  .lang-switch{
+    display:flex; justify-content:center; gap:6px; margin-bottom:2px;
+  }
+  .lang-btn{
+    border:none; background:#fff; color:var(--ink-soft); font-family:'Nunito'; font-weight:800;
+    font-size:12px; padding:4px 12px; border-radius:20px; cursor:pointer;
+    box-shadow: inset 0 0 0 1px rgba(31,58,95,0.12);
+  }
+  .lang-btn.active{ background:var(--ink); color:#fff; box-shadow:none; }
 </style>
 </head>
 <body>
 <div id="app">
 
-  <div class="eyebrow">Englisch Vokabelheft</div>
-  <h1 class="title">Tinos Vokabeltrainer</h1>
+<div class="lang-switch" id="lang-switch">
+    <button class="lang-btn" id="lang-btn-de" data-lang="de">DE</button>
+    <button class="lang-btn" id="lang-btn-en" data-lang="en">EN</button>
+  </div>
+  <div class="eyebrow" id="txt-eyebrow">Englisch Vokabelheft</div>
+  <h1 class="title" id="txt-title">Tinos Vokabeltrainer</h1>
 
   <!-- HOME -->
   <div id="screen-home">
     <div class="notebook">
       <div class="notebook-lines"></div>
-      <p class="home-intro">Deutsches Wort lesen &rarr; englische Übersetzung schreiben.</p>
+      <p class="home-intro" id="txt-home-intro">Deutsches Wort lesen &rarr; englische Übersetzung schreiben.</p>
       <div class="stats-row">
-        <div class="stat-pill"><div class="num" id="stat-mastered">0</div><div class="lbl">Gekonnt</div></div>
-        <div class="stat-pill"><div class="num" id="stat-total">0</div><div class="lbl">Vokabeln</div></div>
-        <div class="stat-pill"><div class="num" id="stat-streak">0</div><div class="lbl">Bestserie</div></div>
+        <div class="stat-pill"><div class="num" id="stat-mastered">0</div><div class="lbl" id="txt-stat-mastered">Gekonnt</div></div>
+        <div class="stat-pill"><div class="num" id="stat-total">0</div><div class="lbl" id="txt-stat-total">Vokabeln</div></div>
+        <div class="stat-pill"><div class="num" id="stat-streak">0</div><div class="lbl" id="txt-stat-phase">Beste Phase</div></div>
       </div>
       <button class="cat-btn daily" id="daily-btn">
-        <span>🎲 Tages-Herausforderung</span>
-        <span class="cat-right"><span class="cat-progress">20 Vokabeln</span></span>
+        <span id="txt-daily-btn">🎲 Tages-Herausforderung</span>
+        <span class="cat-right"><span class="cat-progress" id="txt-daily-badge">20 Vokabeln</span></span>
       </button>
-      <p class="daily-sub">Meist Vokabeln, die noch wackeln – dazu ein paar sichere zur Auffrischung. Üben, bis alle 20 auf Grün stehen!</p>
+      <p class="daily-sub" id="txt-daily-sub">Meist Vokabeln, die noch wackeln – dazu ein paar sichere zur Auffrischung. Üben, bis alle 20 auf Grün stehen!</p>
+      <p class="super-score"><span id="txt-super-label">⭐ Superpunkte:</span> <span id="super-score-num">0</span></p>
       <div class="cat-list" id="cat-list"></div>
     </div>
   </div>
@@ -275,18 +294,18 @@
     <div class="notebook">
       <div class="notebook-lines"></div>
       <div class="quiz-topbar">
-        <button class="back-btn" id="quiz-exit">&larr; Zurück</button>
+        <button class="back-btn" id="quiz-exit">&larr; <span id="txt-quiz-back">Zurück</span></button>
         <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
         <div class="counter" id="quiz-counter">1/10</div>
       </div>
 
       <div class="de-word-wrap">
-        <div class="de-label">Deutsch</div>
+        <div class="de-label" id="txt-de-label">Deutsch</div>
         <div class="de-word" id="de-word">Wort</div>
       </div>
 
       <div class="answer-row">
-        <div class="answer-label">Englisch</div>
+        <div class="answer-label" id="txt-en-label">Englisch</div>
         <input id="answer-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="hier schreiben ...">
       </div>
 
@@ -296,7 +315,7 @@
         <button class="btn btn-primary" id="check-btn">Prüfen</button>
       </div>
       <div class="secondary-row">
-        <button class="dontknow-btn" id="dontknow-btn">Ich weiß es nicht 🤔</button>
+        <button class="dontknow-btn" id="dontknow-btn"><span id="txt-dontknow-btn">Ich weiß es nicht 🤔</span></button>
       </div>
     </div>
   </div>
@@ -310,8 +329,8 @@
       <div class="summary-sub" id="summary-sub">8 von 10 richtig</div>
       <div class="mistake-list" id="mistake-list"></div>
       <div class="action-row">
-        <button class="btn btn-ghost" id="retry-mistakes">Fehler üben</button>
-        <button class="btn btn-primary" id="back-home">Zur Übersicht</button>
+        <button class="btn btn-ghost" id="retry-mistakes"><span id="txt-retry-btn">Fehler üben</span></button>
+        <button class="btn btn-primary" id="back-home"><span id="txt-backhome-btn">Zur Übersicht</span></button>
       </div>
     </div>
   </div>
@@ -332,7 +351,7 @@ const VOCAB = [
   {de:"Ich wohne in", en:["i live in"], cat:"begruessung"},
   {de:"wohnen, leben", en:["to live"], cat:"begruessung"},
   {de:"Wie alt bist du?", en:["how old are you"], cat:"begruessung"},
-  {de:"ich auch", en:["me too"], cat:"begruessung"},
+  {de:"Ich auch", en:["me too"], cat:"begruessung"},
   {de:"Bis dann", en:["see you"], cat:"begruessung"},
   {de:"sehen", en:["to see"], cat:"begruessung"},
   {de:"Tschüss", en:["bye"], cat:"begruessung"},
@@ -353,6 +372,14 @@ const VOCAB = [
   {de:"zehn", en:["ten"], cat:"zahlen"},
   {de:"elf", en:["eleven"], cat:"zahlen"},
   {de:"zwölf", en:["twelve"], cat:"zahlen"},
+  {de:"dreißig", en:["thirty"], cat:"zahlen"},
+  {de:"vierzig", en:["forty"], cat:"zahlen"},
+  {de:"fünfzig", en:["fifty"], cat:"zahlen"},
+  {de:"sechzig", en:["sixty"], cat:"zahlen"},
+  {de:"siebzig", en:["seventy"], cat:"zahlen"},
+  {de:"achtzig", en:["eighty"], cat:"zahlen"},
+  {de:"neunzig", en:["ninety"], cat:"zahlen"},
+  {de:"hundert", en:["a hundred","one hundred","hundred"], cat:"zahlen"},
 
   // Sätze & kleine Wörter
   {de:"Willkommen in", en:["welcome to"], cat:"saetze"},
@@ -427,7 +454,7 @@ const VOCAB = [
   {de:"Wer ist es?", en:["who is it"], cat:"hobbys"},
   {de:"oder", en:["or"], cat:"hobbys"},
   {de:"Hobby", en:["hobby"], cat:"hobbys"},
-  {de:"Du/ihr/Sie auch", en:["you too"], cat:"hobbys"},
+  {de:"Du/ihr/Sie auch?", en:["you too"], cat:"hobbys"},
   {de:"du bist", en:["you're","you are"], cat:"hobbys"},
   {de:"Ich bin dran", en:["my turn"], cat:"hobbys"},
   {de:"zeichnen", en:["to draw"], cat:"hobbys"},
@@ -494,7 +521,7 @@ const VOCAB = [
   {de:"warum", en:["why"], cat:"alltag"},
   {de:"Frau", en:["mrs"], cat:"alltag"},
   {de:"Lehrer/in", en:["teacher"], cat:"alltag"},
-  {de:"bitte", en:["please"], cat:"alltag"},
+  {de:"Bitte", en:["please"], cat:"alltag"},
   {de:"nehmen", en:["to take"], cat:"alltag"},
   {de:"zu Hause", en:["home"], cat:"alltag"},
   {de:"Schau", en:["look"], cat:"alltag"},
@@ -531,18 +558,175 @@ const VOCAB_BY_ID = {};
 VOCAB.forEach(w=> VOCAB_BY_ID[w.id] = w);
 
 const CATEGORIES = [
-  {key:"begruessung", label:"Begrüßung & Sätze", emoji:"👋"},
-  {key:"zahlen", label:"Zahlen", emoji:"🔢"},
-  {key:"saetze", label:"Sätze & kleine Wörter", emoji:"💬"},
-  {key:"tiere", label:"Tiere & Natur", emoji:"🐝"},
-  {key:"familie", label:"Familie & Freunde", emoji:"👨‍👩‍👧"},
-  {key:"farben", label:"Farben", emoji:"🎨"},
-  {key:"hobbys", label:"Hobbys & mehr", emoji:"⚽"},
-  {key:"schulsachen", label:"Schulsachen", emoji:"✏️"},
-  {key:"schulorte", label:"Schule & Orte", emoji:"🏫"},
-  {key:"gefuehle", label:"Gefühle & Beschreibungen", emoji:"😊"},
-  {key:"alltag", label:"Alltag & Sätze", emoji:"💬"},
+  {key:"begruessung", label:"Begrüßung & Sätze", labelEn:"Greetings & Phrases", emoji:"👋"},
+  {key:"zahlen", label:"Zahlen", labelEn:"Numbers", emoji:"🔢"},
+  {key:"saetze", label:"Sätze & kleine Wörter", labelEn:"Phrases & Small Words", emoji:"💬"},
+  {key:"tiere", label:"Tiere & Natur", labelEn:"Animals & Nature", emoji:"🐝"},
+  {key:"familie", label:"Familie & Freunde", labelEn:"Family & Friends", emoji:"👨‍👩‍👧"},
+  {key:"farben", label:"Farben", labelEn:"Colors", emoji:"🎨"},
+  {key:"hobbys", label:"Hobbys & mehr", labelEn:"Hobbies & More", emoji:"⚽"},
+  {key:"schulsachen", label:"Schulsachen", labelEn:"School Supplies", emoji:"✏️"},
+  {key:"schulorte", label:"Schule & Orte", labelEn:"School & Places", emoji:"🏫"},
+  {key:"gefuehle", label:"Gefühle & Beschreibungen", labelEn:"Feelings & Descriptions", emoji:"😊"},
+  {key:"alltag", label:"Alltag & Sätze", labelEn:"Everyday & Phrases", emoji:"💬"},
 ];
+
+/* ---------------- Oberflächen-Sprache (Deutsch/Englisch) ----------------
+   Betrifft nur die Bedienoberfläche (Buttons, Beschriftungen, Rückmeldungen).
+   Die Vokabeln selbst bleiben immer Deutsch -> Englisch, unabhängig davon.
+------------------------------------------------------------------- */
+const UI_LANG_KEY = "vokabel-ui-lang-v1";
+let uiLang = "en";
+
+const STRINGS = {
+  de: {
+    eyebrow: "Englisch Vokabelheft",
+    homeIntro: "Deutsches Wort lesen → englische Übersetzung schreiben.",
+    statMastered: "Gekonnt",
+    statWords: "Vokabeln",
+    statPhase: "Beste Phase",
+    dailyBtn: "🎲 Tages-Herausforderung",
+    dailyBadge: "20 Vokabeln",
+    dailySub: "Meist Vokabeln, die noch wackeln – dazu ein paar sichere zur Auffrischung. Üben, bis alle 20 auf Grün stehen!",
+    superLabel: "⭐ Superpunkte:",
+    allWordsBtn: "📓 Alle Vokabeln",
+    quizBack: "Zurück",
+    deLabel: "Deutsch",
+    enLabel: "Englisch",
+    answerPlaceholder: "hier schreiben ...",
+    checkBtn: "Prüfen",
+    dontknowBtn: "Ich weiß es nicht 🤔",
+    nextBtn: "Weiter",
+    doneBtn: "Fertig",
+    retryBtn: "Fehler üben",
+    backHomeBtn: "Zur Übersicht",
+    feedbackCorrect: "Richtig!",
+    feedbackMastered: " Phase 6 – gekonnt!",
+    feedbackPhase: (p)=>` Phase ${p}/6.`,
+    feedbackPhaseInline: (p)=>` (Phase ${p}/6)`,
+    feedbackCloseIntro: "Fast richtig! Kleiner Schreibfehler. Richtig geschrieben:",
+    feedbackWrongIntro: "Richtig wäre:",
+    feedbackShownIntro: "Kein Problem – das ist:",
+    feedbackShownOutro: "Kommt gleich nochmal dran!",
+    summaryPerfect: "Perfekt!",
+    summaryGreat: "Super gemacht!",
+    summaryGood: "Gut gemacht!",
+    summaryKeepGoing: "Weiter üben!",
+    wordCorrect: "richtig",
+    wordClose: "fast richtig",
+    wordShown: "aufgedeckt",
+    wordWrong: "falsch",
+    dailyDoneTitle: "Tages-Herausforderung geschafft!",
+    dailyDoneSub: (n)=>`Alle ${n} Vokabeln stehen jetzt auf Grün`,
+    dailyPointEarned: (t,c,total)=>` · ⭐ Superpunkt erhalten! Heute: ${t}/${c} · Gesamt: ${total}`,
+    dailyPointCapped: (c)=>` · Tages-Maximum (${c}) an Superpunkten schon erreicht`,
+    practicedTimes: (n)=>`${n}× geübt`,
+    tagClose: "fast", tagWrong: "falsch", tagShown: "aufgedeckt",
+    confirmNewRound: "Du startest jetzt eine neue Runde mit 20 (teils anderen) Vokabeln – nicht die von vorhin. Weitermachen?",
+    confirmNewRoundCapped: "Du hast heute schon das Tages-Maximum an Superpunkten erreicht. Du startest jetzt trotzdem eine neue Runde mit 20 (teils anderen) Vokabeln – ohne weiteren Superpunkt. Weitermachen?",
+  },
+  en: {
+    eyebrow: "English Vocabulary Notebook",
+    homeIntro: "Read the German word → type the English translation.",
+    statMastered: "Mastered",
+    statWords: "Words",
+    statPhase: "Best Phase",
+    dailyBtn: "🎲 Daily Challenge",
+    dailyBadge: "20 words",
+    dailySub: "Mostly words that are still shaky – plus a few solid ones to refresh. Keep going until all 20 are green!",
+    superLabel: "⭐ Super Points:",
+    allWordsBtn: "📓 All Words",
+    quizBack: "Back",
+    deLabel: "German",
+    enLabel: "English",
+    answerPlaceholder: "write here ...",
+    checkBtn: "Check",
+    dontknowBtn: "I don't know 🤔",
+    nextBtn: "Next",
+    doneBtn: "Done",
+    retryBtn: "Practice mistakes",
+    backHomeBtn: "Back to overview",
+    feedbackCorrect: "Correct!",
+    feedbackMastered: " Phase 6 – mastered!",
+    feedbackPhase: (p)=>` Phase ${p}/6.`,
+    feedbackPhaseInline: (p)=>` (Phase ${p}/6)`,
+    feedbackCloseIntro: "Almost! Small spelling mistake. Correct spelling:",
+    feedbackWrongIntro: "The correct answer was:",
+    feedbackShownIntro: "No problem – it's:",
+    feedbackShownOutro: "It'll come up again shortly!",
+    summaryPerfect: "Perfect!",
+    summaryGreat: "Great job!",
+    summaryGood: "Well done!",
+    summaryKeepGoing: "Keep practicing!",
+    wordCorrect: "correct",
+    wordClose: "almost",
+    wordShown: "revealed",
+    wordWrong: "wrong",
+    dailyDoneTitle: "Daily Challenge complete!",
+    dailyDoneSub: (n)=>`All ${n} words are now green`,
+    dailyPointEarned: (t,c,total)=>` · ⭐ Super point earned! Today: ${t}/${c} · Total: ${total}`,
+    dailyPointCapped: (c)=>` · Today's maximum (${c}) super points already reached`,
+    practicedTimes: (n)=>`${n}× practiced`,
+    tagClose: "almost", tagWrong: "wrong", tagShown: "revealed",
+    confirmNewRound: "You're starting a new round with 20 (partly different) words – not the ones from before. Continue?",
+    confirmNewRoundCapped: "You've already reached today's super point maximum. You'll start a new round with 20 (partly different) words anyway – without an extra point. Continue?",
+  }
+};
+function t(key, ...args){
+  const entry = STRINGS[uiLang][key];
+  return typeof entry === "function" ? entry(...args) : entry;
+}
+
+function applyStaticLabels(){
+  document.getElementById("txt-eyebrow").textContent = t("eyebrow");
+  document.getElementById("txt-home-intro").textContent = t("homeIntro");
+  document.getElementById("txt-stat-mastered").textContent = t("statMastered");
+  document.getElementById("txt-stat-total").textContent = t("statWords");
+  document.getElementById("txt-stat-phase").textContent = t("statPhase");
+  document.getElementById("txt-daily-btn").textContent = t("dailyBtn");
+  document.getElementById("txt-daily-badge").textContent = t("dailyBadge");
+  document.getElementById("txt-daily-sub").textContent = t("dailySub");
+  document.getElementById("txt-super-label").textContent = t("superLabel");
+  document.getElementById("txt-quiz-back").textContent = t("quizBack");
+  document.getElementById("txt-de-label").textContent = t("deLabel");
+  document.getElementById("txt-en-label").textContent = t("enLabel");
+  document.getElementById("answer-input").placeholder = t("answerPlaceholder");
+  document.getElementById("txt-dontknow-btn").textContent = t("dontknowBtn");
+  document.getElementById("txt-retry-btn").textContent = t("retryBtn");
+  document.getElementById("txt-backhome-btn").textContent = t("backHomeBtn");
+  if(typeof awaitingNext !== "undefined" && !awaitingNext){
+    const cb = document.getElementById("check-btn");
+    if(cb) cb.textContent = t("checkBtn");
+  }
+  document.getElementById("lang-btn-de").classList.toggle("active", uiLang==="de");
+  document.getElementById("lang-btn-en").classList.toggle("active", uiLang==="en");
+}
+
+async function loadUiLang(){
+  let stored = null;
+  try{
+    if(window.storage){
+      const res = await window.storage.get(UI_LANG_KEY, false);
+      if(res && res.value){ stored = res.value; }
+    }
+  }catch(e){}
+  if(!stored){
+    try{ stored = localStorage.getItem(UI_LANG_KEY); }catch(e){}
+  }
+  if(stored === "de" || stored === "en"){ uiLang = stored; }
+}
+async function saveUiLang(){
+  try{ if(window.storage){ await window.storage.set(UI_LANG_KEY, uiLang, false); } }catch(e){}
+  try{ localStorage.setItem(UI_LANG_KEY, uiLang); }catch(e){}
+}
+function setUiLang(lang){
+  uiLang = lang;
+  saveUiLang();
+  applyStaticLabels();
+  renderHome();
+}
+document.getElementById("lang-btn-de").addEventListener("click", ()=>setUiLang("de"));
+document.getElementById("lang-btn-en").addEventListener("click", ()=>setUiLang("en"));
 
 /* ---------------- Fortschritt (persistent storage) ----------------
    Zwei Speicherwege, je nachdem wie die App geöffnet wird:
@@ -553,7 +737,7 @@ const CATEGORIES = [
                          jeweiligen Gerät erhalten, auch offline.
 ------------------------------------------------------------------- */
 const STORAGE_KEY = "vokabel-progress-v1";
-let progress = {}; // { wordId: {streak, seen, correct} }
+let progress = {}; // { wordId: {phase, dueDate, seen, correct, mistakeCount} }
 
 async function loadProgress(){
   try{
@@ -575,8 +759,56 @@ async function saveProgress(){
   try{ localStorage.setItem(STORAGE_KEY, json); }
   catch(e){ /* Speicher hier nicht verfügbar - App funktioniert trotzdem für die Sitzung */ }
 }
-function getStat(id){ return progress[id] || {streak:0, seen:0, correct:0, mistakeCount:0}; }
-function isMastered(id){ return getStat(id).streak >= 2; }
+
+function getTodayKey(){
+  const d = new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function addDaysToKey(dateKey, days){
+  const [y,m,d] = dateKey.split("-").map(Number);
+  const dt = new Date(y, m-1, d);
+  dt.setDate(dt.getDate()+days);
+  return dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");
+}
+
+/* ---------------- Lern-Phasen (nach dem Karteikasten-Prinzip von phase6) ----------------
+   Jede Vokabel durchläuft 6 Phasen mit wachsenden Wiederholungsabständen, bevor sie als
+   wirklich "gekonnt" (grün) zählt. Richtige Antwort -> eine Phase weiter, mit neuer
+   Fälligkeit nach dem jeweiligen Abstand. Falsche/fast richtige/aufgedeckte Antwort ->
+   eine Phase zurück (mindestens Phase 1), sofort wieder fällig.
+------------------------------------------------------------------- */
+const PHASE_INTERVAL_TAGE = {2:1, 3:3, 4:10, 5:30, 6:90};
+
+function getStat(id){
+  const raw = progress[id];
+  if(!raw){ return {phase:1, dueDate:null, seen:0, correct:0, mistakeCount:0}; }
+  if(raw.phase === undefined){
+    // Migration vom alten Streak-System: schon 2x hintereinander richtig -> mit etwas
+    // Vorschuss starten (Phase 3), statt komplett bei 0 anzufangen.
+    return {
+      phase: (raw.streak||0) >= 2 ? 3 : 1,
+      dueDate: null,
+      seen: raw.seen||0, correct: raw.correct||0, mistakeCount: raw.mistakeCount||0
+    };
+  }
+  return raw;
+}
+function isMastered(id){ return getStat(id).phase >= 6; }
+function isDue(id){
+  const stat = getStat(id);
+  if(stat.phase >= 6) return false; // fertig gelernt, keine reguläre Fälligkeit mehr
+  if(!stat.dueDate) return true; // noch nie eingeplant -> sofort fällig
+  return stat.dueDate <= getTodayKey();
+}
+function applyCorrectAnswer(stat){
+  stat.phase = Math.min(6, (stat.phase||1)+1);
+  const days = PHASE_INTERVAL_TAGE[stat.phase] || 90;
+  stat.dueDate = (stat.phase >= 6) ? addDaysToKey(getTodayKey(), 90) : addDaysToKey(getTodayKey(), days);
+}
+function applyMistake(stat){
+  stat.phase = Math.max(1, (stat.phase||1)-1);
+  stat.dueDate = getTodayKey(); // sofort wieder fällig
+}
 
 /* ---------------- Tages-Herausforderung (20 zufällige Vokabeln) ----------------
    Die Auswahl wird für den jeweiligen Kalendertag festgehalten, damit an
@@ -588,33 +820,47 @@ const DAILY_COUNT = 20;
 const DAILY_REINFORCE_COUNT = 5; // davon: schon sicher gelernte, zur Auffrischung
 const DAILY_STRUGGLE_COUNT = DAILY_COUNT - DAILY_REINFORCE_COUNT; // Rest: wacklige Vokabeln
 
-function getTodayKey(){
-  const d = new Date();
-  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-}
+// Baut die Tagesauswahl: überwiegend fällige/wacklige Vokabeln (nach Phasen-Fälligkeit),
+// dazu ein paar bereits gemeisterte (Phase 6) zur Auffrischung. Wird erst zu wenig
+// Auswahl gefunden (z.B. am Anfang), mit unbekannten Vokabeln aufgefüllt.
+function buildDailySelection(excludeIds){
+  excludeIds = excludeIds || new Set();
+  const pool = VOCAB.filter(w=>!excludeIds.has(w.id));
+  const usePool = pool.length >= DAILY_COUNT ? pool : VOCAB; // Sicherheitsnetz, falls zu wenig übrig bleibt
 
-// Baut die Tagesauswahl: überwiegend Vokabeln, die schon mal falsch/fast richtig/
-// aufgedeckt waren, dazu ein paar bereits sicher gelernte zur Auffrischung.
-// Wird erst zu wenig Auswahl gefunden (z.B. am Anfang), mit unbekannten Vokabeln aufgefüllt.
-function buildDailySelection(){
-  const masteredWords = VOCAB.filter(w=>isMastered(w.id));
-  const struggleWords = VOCAB.filter(w=> !isMastered(w.id) && (getStat(w.id).mistakeCount||0) > 0);
-  const untouchedWords = VOCAB.filter(w=> !isMastered(w.id) && !((getStat(w.id).mistakeCount||0) > 0));
+  const masteredWords = usePool.filter(w=>isMastered(w.id));
+  const notMastered = usePool.filter(w=>!isMastered(w.id));
+  const duePool = notMastered.filter(w=> (getStat(w.id).mistakeCount||0) > 0 && isDue(w.id));
+  const mistakeNotDuePool = notMastered.filter(w=> (getStat(w.id).mistakeCount||0) > 0 && !isDue(w.id));
+  const untouchedPool = notMastered.filter(w=> !((getStat(w.id).mistakeCount||0) > 0));
 
   let reinforce = shuffle(masteredWords).slice(0, DAILY_REINFORCE_COUNT);
-  let majority = shuffle(struggleWords).slice(0, DAILY_STRUGGLE_COUNT);
 
+  // Kaskade für die 15 "Übungs"-Plätze: zuerst fällige wacklige Vokabeln, dann
+  // noch nicht fällige wacklige, zuletzt unberührte Vokabeln zum Auffüllen.
+  let majority = shuffle(duePool).slice(0, DAILY_STRUGGLE_COUNT);
   if(majority.length < DAILY_STRUGGLE_COUNT){
     const need = DAILY_STRUGGLE_COUNT - majority.length;
-    majority = majority.concat(shuffle(untouchedWords).slice(0, need));
+    majority = majority.concat(shuffle(mistakeNotDuePool).slice(0, need));
+  }
+  if(majority.length < DAILY_STRUGGLE_COUNT){
+    const need = DAILY_STRUGGLE_COUNT - majority.length;
+    majority = majority.concat(shuffle(untouchedPool).slice(0, need));
   }
   if(reinforce.length < DAILY_REINFORCE_COUNT){
     const need = DAILY_REINFORCE_COUNT - reinforce.length;
     const usedIds = new Set(majority.map(w=>w.id).concat(reinforce.map(w=>w.id)));
-    const filler = VOCAB.filter(w=>!usedIds.has(w.id));
+    const filler = usePool.filter(w=>!usedIds.has(w.id));
     reinforce = reinforce.concat(shuffle(filler).slice(0, need));
   }
-  return shuffle(majority.concat(reinforce)).map(w=>w.id);
+  let combined = majority.concat(reinforce);
+  if(combined.length < DAILY_COUNT){
+    // Letztes Sicherheitsnetz: aus dem Gesamtpool auffüllen (auch ausgeschlossene, falls nötig)
+    const usedIds = new Set(combined.map(w=>w.id));
+    const filler = VOCAB.filter(w=>!usedIds.has(w.id));
+    combined = combined.concat(shuffle(filler).slice(0, DAILY_COUNT-combined.length));
+  }
+  return shuffle(combined).map(w=>w.id);
 }
 
 async function getDailyWordIds(){
@@ -641,6 +887,84 @@ async function getDailyWordIds(){
   try{ if(window.storage){ await window.storage.set(DAILY_KEY, payload, false); } }catch(e){}
   try{ localStorage.setItem(DAILY_KEY, payload); }catch(e){}
   return ids;
+}
+
+/* ---------------- Superpunkte ----------------
+   Für jede vollständig geschaffte 20er-Runde (Haupt- oder Extra-Runde) gibt es einen
+   Superpunkt, pro Tag aber maximal DAILY_POINT_CAP. An Tagen ganz ohne eine
+   vollständige Runde wird beim nächsten Öffnen rückwirkend ein Superpunkt abgezogen
+   (Minimum 0).
+------------------------------------------------------------------- */
+const SCORE_KEY = "vokabel-score-v1";
+const DAILY_POINT_CAP = 3;
+
+async function loadScoreData(){
+  let stored = null;
+  try{
+    if(window.storage){
+      const res = await window.storage.get(SCORE_KEY, false);
+      if(res && res.value){ stored = JSON.parse(res.value); }
+    }
+  }catch(e){ /* weiter mit localStorage */ }
+  if(!stored){
+    try{
+      const local = localStorage.getItem(SCORE_KEY);
+      if(local){ stored = JSON.parse(local); }
+    }catch(e){ /* ignorieren */ }
+  }
+  if(!stored){ stored = {superScore:0, dailyPoints:{}, lastEvaluatedDate:null}; }
+  if(!stored.dailyPoints || typeof stored.dailyPoints !== "object") stored.dailyPoints = {};
+  if(typeof stored.superScore !== "number") stored.superScore = 0;
+  return stored;
+}
+async function saveScoreData(data){
+  // alte Einträge (älter als ~120 Tage) aufräumen, damit die Liste nicht unbegrenzt wächst
+  const cutoff = addDaysToKey(getTodayKey(), -120);
+  Object.keys(data.dailyPoints).forEach(d=>{ if(d < cutoff) delete data.dailyPoints[d]; });
+  const json = JSON.stringify(data);
+  try{ if(window.storage){ await window.storage.set(SCORE_KEY, json, false); } }catch(e){}
+  try{ localStorage.setItem(SCORE_KEY, json); }catch(e){}
+}
+
+// Wird beim Start der App aufgerufen: zieht für jeden vollständig verpassten Tag
+// seit dem letzten Öffnen rückwirkend einen Superpunkt ab.
+async function evaluateMissedDays(){
+  const data = await loadScoreData();
+  const today = getTodayKey();
+  if(!data.lastEvaluatedDate){
+    data.lastEvaluatedDate = addDaysToKey(today, -1);
+    await saveScoreData(data);
+    return data;
+  }
+  let cursor = addDaysToKey(data.lastEvaluatedDate, 1);
+  let changed = false;
+  while(cursor < today){
+    changed = true;
+    if((data.dailyPoints[cursor]||0) > 0){
+      data.superScore = (data.superScore||0)+1;
+    } else {
+      data.superScore = Math.max(0, (data.superScore||0)-1);
+    }
+    cursor = addDaysToKey(cursor, 1);
+  }
+  data.lastEvaluatedDate = addDaysToKey(today, -1);
+  if(changed){ await saveScoreData(data); }
+  return data;
+}
+
+// Vergibt einen Superpunkt für eine geschaffte Runde (Haupt- oder Extra-Runde),
+// bis zur Tages-Obergrenze. Gibt {data, earned, capped, pointsToday} zurück.
+async function markRoundCompleted(){
+  const data = await loadScoreData();
+  const today = getTodayKey();
+  const pointsToday = data.dailyPoints[today] || 0;
+  if(pointsToday >= DAILY_POINT_CAP){
+    return {data, earned:false, capped:true, pointsToday};
+  }
+  data.dailyPoints[today] = pointsToday+1;
+  data.superScore = (data.superScore||0)+1;
+  await saveScoreData(data);
+  return {data, earned:true, capped:false, pointsToday: pointsToday+1};
 }
 
 /* ---------------- Normalisierung & Vergleich ---------------- */
@@ -698,24 +1022,28 @@ function show(screen){
 function renderHome(){
   const total = VOCAB.length;
   const masteredCount = VOCAB.filter(w=>isMastered(w.id)).length;
-  let bestStreak = 0;
-  VOCAB.forEach(w=> bestStreak = Math.max(bestStreak, getStat(w.id).streak));
+  let bestPhase = 1;
+  VOCAB.forEach(w=> bestPhase = Math.max(bestPhase, getStat(w.id).phase));
 
   document.getElementById("stat-mastered").textContent = masteredCount;
   document.getElementById("stat-total").textContent = total;
-  document.getElementById("stat-streak").textContent = bestStreak;
+  document.getElementById("stat-streak").textContent = bestPhase+"/6";
+
+  loadScoreData().then(data=>{
+    document.getElementById("super-score-num").textContent = data.superScore||0;
+  });
 
   const list = document.getElementById("cat-list");
   list.innerHTML = "";
 
   const allBtn = document.createElement("button");
   allBtn.className = "cat-btn all";
-  allBtn.innerHTML = `<span>📓 Alle Vokabeln</span>
+  allBtn.innerHTML = `<span>${t("allWordsBtn")}</span>
     <span class="cat-right"><span class="cat-progress">${masteredCount}/${total}</span></span>`;
   allBtn.onclick = ()=> startSession("alle");
   list.appendChild(allBtn);
 
-  document.getElementById("daily-btn").onclick = startDailySession;
+  document.getElementById("daily-btn").onclick = handleDailyBtnClick;
 
   CATEGORIES.forEach(cat=>{
     const words = VOCAB.filter(w=>w.cat===cat.key);
@@ -723,7 +1051,8 @@ function renderHome(){
     const btn = document.createElement("button");
     btn.className = "cat-btn";
     const done = mastered === words.length;
-    btn.innerHTML = `<span class="cat-right"><span class="cat-emoji">${cat.emoji}</span> ${cat.label}</span>
+    const label = uiLang === "en" ? cat.labelEn : cat.label;
+    btn.innerHTML = `<span class="cat-right"><span class="cat-emoji">${cat.emoji}</span> ${label}</span>
       <span class="cat-progress ${done?'done':''}">${mastered}/${words.length}</span>`;
     btn.onclick = ()=> startSession(cat.key);
     list.appendChild(btn);
@@ -750,13 +1079,33 @@ function startSession(catKey, wordsOverride){
   renderQuestion();
 }
 
-async function startDailySession(){
-  const ids = await getDailyWordIds();
+async function handleDailyBtnClick(){
+  const scoreData = await loadScoreData();
+  const today = getTodayKey();
+  const isExtra = (scoreData.dailyPoints[today]||0) > 0;
+  if(isExtra){
+    const atCap = (scoreData.dailyPoints[today]||0) >= DAILY_POINT_CAP;
+    const msg = atCap ? t("confirmNewRoundCapped") : t("confirmNewRound");
+    const ok = window.confirm(msg);
+    if(!ok) return;
+  }
+  startDailySession(isExtra);
+}
+
+async function startDailySession(isExtra){
+  let ids;
+  if(isExtra){
+    const mainIds = await getDailyWordIds();
+    ids = buildDailySelection(new Set(mainIds));
+  } else {
+    ids = await getDailyWordIds();
+  }
   const pool = ids.map(id=>VOCAB_BY_ID[id]).filter(Boolean);
   currentCatKey = "daily";
   session = {
     words: shuffle(pool), index:0, correctCount:0, closeCount:0, wrongCount:0, shownCount:0,
-    mistakes:[], revealedIds:new Set(), mode:"daily", remainingIds:new Set(ids), dailyTotal:ids.length
+    mistakes:[], revealedIds:new Set(), mode:"daily", remainingIds:new Set(ids), dailyTotal:ids.length,
+    isExtra: !!isExtra
   };
   show(screenQuiz);
   renderQuestion();
@@ -778,7 +1127,7 @@ function renderQuestion(){
   answerInput.disabled = false;
   feedbackEl.textContent = "";
   feedbackEl.className = "feedback";
-  checkBtn.textContent = "Prüfen";
+  checkBtn.textContent = t("checkBtn");
   checkBtn.disabled = false;
   dontknowBtn.disabled = false;
   if(session.mode === "daily"){
@@ -807,30 +1156,32 @@ function submitAnswer(){
   stat.seen = (stat.seen||0)+1;
 
   if(result.status === "correct"){
-    stat.streak = (stat.streak||0)+1;
+    applyCorrectAnswer(stat);
     stat.correct = (stat.correct||0)+1;
     session.correctCount++;
     answerInput.className = "correct";
     feedbackEl.className = "feedback good";
-    feedbackEl.innerHTML = `<span class="stamp">✓</span> Richtig!`;
+    feedbackEl.innerHTML = `<span class="stamp">✓</span> ${t("feedbackCorrect")}` + (stat.phase>=6 ? t("feedbackMastered") : t("feedbackPhase", stat.phase));
     if(session.mode === "daily"){ session.remainingIds.delete(w.id); }
   } else if(result.status === "close"){
-    // Streak bleibt unverändert: zählt weder als Fehler noch als sichere Beherrschung
+    // Phase bleibt unverändert: zählt weder als Fehler noch als sichere Beherrschung,
+    // wird aber sofort wieder fällig, damit die Schreibweise nochmal geübt wird.
     session.closeCount++;
     session.mistakes.push({...w, _tag:"close"});
     stat.mistakeCount = (stat.mistakeCount||0)+1;
+    stat.dueDate = getTodayKey();
     answerInput.className = "close";
     feedbackEl.className = "feedback close";
-    feedbackEl.innerHTML = `<span class="stamp">〜</span> Fast richtig! Kleiner Schreibfehler. Richtig geschrieben: "${w.en[0]}"`;
+    feedbackEl.innerHTML = `<span class="stamp">〜</span> ${t("feedbackCloseIntro")} "${w.en[0]}"`;
     if(session.mode === "daily"){ session.words.push({...w}); }
   } else {
-    stat.streak = 0;
+    applyMistake(stat);
     session.wrongCount++;
     session.mistakes.push({...w, _tag:"wrong"});
     stat.mistakeCount = (stat.mistakeCount||0)+1;
     answerInput.className = "wrong";
     feedbackEl.className = "feedback bad";
-    feedbackEl.innerHTML = `<span class="stamp">✗</span> Richtig wäre: "${w.en[0]}"`;
+    feedbackEl.innerHTML = `<span class="stamp">✗</span> ${t("feedbackWrongIntro")} "${w.en[0]}"${t("feedbackPhaseInline", stat.phase)}`;
     if(session.mode === "daily"){ session.words.push({...w}); }
   }
   answerInput.disabled = true;
@@ -838,7 +1189,7 @@ function submitAnswer(){
   progress[w.id] = stat;
   saveProgress();
 
-  checkBtn.textContent = (session.index < session.words.length-1) ? "Weiter" : "Fertig";
+  checkBtn.textContent = (session.index < session.words.length-1) ? t("nextBtn") : t("doneBtn");
   awaitingNext = true;
 }
 
@@ -875,7 +1226,7 @@ dontknowBtn.addEventListener("click", ()=>{
   const w = session.words[session.index];
   const stat = getStat(w.id);
   stat.seen = (stat.seen||0)+1;
-  stat.streak = 0;
+  applyMistake(stat);
   stat.mistakeCount = (stat.mistakeCount||0)+1;
   progress[w.id] = stat;
   saveProgress();
@@ -896,9 +1247,9 @@ dontknowBtn.addEventListener("click", ()=>{
   answerInput.className = "shown";
   answerInput.disabled = true;
   feedbackEl.className = "feedback shown";
-  feedbackEl.innerHTML = `<span class="stamp">👀</span> Kein Problem – das ist: "${w.en[0]}". Kommt gleich nochmal dran!`;
+  feedbackEl.innerHTML = `<span class="stamp">👀</span> ${t("feedbackShownIntro")} "${w.en[0]}". ${t("feedbackShownOutro")}`;
 
-  checkBtn.textContent = (session.index < session.words.length-1) ? "Weiter" : "Fertig";
+  checkBtn.textContent = (session.index < session.words.length-1) ? t("nextBtn") : t("doneBtn");
   dontknowBtn.disabled = true;
   awaitingNext = true;
 });
@@ -908,11 +1259,11 @@ document.getElementById("quiz-exit").addEventListener("click", ()=>{
 });
 
 /* ---------------- Summary Screen ---------------- */
-function finishSession(){
+async function finishSession(){
   if(session.mode === "daily"){
     document.getElementById("summary-emoji").textContent = "🎉";
-    document.getElementById("summary-title").textContent = "Tages-Herausforderung geschafft!";
-    document.getElementById("summary-sub").textContent = `Alle ${session.dailyTotal} Vokabeln stehen jetzt auf Grün`;
+    document.getElementById("summary-title").textContent = t("dailyDoneTitle");
+    document.getElementById("summary-sub").textContent = t("dailyDoneSub", session.dailyTotal);
 
     const list = document.getElementById("mistake-list");
     list.innerHTML = "";
@@ -925,12 +1276,19 @@ function finishSession(){
       const el = document.createElement("div");
       el.className = "mistake-item close";
       el.innerHTML = `<span class="de">${item.de}</span>
-        <span class="tag-label close">${item.n}× geübt</span>
+        <span class="tag-label close">${t("practicedTimes", item.n)}</span>
         <span class="en">${item.en[0]}</span>`;
       list.appendChild(el);
     });
     document.getElementById("retry-mistakes").classList.add("hidden");
     show(screenSummary);
+
+    const { earned, capped, data, pointsToday } = await markRoundCompleted();
+    if(earned){
+      document.getElementById("summary-sub").textContent += t("dailyPointEarned", pointsToday, DAILY_POINT_CAP, data.superScore);
+    } else if(capped){
+      document.getElementById("summary-sub").textContent += t("dailyPointCapped", DAILY_POINT_CAP);
+    }
     return;
   }
 
@@ -941,18 +1299,18 @@ function finishSession(){
   const shown = session.shownCount;
   const pct = Math.round(correct/total*100);
 
-  let emoji = "🙂", title = "Gut gemacht!";
-  if(pct === 100){ emoji="🏆"; title="Perfekt!"; }
-  else if(pct >= 80){ emoji="🌟"; title="Super gemacht!"; }
-  else if(pct >= 50){ emoji="👍"; title="Gut gemacht!"; }
-  else{ emoji="💪"; title="Weiter üben!"; }
+  let emoji = "🙂", title = t("summaryGood");
+  if(pct === 100){ emoji="🏆"; title=t("summaryPerfect"); }
+  else if(pct >= 80){ emoji="🌟"; title=t("summaryGreat"); }
+  else if(pct >= 50){ emoji="👍"; title=t("summaryGood"); }
+  else{ emoji="💪"; title=t("summaryKeepGoing"); }
 
   document.getElementById("summary-emoji").textContent = emoji;
   document.getElementById("summary-title").textContent = title;
-  const subParts = [`${correct} richtig`];
-  if(close) subParts.push(`${close} fast richtig`);
-  if(shown) subParts.push(`${shown} aufgedeckt`);
-  if(wrong) subParts.push(`${wrong} falsch`);
+  const subParts = [`${correct} ${t("wordCorrect")}`];
+  if(close) subParts.push(`${close} ${t("wordClose")}`);
+  if(shown) subParts.push(`${shown} ${t("wordShown")}`);
+  if(wrong) subParts.push(`${wrong} ${t("wordWrong")}`);
   document.getElementById("summary-sub").textContent = subParts.join(" · ");
 
   const list = document.getElementById("mistake-list");
@@ -961,7 +1319,7 @@ function finishSession(){
     session.mistakes.forEach(w=>{
       const item = document.createElement("div");
       item.className = "mistake-item " + w._tag;
-      const tagLabel = w._tag === "close" ? "fast" : (w._tag === "shown" ? "aufgedeckt" : "falsch");
+      const tagLabel = w._tag === "close" ? t("tagClose") : (w._tag === "shown" ? t("tagShown") : t("tagWrong"));
       item.innerHTML = `<span class="de"><span class="dot ${w._tag}"></span>${w.de}</span>
         <span class="tag-label ${w._tag}">${tagLabel}</span>
         <span class="en">${w.en[0]}</span>`;
@@ -983,7 +1341,10 @@ document.getElementById("back-home").addEventListener("click", ()=>{
 
 /* ---------------- Start ---------------- */
 (async function init(){
+  await loadUiLang();
+  applyStaticLabels();
   await loadProgress();
+  await evaluateMissedDays();
   renderHome();
   show(screenHome);
 })();
