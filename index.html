@@ -143,6 +143,21 @@
     position:relative; z-index:1; text-align:center; font-weight:800; color:var(--gold);
     font-size:14px; margin: -8px 0 16px;
   }
+  .super-score-date{
+    font-weight:700; color:var(--ink-soft); font-size:12px;
+    cursor:pointer; text-decoration:underline; text-decoration-style:dotted; text-underline-offset:2px;
+  }
+  .super-history{
+    position:relative; z-index:1; background:#fff; border-radius:12px; padding:8px 14px;
+    margin: -10px 0 16px; box-shadow: inset 0 0 0 1px rgba(31,58,95,0.1);
+    max-height:160px; overflow-y:auto;
+  }
+  .super-history-row{
+    display:flex; justify-content:space-between; gap:10px;
+    font-size:13px; padding:5px 0; color:var(--ink); font-weight:700;
+  }
+  .super-history-row + .super-history-row{ border-top:1px solid var(--paper-line); }
+  .super-history-row .n{ color:var(--gold); }
 
   /* QUIZ SCREEN */
   .quiz-topbar{
@@ -284,7 +299,8 @@
         <span class="cat-right"><span class="cat-progress" id="txt-daily-badge">20 Vokabeln</span></span>
       </button>
       <p class="daily-sub" id="txt-daily-sub">Meist Vokabeln, die noch wackeln – dazu ein paar sichere zur Auffrischung. Üben, bis alle 20 auf Grün stehen!</p>
-      <p class="super-score"><span id="txt-super-label">⭐ Superpunkte:</span> <span id="super-score-num">0</span></p>
+      <p class="super-score"><span id="txt-super-label">⭐ Superpunkte:</span> <span id="super-score-num">0</span> <span id="super-score-date" class="super-score-date"></span></p>
+      <div id="super-score-history" class="super-history hidden"></div>
       <div class="cat-list" id="cat-list"></div>
     </div>
   </div>
@@ -373,13 +389,6 @@ const VOCAB = [
   {de:"elf", en:["eleven"], cat:"zahlen"},
   {de:"zwölf", en:["twelve"], cat:"zahlen"},
   {de:"dreißig", en:["thirty"], cat:"zahlen"},
-  {de:"vierzig", en:["forty"], cat:"zahlen"},
-  {de:"fünfzig", en:["fifty"], cat:"zahlen"},
-  {de:"sechzig", en:["sixty"], cat:"zahlen"},
-  {de:"siebzig", en:["seventy"], cat:"zahlen"},
-  {de:"achtzig", en:["eighty"], cat:"zahlen"},
-  {de:"neunzig", en:["ninety"], cat:"zahlen"},
-  {de:"hundert", en:["a hundred","one hundred","hundred"], cat:"zahlen"},
 
   // Sätze & kleine Wörter
   {de:"Willkommen in", en:["welcome to"], cat:"saetze"},
@@ -624,6 +633,10 @@ const STRINGS = {
     tagClose: "fast", tagWrong: "falsch", tagShown: "aufgedeckt",
     confirmNewRound: "Du startest jetzt eine neue Runde mit 20 (teils anderen) Vokabeln – nicht die von vorhin. Weitermachen?",
     confirmNewRoundCapped: "Du hast heute schon das Tages-Maximum an Superpunkten erreicht. Du startest jetzt trotzdem eine neue Runde mit 20 (teils anderen) Vokabeln – ohne weiteren Superpunkt. Weitermachen?",
+    lastPoint: (d)=>`(zuletzt: ${d})`,
+    lastPointNone: "(noch keiner)",
+    historyEmpty: "Noch keine Superpunkte",
+    pointsCount: (n)=> n===1 ? `${n} Punkt` : `${n} Punkte`,
   },
   en: {
     eyebrow: "English Vocabulary Notebook",
@@ -670,6 +683,10 @@ const STRINGS = {
     tagClose: "almost", tagWrong: "wrong", tagShown: "revealed",
     confirmNewRound: "You're starting a new round with 20 (partly different) words – not the ones from before. Continue?",
     confirmNewRoundCapped: "You've already reached today's super point maximum. You'll start a new round with 20 (partly different) words anyway – without an extra point. Continue?",
+    lastPoint: (d)=>`(last: ${d})`,
+    lastPointNone: "(none yet)",
+    historyEmpty: "No super points yet",
+    pointsCount: (n)=> n===1 ? `${n} point` : `${n} points`,
   }
 };
 function t(key, ...args){
@@ -728,6 +745,29 @@ function setUiLang(lang){
 document.getElementById("lang-btn-de").addEventListener("click", ()=>setUiLang("de"));
 document.getElementById("lang-btn-en").addEventListener("click", ()=>setUiLang("en"));
 
+async function toggleSuperHistory(){
+  const panel = document.getElementById("super-score-history");
+  if(!panel.classList.contains("hidden")){
+    panel.classList.add("hidden");
+    return;
+  }
+  const data = await loadScoreData();
+  const dates = Object.keys(data.dailyPoints||{}).sort().reverse();
+  panel.innerHTML = "";
+  if(!dates.length){
+    panel.innerHTML = `<div class="super-history-row"><span>${t("historyEmpty")}</span></div>`;
+  } else {
+    dates.forEach(d=>{
+      const row = document.createElement("div");
+      row.className = "super-history-row";
+      row.innerHTML = `<span>${formatDateKey(d)}</span><span class="n">${t("pointsCount", data.dailyPoints[d])}</span>`;
+      panel.appendChild(row);
+    });
+  }
+  panel.classList.remove("hidden");
+}
+document.getElementById("super-score-date").addEventListener("click", toggleSuperHistory);
+
 /* ---------------- Fortschritt (persistent storage) ----------------
    Zwei Speicherwege, je nachdem wie die App geöffnet wird:
    1) window.storage – wenn die Datei innerhalb von Claude geöffnet wird
@@ -769,6 +809,15 @@ function addDaysToKey(dateKey, days){
   const dt = new Date(y, m-1, d);
   dt.setDate(dt.getDate()+days);
   return dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");
+}
+function formatDateKey(dateKey){
+  const [y,m,d] = dateKey.split("-").map(Number);
+  const dt = new Date(y, m-1, d);
+  try{
+    return dt.toLocaleDateString(uiLang === "en" ? "en-GB" : "de-DE", {day:"2-digit", month:"2-digit", year:"numeric"});
+  }catch(e){
+    return dateKey;
+  }
 }
 
 /* ---------------- Lern-Phasen (nach dem Karteikasten-Prinzip von phase6) ----------------
@@ -937,18 +986,19 @@ async function evaluateMissedDays(){
     return data;
   }
   let cursor = addDaysToKey(data.lastEvaluatedDate, 1);
-  let changed = false;
+  let processedAny = false;
   while(cursor < today){
-    changed = true;
-    if((data.dailyPoints[cursor]||0) > 0){
-      data.superScore = (data.superScore||0)+1;
-    } else {
+    processedAny = true;
+    // Tage MIT Punkten wurden schon live beim Rundenabschluss gutgeschrieben
+    // (markRoundCompleted) - hier NICHT nochmal addieren, sonst Doppelzählung!
+    // Nur echte Fehltage (0 Punkte) werden hier nachträglich bestraft.
+    if((data.dailyPoints[cursor]||0) === 0){
       data.superScore = Math.max(0, (data.superScore||0)-1);
     }
     cursor = addDaysToKey(cursor, 1);
   }
   data.lastEvaluatedDate = addDaysToKey(today, -1);
-  if(changed){ await saveScoreData(data); }
+  if(processedAny){ await saveScoreData(data); }
   return data;
 }
 
@@ -1020,6 +1070,7 @@ function show(screen){
 
 /* ---------------- Home Screen ---------------- */
 function renderHome(){
+  document.getElementById("super-score-history").classList.add("hidden");
   const total = VOCAB.length;
   const masteredCount = VOCAB.filter(w=>isMastered(w.id)).length;
   let bestPhase = 1;
@@ -1031,6 +1082,13 @@ function renderHome(){
 
   loadScoreData().then(data=>{
     document.getElementById("super-score-num").textContent = data.superScore||0;
+    const dates = Object.keys(data.dailyPoints||{}).sort();
+    const dateEl = document.getElementById("super-score-date");
+    if(dates.length){
+      dateEl.textContent = t("lastPoint", formatDateKey(dates[dates.length-1]));
+    } else {
+      dateEl.textContent = t("lastPointNone");
+    }
   });
 
   const list = document.getElementById("cat-list");
