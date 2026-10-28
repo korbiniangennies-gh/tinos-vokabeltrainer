@@ -2356,8 +2356,19 @@ function germanAnswers(w){
   w._deAns = [...out].map(x=>x.trim()).filter(Boolean);
   return w._deAns;
 }
+// Füllwörter, die bei EN->DE egal sind ("der Hund", "sich konzentrieren", "zu Mittag essen")
+const GERMAN_FILLERS = new Set(["der","die","das","den","dem","des","ein","eine","einen","einem","einer","eines","sich","zu"]);
+function stripFillers(folded){
+  const kept = folded.split(" ").filter(x=>!GERMAN_FILLERS.has(x));
+  return kept.length ? kept.join(" ") : folded;
+}
 function checkGermanAnswer(input, w){
-  const res = checkAnswer(foldGerman(input), germanAnswers(w).map(foldGerman));
+  const accepted = germanAnswers(w).map(foldGerman);
+  const variants = [...new Set(accepted.concat(accepted.map(stripFillers)))];
+  let res = checkAnswer(foldGerman(input), variants);
+  if(res.status !== "correct" && res.status !== "empty") res = checkAnswer(stripFillers(foldGerman(input)), variants);
+  // sehr großzügig: kleine Tippfehler zählen rückwärts als richtig
+  if(res.status === "close") return {status:"correct"};
   if(res.status === "correct" || res.status === "empty") return res;
   // Sätze mit Alternativen ("Woher kommst du/kommt ihr/kommen Sie?"): eine der Lesarten genügt,
   // d.h. die getippten Wörter kommen der Reihe nach im Satz vor und der Satzanfang stimmt.
