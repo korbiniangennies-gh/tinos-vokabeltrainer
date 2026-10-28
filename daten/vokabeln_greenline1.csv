@@ -1,0 +1,917 @@
+id,unit,station,englisch,deutsch,weitere_antworten,quelle
+GRS.CI.hello,GRS,CI,Hello.,Hallo.,hi,Green Line 1
+GRS.CI.my-name-is,GRS,CI,My name is …,Ich heiße …,,Green Line 1
+GRS.CI.to-be,GRS,CI,to be,sein,,Green Line 1
+GRS.CI.what-s-your-name,GRS,CI,What’s your name?,Wie heißt du?; Wie heißen Sie?,,Green Line 1
+GRS.CI.hi,GRS,CI,Hi.,Hi.; Hallo.,hello,Green Line 1
+GRS.CI.i-m,GRS,CI,I’m …,Ich bin …,i am,Green Line 1
+GRS.CI.where-are-you-from,GRS,CI,Where are you from?,Woher kommst du/kommt ihr/kommen Sie?,,Green Line 1
+GRS.CI.i-m-from,GRS,CI,I’m from …,Ich bin aus …,i am from,Green Line 1
+GRS.CI.but,GRS,CI,but,aber,,Green Line 1
+GRS.CI.i-live-in,GRS,CI,I live in …,Ich wohne in …,,Green Line 1
+GRS.CI.to-live,GRS,CI,to live,wohnen; leben,,Green Line 1
+GRS.CI.how-old-are-you,GRS,CI,How old are you?,Wie alt bist du?; Wie alt sind Sie?,,Green Line 1
+GRS.CI.me-too,GRS,CI,Me too.,Ich auch.,,Green Line 1
+GRS.CI.see-you,GRS,CI,See you!,Bis dann!; Bis ...,,Green Line 1
+GRS.CI.to-see,GRS,CI,to see,sehen,,Green Line 1
+GRS.CI.bye,GRS,CI,Bye!,Tschüss!,,Green Line 1
+GRS.CI.new,GRS,CI,new,neu,,Green Line 1
+GRS.CI.friend,GRS,CI,friend,Freund/-in,,Green Line 1
+GRS.S1.welcome-to,GRS,S1,welcome (to),willkommen (in),,Green Line 1
+GRS.S1.what-can-you-hear,GRS,S1,What can you hear?,Was kannst du/könnt ihr hören?,,Green Line 1
+GRS.S1.to-hear,GRS,S1,to hear,hören,,Green Line 1
+GRS.S1.the,GRS,S1,the,der; die (auch Pl.); das,,Green Line 1
+GRS.S1.to-do,GRS,S1,to do,machen; tun,,Green Line 1
+GRS.S1.i-can,GRS,S1,I can …,Ich kann …,,Green Line 1
+GRS.S1.a,GRS,S1,a,ein/-e,,Green Line 1
+GRS.S1.boat,GRS,S1,boat,Boot,,Green Line 1
+GRS.S1.flower,GRS,S1,flower,Blume,,Green Line 1
+GRS.S1.girl,GRS,S1,girl,Mädchen,,Green Line 1
+GRS.S1.on,GRS,S1,on,auf; an; am; in; im,,Green Line 1
+GRS.S1.skates,GRS,S1,skates (pl),Inlineskates; Rollschuhe; Schlittschuhe,,Green Line 1
+GRS.S1.boy,GRS,S1,boy,Junge,,Green Line 1
+GRS.S1.mother,GRS,S1,mother,Mutter,,Green Line 1
+GRS.S1.father,GRS,S1,father,Vater,,Green Line 1
+GRS.S1.dog,GRS,S1,dog,Hund,,Green Line 1
+GRS.S1.cat,GRS,S1,cat,Katze,,Green Line 1
+GRS.S1.bird,GRS,S1,bird,Vogel,,Green Line 1
+GRS.S1.butterfly,GRS,S1,butterfly,Schmetterling,,Green Line 1
+GRS.S1.bee,GRS,S1,bee,Biene,,Green Line 1
+GRS.S1.tree,GRS,S1,tree,Baum,,Green Line 1
+GRS.S1.grass,GRS,S1,grass,Gras,,Green Line 1
+GRS.S1.bike,GRS,S1,bike,Fahrrad,bicycle,Green Line 1
+GRS.S1.to-have-a-picnic,GRS,S1,to have a picnic,ein Picknick machen,,Green Line 1
+GRS.S1.with,GRS,S1,with,mit; bei,,Green Line 1
+GRS.S1.to-read,GRS,S1,to read,lesen,,Green Line 1
+GRS.S1.book,GRS,S1,book,Buch,,Green Line 1
+GRS.S1.to-play,GRS,S1,to play,spielen,,Green Line 1
+GRS.S1.to-ride,GRS,S1,to ride,fahren; reiten,,Green Line 1
+GRS.S1.to-ride-a-bike,GRS,S1,to ride a bike,Fahrrad fahren,,eigene
+GRS.S1.to-talk-to,GRS,S1,to talk to,reden mit,,Green Line 1
+GRS.S1.number,GRS,S1,number,Zahl; Nummer,,Green Line 1
+GRS.S1.colour,GRS,S1,colour,Farbe,,Green Line 1
+GRS.S1.shorts,GRS,S1,shorts (pl),Shorts; kurze Hose,,Green Line 1
+GRS.S1.zero,GRS,S1,zero,null,,Green Line 1
+GRS.S1.one,GRS,S1,one,eins,,Green Line 1
+GRS.S1.two,GRS,S1,two,zwei,,Green Line 1
+GRS.S1.three,GRS,S1,three,drei,,Green Line 1
+GRS.S1.four,GRS,S1,four,vier,,Green Line 1
+GRS.S1.five,GRS,S1,five,fünf,,Green Line 1
+GRS.S1.six,GRS,S1,six,sechs,,Green Line 1
+GRS.S1.seven,GRS,S1,seven,sieben,,Green Line 1
+GRS.S1.eight,GRS,S1,eight,acht,,Green Line 1
+GRS.S1.nine,GRS,S1,nine,neun,,Green Line 1
+GRS.S1.ten,GRS,S1,ten,zehn,,Green Line 1
+GRS.S1.eleven,GRS,S1,eleven,elf,,Green Line 1
+GRS.S1.twelve,GRS,S1,twelve,zwölf,,Green Line 1
+GRS.S1.yellow,GRS,S1,yellow,gelb,,Green Line 1
+GRS.S1.white,GRS,S1,white,weiß,,Green Line 1
+GRS.S1.red,GRS,S1,red,rot,,Green Line 1
+GRS.S1.orange,GRS,S1,orange,orange,,Green Line 1
+GRS.S1.purple,GRS,S1,purple,violett; lila,,Green Line 1
+GRS.S1.green,GRS,S1,green,grün,,Green Line 1
+GRS.S1.brown,GRS,S1,brown,braun,,Green Line 1
+GRS.S1.black,GRS,S1,black,schwarz,,Green Line 1
+GRS.S1.grey,GRS,S1,grey,grau,gray,Green Line 1
+GRS.S1.blue,GRS,S1,blue,blau,,Green Line 1
+GRS.S1.pink,GRS,S1,pink,pink; rosa,,Green Line 1
+GRS.S2.my-favourite,GRS,S2,My favourite …,Mein/e Lieblings-…,my favorite,Green Line 1
+GRS.S2.i-like,GRS,S2,I like …,Mir gefällt …; Ich mag …,,Green Line 1
+GRS.S2.to-like,GRS,S2,to like,mögen; gern haben,,Green Line 1
+GRS.S2.to-take-photos,GRS,S2,to take photos,Fotos machen,,Green Line 1
+GRS.S2.great,GRS,S2,great,großartig; toll; super,,Green Line 1
+GRS.S2.big,GRS,S2,big,groß,,Green Line 1
+GRS.S2.sister,GRS,S2,sister,Schwester,,Green Line 1
+GRS.S2.best,GRS,S2,best,beste/-r/-s,,Green Line 1
+GRS.S2.and,GRS,S2,and,und,,Green Line 1
+GRS.S2.we-re,GRS,S2,we're (= we are),wir sind,we are,Green Line 1
+GRS.S2.twin,GRS,S2,twin,Zwilling; Zwillings-,,Green Line 1
+GRS.S2.to-have,GRS,S2,to have,haben,,Green Line 1
+GRS.S2.funny,GRS,S2,funny,lustig; witzig,,Green Line 1
+GRS.S2.football,GRS,S2,football,Fußball,soccer,Green Line 1
+GRS.S2.food,GRS,S2,food,Essen; Lebensmittel,,Green Line 1
+GRS.S2.to-cook,GRS,S2,to cook,kochen,,Green Line 1
+GRS.S2.netball,GRS,S2,netball,Korbball,,Green Line 1
+GRS.S2.he-s,GRS,S2,he’s,er ist,he is,Green Line 1
+GRS.S2.good,GRS,S2,good,gut,,Green Line 1
+GRS.S2.brother,GRS,S2,brother,Bruder,,Green Line 1
+GRS.S2.who-is-it,GRS,S2,Who is it?,Wer ist es?,,Green Line 1
+GRS.S2.or,GRS,S2,or,oder,,Green Line 1
+GRS.S2.i,GRS,S2,I,ich,,Green Line 1
+GRS.S2.he,GRS,S2,he,er,,Green Line 1
+GRS.S2.she,GRS,S2,she,sie,,Green Line 1
+GRS.S2.it,GRS,S2,it,es,,Green Line 1
+GRS.S2.we,GRS,S2,we,wir,,Green Line 1
+GRS.S2.you,GRS,S2,you,du; ihr; Sie,,Green Line 1
+GRS.S2.they,GRS,S2,they,sie (Pl.),,Green Line 1
+GRS.S2.hobby,GRS,S2,"hobby, hobbies (pl)",Hobby,,Green Line 1
+GRS.S2.you-too,GRS,S2,You too?,Du/ihr/Sie auch?,,Green Line 1
+GRS.S2.to-watch,GRS,S2,to watch,beobachten; (sich) ansehen; zuschauen,,Green Line 1
+GRS.S2.you-re,GRS,S2,you’re,du bist; Sie sind,you are,Green Line 1
+GRS.S2.my-turn,GRS,S2,My turn.,Ich bin dran.,,Green Line 1
+GRS.S2.to-draw,GRS,S2,to draw,zeichnen,,Green Line 1
+GRS.S2.picture,GRS,S2,picture,Bild; Foto,,Green Line 1
+GRS.S2.pet,GRS,S2,pet,Haustier,,Green Line 1
+GRS.S2.game,GRS,S2,game,Spiel,,Green Line 1
+GRS.S2.to-sing,GRS,S2,to sing,singen,,Green Line 1
+GRS.S2.horse,GRS,S2,horse,Pferd,,Green Line 1
+GRS.S2.to-dance,GRS,S2,to dance,tanzen,,Green Line 1
+GRS.S2.at-ruby-and-ryan-s-house,GRS,S2,at Ruby and Ryan's house,bei Ruby und Ryan zu Hause,,Green Line 1
+GRS.S2.at,GRS,S2,at,in; auf; bei; an,,Green Line 1
+GRS.S2.house,GRS,S2,house,Haus,,Green Line 1
+GRS.S2.bored,GRS,S2,bored,gelangweilt,,Green Line 1
+GRS.S2.let-s,GRS,S2,Let’s …,Lass/Lasst uns …,,Green Line 1
+GRS.S2.to-go-to,GRS,S2,to go (to),gehen (zu/nach); fahren (zu/nach),,Green Line 1
+GRS.S2.to,GRS,S2,to,zu; nach; auf; in,,Green Line 1
+GRS.S2.how-are-you,GRS,S2,How are you?,Wie geht es dir?; Wie geht es euch?; Wie geht es Ihnen?,,Green Line 1
+GRS.S2.fine,GRS,S2,fine,gut; in Ordnung; schön,,Green Line 1
+GRS.S2.thanks,GRS,S2,Thanks.,Danke.,,Green Line 1
+GRS.S2.this,GRS,S2,this,dies; diese/-r/-s,,Green Line 1
+GRS.S2.here,GRS,S2,here,hier,,Green Line 1
+GRS.S2.tomorrow,GRS,S2,tomorrow,morgen,,Green Line 1
+GRS.S2.the-first-day-of-school,GRS,S2,the first day of school,der erste Schultag,,Green Line 1
+GRS.S2.yes,GRS,S2,yes,ja,,Green Line 1
+GRS.S2.come-on,GRS,S2,Come on!,Komm(t) schon!; Komm(t) jetzt!,,Green Line 1
+GRS.S2.to-come,GRS,S2,to come,kommen,,Green Line 1
+GRS.S2.it-s-time-for,GRS,S2,It's time for …,Es ist Zeit für …,,Green Line 1
+GRS.S2.ice-cream,GRS,S2,ice cream,Eis; Eiscreme,,Green Line 1
+GRS.S2.can-t,GRS,S2,can’t,kann nicht; können nicht,,Green Line 1
+GRS.S2.me,GRS,S2,me,mich; mir,,Green Line 1
+GRS.S3.thing,GRS,S3,thing,Ding; Sache,,Green Line 1
+GRS.S3.exercise-book,GRS,S3,exercise book,Übungsheft,,Green Line 1
+GRS.S3.marker,GRS,S3,marker,Leuchtstift,,Green Line 1
+GRS.S3.pen,GRS,S3,pen,Füller,,Green Line 1
+GRS.S3.pencil,GRS,S3,pencil,Bleistift; Buntstift,,Green Line 1
+GRS.S3.pencil-case,GRS,S3,pencil case,Federmäppchen; Mäppchen,,Green Line 1
+GRS.S3.rubber,GRS,S3,rubber,Radiergummi,eraser,Green Line 1
+GRS.S3.ruler,GRS,S3,ruler,Lineal,,Green Line 1
+GRS.S3.schoolbag,GRS,S3,schoolbag,Schultasche,school bag,Green Line 1
+GRS.S3.glue,GRS,S3,glue,Klebstift,,eigene
+GRS.S3.sharpener,GRS,S3,sharpener,Spitzer,,eigene
+GRS.S3.scissors,GRS,S3,scissors (pl),Schere,,eigene
+U1.CI.year,U1,CI,year,Jahr; Schuljahr,,Green Line 1
+U1.CI.to-look-at,U1,CI,to look at,anschauen; ansehen,,Green Line 1
+U1.CI.us,U1,CI,us,uns,,Green Line 1
+U1.CI.look,U1,CI,Look!,Schau/Schaut mal!,,Green Line 1
+U1.CI.to-look,U1,CI,to look,schauen; sehen; aussehen,,Green Line 1
+U1.CI.over-there,U1,CI,over there,da drüben; dort drüben; nach dort drüben,,Green Line 1
+U1.CI.nervous,U1,CI,nervous,nervös; aufgeregt,,Green Line 1
+U1.CI.don-t-worry,U1,CI,Don’t worry!,Keine Sorge!,,Green Line 1
+U1.CI.to-sit,U1,CI,to sit,sitzen,,Green Line 1
+U1.CI.together,U1,CI,together,zusammen; miteinander; gemeinsam,,Green Line 1
+U1.CI.sports-ground,U1,CI,sports ground,Sportplatz,sports field,Green Line 1
+U1.CI.why,U1,CI,why,warum,,Green Line 1
+U1.CI.mrs,U1,CI,Mrs,Frau (Anrede),,Green Line 1
+U1.CI.teacher,U1,CI,teacher,Lehrer/-in,,Green Line 1
+U1.CI.please,U1,CI,Please.,Bitte.,,Green Line 1
+U1.CI.to-take,U1,CI,to take,nehmen; mitnehmen; wegnehmen; bringen; mitbringen,,Green Line 1
+U1.CI.home,U1,CI,home,nach Hause,,Green Line 1
+U1.CI.crazy,U1,CI,crazy,verrückt,,Green Line 1
+U1.CI.that-s,U1,CI,That's … (= that is),Das ist …,,Green Line 1
+U1.CI.in-front-of,U1,CI,in front of,vor,,Green Line 1
+U1.CI.happy,U1,CI,happy,glücklich; froh; fröhlich,,Green Line 1
+U1.CI.to-think,U1,CI,to think,denken; nachdenken; glauben; finden; meinen,,Green Line 1
+U1.CI.angry,U1,CI,angry,wütend; zornig; verärgert; böse,,Green Line 1
+U1.CI.surprised,U1,CI,surprised,überrascht,,Green Line 1
+U1.CI.sad,U1,CI,sad,traurig,,Green Line 1
+U1.CI.uniform,U1,CI,uniform,Uniform,,Green Line 1
+U1.CI.boring,U1,CI,boring,langweilig,,Green Line 1
+U1.CI.ugly,U1,CI,ugly,hässlich,,Green Line 1
+U1.CI.silly,U1,CI,silly,dumm; doof; albern,,Green Line 1
+U1.CI.to-look-for,U1,CI,to look for,suchen nach,,Green Line 1
+U1.CI.no,U1,CI,no,kein/-e,none,Green Line 1
+U1.CI.today,U1,CI,today,heute,,Green Line 1
+U1.CI.bedroom,U1,CI,bedroom,Schlafzimmer,,Green Line 1
+U1.CI.under,U1,CI,under,unter,,Green Line 1
+U1.CI.bed,U1,CI,bed,Bett,,Green Line 1
+U1.S1.good-morning,U1,S1,Good morning.,Guten Morgen.,,Green Line 1
+U1.S1.tutor,U1,S1,tutor,Klassenlehrer/-in,,Green Line 1
+U1.S1.no,U1,S1,no,nein,,Green Line 1
+U1.S1.not,U1,S1,not,nicht,,Green Line 1
+U1.S1.friendly,U1,S1,friendly,freundlich; nett,,Green Line 1
+U1.S1.to-help,U1,S1,to help,helfen,,Green Line 1
+U1.S1.question,U1,S1,question,Frage,,Green Line 1
+U1.S1.planner,U1,S1,planner,Handbuch; Kalender,,Green Line 1
+U1.S1.timetable,U1,S1,timetable,Stundenplan; Fahrplan,time table,Green Line 1
+U1.S1.map,U1,S1,map,Stadtplan; Landkarte,,Green Line 1
+U1.S1.rule,U1,S1,rule,Regel,,Green Line 1
+U1.S1.don-t-be-late-for-school,U1,S1,Don't be late for school.,Komm nicht zu spät zur Schule.,,Green Line 1
+U1.S1.late,U1,S1,late,spät; zu spät,,Green Line 1
+U1.S1.lesson,U1,S1,lesson,Unterrichtsstunde; Schulstunde; Unterricht,,Green Line 1
+U1.S1.strict,U1,S1,strict,streng; strikt,,Green Line 1
+U1.S1.library,U1,S1,library,Bibliothek; Bücherei,,Green Line 1
+U1.S1.an,U1,S1,an,ein/-e,,Green Line 1
+U1.S1.assembly,U1,S1,assembly,Versammlung; Morgenappell,,Green Line 1
+U1.S1.hall,U1,S1,hall,Halle; Saal,,Green Line 1
+U1.S1.gym-nasium,U1,S1,gym(nasium),Turnhalle,,Green Line 1
+U1.S1.recording-studio,U1,S1,recording studio,Aufnahmestudio; Tonstudio,,Green Line 1
+U1.S1.to-show,U1,S1,to show,zeigen,,Green Line 1
+U1.S1.tour,U1,S1,tour,Tour; Fahrt; Rundgang,,Green Line 1
+U1.S1.to-have-lunch,U1,S1,to have lunch,zu Mittag essen,,Green Line 1
+U1.S1.cafeteria,U1,S1,cafeteria,Cafeteria,,Green Line 1
+U1.S1.excuse-me,U1,S1,Excuse me …,Entschuldigung!; Entschuldigen Sie!,,Green Line 1
+U1.S1.art,U1,S1,art,Kunst; Kunstunterricht,,Green Line 1
+U1.S1.room,U1,S1,room,Zimmer; Raum,,Green Line 1
+U1.S1.to-say,U1,S1,to say,sagen; aufsagen; sprechen,,Green Line 1
+U1.S1.there,U1,S1,there,da; dort; dahin; dorthin,,Green Line 1
+U1.S1.student,U1,S1,student,Schüler/-in; Student/-in,,Green Line 1
+U1.S1.to-want-to,U1,S1,to want (to),wollen; mögen,,Green Line 1
+U1.S1.drink,U1,S1,drink,Getränk,,Green Line 1
+U1.S1.classroom,U1,S1,classroom,Klassenzimmer,,Green Line 1
+U1.S1.what-s-wrong,U1,S1,What’s wrong?,Was ist los?; Was stimmt nicht?,,Green Line 1
+U1.S1.scary,U1,S1,scary,unheimlich; gruselig; beängstigend,,Green Line 1
+U1.S1.everything,U1,S1,everything,alles,,Green Line 1
+U1.S1.mum,U1,S1,mum,Mama,,Green Line 1
+U1.S1.parents,U1,S1,parents (pl),Eltern,,Green Line 1
+U1.S1.divorced,U1,S1,divorced,geschieden,,Green Line 1
+U1.S1.alone,U1,S1,alone,allein; ohne fremde Hilfe,,Green Line 1
+U1.S1.easy,U1,S1,easy,einfach; leicht,,Green Line 1
+U1.S1.after,U1,S1,after,nach (zeitlich),,Green Line 1
+U1.S1.dad,U1,S1,dad,Papa,,Green Line 1
+U1.S1.to-be-right,U1,S1,to be right,recht haben,,Green Line 1
+U1.S1.family,U1,S1,family,Familie,,Green Line 1
+U1.S1.word,U1,S1,word,Wort,,Green Line 1
+U1.S1.place,U1,S1,place,Ort; Stelle; Platz,,Green Line 1
+U1.S1.people,U1,S1,people (pl),Leute; Menschen,,Green Line 1
+U1.S1.nice,U1,S1,nice,schön; nett; lieb,,Green Line 1
+U1.S2.there-is-are,U1,S2,there is/are,da ist/sind; es gibt,,Green Line 1
+U1.S2.class,U1,S2,class,Klasse; Schulklasse,,Green Line 1
+U1.S2.media-centre,U1,S2,media centre,Medienzentrum,,Green Line 1
+U1.S2.table,U1,S2,table,Tisch,,Green Line 1
+U1.S2.headphones,U1,S2,headphones (pl),Kopfhörer,,Green Line 1
+U1.S2.to-use,U1,S2,to use,benutzen; verwenden; gebrauchen,,Green Line 1
+U1.S2.break,U1,S2,break,Pause,,Green Line 1
+U1.S2.power-socket,U1,S2,power socket,Steckdose,,Green Line 1
+U1.S2.reading-corner,U1,S2,reading corner,Leseecke,,Green Line 1
+U1.S2.news-paper,U1,S2,(news)paper,Zeitung,,Green Line 1
+U1.S2.magazine,U1,S2,magazine,Zeitschrift,,Green Line 1
+U1.S2.to-find,U1,S2,to find,finden; herausfinden,,Green Line 1
+U1.S2.man,U1,S2,"man, men (pl)",Mann,,Green Line 1
+U1.S2.behind,U1,S2,behind,hinter,,Green Line 1
+U1.S2.information-desk,U1,S2,information desk,Infotheke,,Green Line 1
+U1.S2.noticeboard,U1,S2,noticeboard,schwarzes Brett,,Green Line 1
+U1.S2.next-to,U1,S2,next to,neben,,Green Line 1
+U1.S2.door,U1,S2,door,Tür,,Green Line 1
+U1.S2.wall,U1,S2,wall,Wand; Mauer,,Green Line 1
+U1.S2.chair,U1,S2,chair,Stuhl,,Green Line 1
+U1.S2.clock,U1,S2,clock,Uhr,,Green Line 1
+U1.S2.about,U1,S2,about,über; von,,Green Line 1
+U1.S2.desk,U1,S2,desk,Schreibtisch,,Green Line 1
+U1.S3.to-forget,U1,S3,to forget,vergessen,,Green Line 1
+U1.S3.veggie,U1,S3,veggie,vegetarisch,,Green Line 1
+U1.S3.chips,U1,S3,chips (pl),Pommes frites,,Green Line 1
+U1.S3.yuk,U1,S3,yuk,igitt,,Green Line 1
+U1.S3.allergic-to,U1,S3,allergic to,allergisch gegen,,Green Line 1
+U1.S3.tomato,U1,S3,"tomato, tomatoes (pl)",Tomate,,Green Line 1
+U1.S3.fresh,U1,S3,fresh,frisch,,Green Line 1
+U1.S3.all,U1,S3,all,alle/-s; ganz,,Green Line 1
+U1.S3.to-stare,U1,S3,to stare,starren; anstarren,,Green Line 1
+U1.S3.rude,U1,S3,rude,unhöflich; unverschämt,,Green Line 1
+U1.S3.year,U1,S3,year,Jahrgangsstufe; Klasse,,Green Line 1
+U1.S3.to-do,U1,S3,to do,machen; tun,,Green Line 1
+U1.S3.to-bring,U1,S3,to bring,bringen; mitbringen,,Green Line 1
+U1.S3.to-buy,U1,S3,to buy,kaufen,,Green Line 1
+U1.S3.to-eat,U1,S3,to eat,essen; fressen,,Green Line 1
+U1.S3.our,U1,S3,our,unser/-e,,Green Line 1
+U1.S3.to-talk-about,U1,S3,to talk (about),sprechen (über); reden (über),,Green Line 1
+U1.S3.polite,U1,S3,polite,höflich,,Green Line 1
+U1.S3.too,U1,S3,too,zu,,Green Line 1
+U1.S3.classmate,U1,S3,classmate,Klassenkamerad/-in; Mitschüler/-in,,Green Line 1
+U1.S3.homework,U1,S3,homework,Hausaufgabe(n),,Green Line 1
+U1.S3.right,U1,S3,right,richtig; korrekt,,Green Line 1
+U1.S3.to-sleep,U1,S3,to sleep,schlafen,,Green Line 1
+U1.S3.on-the-phone,U1,S3,on the phone,am Telefon,,Green Line 1
+U1.S3.to-ask,U1,S3,to ask,fragen; bitten,,Green Line 1
+U1.S3.to-send,U1,S3,to send,schicken; senden,,Green Line 1
+U1.S3.hair,U1,S3,hair,Haar; Haare,,Green Line 1
+U1.S3.take-a-tour-of,U1,S3,Take a tour of …,Begib dich/Begebt euch auf eine Tour durch …,,Green Line 1
+U1.S3.reception-area,U1,S3,reception area,Empfangsbereich,,Green Line 1
+U1.S3.fast,U1,S3,fast,schnell,,Green Line 1
+U1.S3.to-be-prepared,U1,S3,to be prepared,bereit sein,,Green Line 1
+U1.S3.to-focus-on,U1,S3,to focus (on),sich konzentrieren (auf),,Green Line 1
+U1.S3.other,U1,S3,other,anders; andere/-r/-s; weitere,,Green Line 1
+U1.S3.to-give,U1,S3,to give,geben; schenken,,Green Line 1
+U1.ST.problem,U1,ST,problem,Problem; Schwierigkeit,,Green Line 1
+U1.ST.cupboard,U1,ST,cupboard,Küchenschrank; Schrank,,Green Line 1
+U1.ST.what-a-mess,U1,ST,What a mess!,Was für eine Unordnung/Sauerei!,,Green Line 1
+U1.ST.to-break-a-rule,U1,ST,to break a rule,gegen eine Regel verstoßen,,Green Line 1
+U1.ST.sorry,U1,ST,Sorry!,Entschuldigung!; Tut mir leid!,,Green Line 1
+U1.ST.the-others,U1,ST,the others,die anderen,,Green Line 1
+U1.CO.to-listen-to,U1,CO,to listen (to),zuhören; anhören,,Green Line 1
+U1.CO.everywhere,U1,CO,everywhere,überall,,Green Line 1
+U1.CO.special,U1,CO,special,besonders; speziell,,Green Line 1
+U1.CO.dream,U1,CO,dream,Traum; Traum-,,Green Line 1
+U1.CO.to-wear,U1,CO,to wear,anhaben; tragen (Kleidung),,Green Line 1
+U1.CO.hoodie,U1,CO,hoodie,Kapuzenpulli,,Green Line 1
+U1.CO.cap,U1,CO,cap,Kappe; Mütze,,Green Line 1
+U1.CO.every-day,U1,CO,every day,jeden Tag,,Green Line 1
+MS1.to-write,MS1,,to write,schreiben,,Green Line 1
+MS1.to-need-to,MS1,,to need (to),brauchen; benötigen,,Green Line 1
+MS1.to-write-down,MS1,,to write down,aufschreiben,,Green Line 1
+MS1.to-think-about,MS1,,to think about,nachdenken über; denken über; halten von,,Green Line 1
+MS1.to-organise,MS1,,to organise,organisieren,,Green Line 1
+MS1.idea,MS1,,idea,Idee; Einfall,,Green Line 1
+MS1.to-turn-off,MS1,,to turn off,abschalten; ausschalten,,Green Line 1
+MS1.headphones,MS1,,headphones (pl),Kopfhörer,,Green Line 1
+MS1.audio,MS1,,audio,Audio-; Hör-,,Green Line 1
+MS1.work,MS1,,work,Arbeit,,Green Line 1
+MS1.before,MS1,,before,vor (zeitlich); bevor,,Green Line 1
+MS1.at-home,MS1,,at home,zu Hause,,Green Line 1
+MS1.fun,MS1,,fun,Freude; Spaß,,Green Line 1
+MS1.be-careful,MS1,,Be careful!,Vorsicht!; Pass/Passt auf!,,Green Line 1
+MS1.expensive,MS1,,expensive,teuer,,Green Line 1
+MS1.sound,MS1,,sound,Ton; Geräusch; Klang,,Green Line 1
+MS1.to-leave,MS1,,to leave,verlassen; lassen; abfahren,,Green Line 1
+MS1.floor,MS1,,floor,Fußboden,,Green Line 1
+MS1.what-about,MS1,,What about …?,Was ist mit …?; Wie wär’s mit …?,,Green Line 1
+MS1.small,MS1,,small,klein,,Green Line 1
+MS1.each,MS1,,each,jede/-r/-s,,Green Line 1
+MS1.oops,MS1,,Oops!,Hoppla!; Huch!,,Green Line 1
+MS1.between,MS1,,between,zwischen,,Green Line 1
+MS1.to-change,MS1,,to change,(sich) ändern; wechseln,,Green Line 1
+U2.CI.to-be-fun,U2,CI,to be fun,Spaß machen; witzig sein,,Green Line 1
+U2.CI.living-room,U2,CI,living room,Wohnzimmer,,Green Line 1
+U2.CI.garden,U2,CI,garden,Garten,,Green Line 1
+U2.CI.bathroom,U2,CI,bathroom,Bad; Badezimmer,,Green Line 1
+U2.CI.kitchen,U2,CI,kitchen,Küche,,Green Line 1
+U2.CI.to-be-scared-of,U2,CI,to be scared (of),Angst haben (vor),,Green Line 1
+U2.CI.to-get,U2,CI,to get,holen; bringen; bekommen,,Green Line 1
+U2.CI.these,U2,CI,these,diese (hier),,Green Line 1
+U2.S1.different,U2,S1,different,anders; unterschiedlich; verschieden,,Green Line 1
+U2.S1.home,U2,S1,home,Zuhause; Heim,,Green Line 1
+U2.S1.armchair,U2,S1,armchair,Sessel,,Green Line 1
+U2.S1.bath,U2,S1,bath,Bad; Badewanne,,Green Line 1
+U2.S1.carpet,U2,S1,carpet,Teppich,,Green Line 1
+U2.S1.cooker,U2,S1,cooker,Herd,,Green Line 1
+U2.S1.fridge,U2,S1,fridge,Kühlschrank,,Green Line 1
+U2.S1.lamp,U2,S1,lamp,Lampe; Leuchte,,Green Line 1
+U2.S1.shelf,U2,S1,"shelf, shelves (pl)",Regal; Regalbrett,,Green Line 1
+U2.S1.shower,U2,S1,shower,Dusche,,Green Line 1
+U2.S1.sink,U2,S1,sink,Becken; Spülbecken; Abwaschbecken,,Green Line 1
+U2.S1.toilet,U2,S1,toilet,Toilette,,Green Line 1
+U2.S1.tv,U2,S1,TV (= television),Fernsehen; Fernseher,,Green Line 1
+U2.S1.wardrobe,U2,S1,wardrobe,Kleiderschrank,,Green Line 1
+U2.S1.washbasin,U2,S1,washbasin,Waschbecken,,Green Line 1
+U2.S1.shoe,U2,S1,shoe,Schuh,,Green Line 1
+U2.S1.glasses,U2,S1,glasses (pl),Brille,,Green Line 1
+U2.S1.banana,U2,S1,banana,Banane,,Green Line 1
+U2.S1.cap,U2,S1,cap,Kappe; Mütze,,Green Line 1
+U2.S1.fire,U2,S1,fire,Feuer,,Green Line 1
+U2.S1.flat,U2,S1,flat,Wohnung,,Green Line 1
+U2.S1.fantasy,U2,S1,fantasy,Fantasie; Traum-,,Green Line 1
+U2.S1.because,U2,S1,because,weil; da,,Green Line 1
+U2.S1.a-one-hundred,U2,S1,a/one hundred,(ein)hundert,,Green Line 1
+U2.S1.ninety,U2,S1,ninety,neunzig,,Green Line 1
+U2.S1.eighty,U2,S1,eighty,achtzig,,Green Line 1
+U2.S1.seventy,U2,S1,seventy,siebzig,,Green Line 1
+U2.S1.sixty,U2,S1,sixty,sechzig,,Green Line 1
+U2.S1.fifty,U2,S1,fifty,fünfzig,,Green Line 1
+U2.S1.forty,U2,S1,forty,vierzig,,Green Line 1
+U2.S1.thirty,U2,S1,thirty,dreißig,,Green Line 1
+U2.S2.grandma,U2,S2,grandma,Oma,,Green Line 1
+U2.S2.grandpa,U2,S2,grandpa,Opa,,Green Line 1
+U2.S2.uncle,U2,S2,uncle,Onkel,,Green Line 1
+U2.S2.aunt,U2,S2,aunt,Tante,,Green Line 1
+U2.S2.cousin,U2,S2,cousin,Cousin/Cousine,,Green Line 1
+U2.S2.to-work,U2,S2,to work,arbeiten,,Green Line 1
+U2.S2.office,U2,S2,office,Büro,,Green Line 1
+U2.S2.free-time,U2,S2,free time,Freizeit,,Green Line 1
+U2.S2.to-paint,U2,S2,to paint,anmalen; malen,,Green Line 1
+U2.S2.to-sell,U2,S2,to sell,verkaufen,,Green Line 1
+U2.S2.them,U2,S2,them,sie (Pl.); ihnen,,Green Line 1
+U2.S2.market,U2,S2,market,Markt,,Green Line 1
+U2.S2.when,U2,S2,when,wenn; wann; als,,Green Line 1
+U2.S2.to-hide,U2,S2,to hide,(sich) verstecken,,Green Line 1
+U2.S2.divorced,U2,S2,divorced,geschieden,,Green Line 1
+U2.S2.daughter,U2,S2,daughter,Tochter,,Green Line 1
+U2.S2.only-child,U2,S2,only child,Einzelkind,,Green Line 1
+U2.S2.at-weekends,U2,S2,at weekends,am Wochenende; an den Wochenenden,,Green Line 1
+U2.S2.grandparents,U2,S2,grandparents (pl),Großeltern,,Green Line 1
+U2.S2.son,U2,S2,son,Sohn,,Green Line 1
+U2.S2.to-have-got,U2,S2,to have got,besitzen; haben,,Green Line 1
+U2.S2.to-love,U2,S2,to love,lieben; gern mögen,,Green Line 1
+U2.S2.mr,U2,S2,Mr,Herr (Anrede),,Green Line 1
+U2.S2.cooking,U2,S2,cooking,Kochen,,Green Line 1
+U2.S2.now,U2,S2,now,jetzt; nun,,Green Line 1
+U2.S2.music,U2,S2,music,Musik,,Green Line 1
+U2.S2.guitar,U2,S2,guitar,Gitarre,,Green Line 1
+U2.S2.every,U2,S2,every,jede/-r/-s,,Green Line 1
+U2.S2.afternoon,U2,S2,afternoon,Nachmittag,,Green Line 1
+U2.S2.fun,U2,S2,fun,lustig; witzig; fröhlich,,Green Line 1
+U2.S2.little,U2,S2,little,klein,,Green Line 1
+U2.S2.to-be-wrong,U2,S2,to be wrong,unrecht haben; sich irren,,Green Line 1
+U2.S2.skateboarding,U2,S2,skateboarding,Skateboardfahren,,Green Line 1
+U2.S2.sometimes,U2,S2,sometimes,manchmal,,Green Line 1
+U2.S2.wheelchair,U2,S2,wheelchair,Rollstuhl,,Green Line 1
+U2.S2.to-miss,U2,S2,to miss,vermissen,,Green Line 1
+U2.S3.it-gets-on-my-nerves,U2,S3,It gets on my nerves!,Es geht mir auf die Nerven!,,Green Line 1
+U2.S3.past,U2,S3,past,nach (bei Uhrzeitangaben),,Green Line 1
+U2.S3.to-start,U2,S3,to start,anfangen; beginnen; starten,,Green Line 1
+U2.S3.to-know,U2,S3,to know,kennen; wissen,,Green Line 1
+U2.S3.always,U2,S3,always,immer; ständig,,Green Line 1
+U2.S3.head,U2,S3,head,Kopf,,Green Line 1
+U2.S3.very,U2,S3,very,sehr,,Green Line 1
+U2.S3.of-course,U2,S3,of course,natürlich; selbstverständlich,,Green Line 1
+U2.S3.never,U2,S3,never,nie; niemals,,Green Line 1
+U2.S3.to-lose,U2,S3,to lose,verlieren,,Green Line 1
+U2.S3.usually,U2,S3,usually,normalerweise; gewöhnlich; meistens,,Green Line 1
+U2.S3.to-put,U2,S3,to put,setzen; stellen; legen,,Green Line 1
+U2.S3.busy,U2,S3,busy,beschäftigt,,Green Line 1
+U2.S3.lots-of,U2,S3,lots (of),viel/-e; jede Menge,,Green Line 1
+U2.S3.often,U2,S3,often,oft; häufig,,Green Line 1
+U2.S3.in-the-street,U2,S3,in the street,in der Straße; auf der Straße,,Green Line 1
+U2.S3.mouth,U2,S3,mouth,Mund; Maul,,Green Line 1
+U2.S3.to-come-back,U2,S3,to come back,zurückkommen,,Green Line 1
+U2.S3.to-be-late,U2,S3,to be late,zu spät dran sein; zu spät kommen,,Green Line 1
+U2.S3.to-wait-for,U2,S3,to wait (for),warten (auf),,Green Line 1
+U2.S3.character,U2,S3,character,Charakter; Figur,,Green Line 1
+U2.S3.freeze-frame,U2,S3,freeze frame,Standbild,,Green Line 1
+U2.S3.helpless,U2,S3,helpless,hilflos,,Green Line 1
+U2.S3.confused,U2,S3,confused,verwirrt; wirr; konfus,,Green Line 1
+U2.S3.what-s-the-time,U2,S3,What’s the time?,Wie spät ist es?; Wie viel Uhr ist es?,,Green Line 1
+U2.S3.time,U2,S3,time,Uhrzeit,,Green Line 1
+U2.S3.o-clock,U2,S3,o’clock,Uhr (Zeitangabe bei vollen Stunden),,Green Line 1
+U2.S3.half,U2,S3,half,halb,,Green Line 1
+U2.S3.quarter-past-to,U2,S3,quarter past/to,Viertel nach/vor,,Green Line 1
+U2.S3.to,U2,S3,to,vor (bei Uhrzeitangaben),,Green Line 1
+U2.S3.scene,U2,S3,scene,Szene,,Green Line 1
+U2.S3.to-get-up,U2,S3,to get up,aufstehen,,Green Line 1
+U2.S3.to-have-breakfast,U2,S3,to have breakfast,frühstücken,,Green Line 1
+U2.S3.dinner,U2,S3,dinner,Abendessen,,Green Line 1
+U2.S3.to-go-to-bed,U2,S3,to go to bed,ins Bett gehen,,Green Line 1
+U2.S3.then,U2,S3,then,dann; danach,,Green Line 1
+U2.S3.in-the-evenings,U2,S3,in the evenings,abends,,Green Line 1
+U2.S3.evening,U2,S3,evening,Abend,,Green Line 1
+U2.S3.on-mondays,U2,S3,on Mondays,montags,,Green Line 1
+U2.S3.to-tell,U2,S3,to tell,erzählen; sagen; mitteilen,,Green Line 1
+U2.S3.p-m,U2,S3,p.m.,nachmittags (Uhrzeit); abends (Uhrzeit),,Green Line 1
+U2.S3.week,U2,S3,week,Woche,,Green Line 1
+U2.S3.to-walk,U2,S3,to walk,gehen; laufen,,Green Line 1
+U2.S3.to-meet,U2,S3,to meet,treffen; sich treffen,,Green Line 1
+U2.S3.something,U2,S3,something,etwas,,Green Line 1
+U2.S3.typical,U2,S3,typical,typisch,,Green Line 1
+U2.S3.life,U2,S3,"life, lives (pl)",Leben,,Green Line 1
+U2.S3.stressful,U2,S3,stressful,stressig,,Green Line 1
+U2.S3.only,U2,S3,only,erst; bloß; nur,,Green Line 1
+U2.S3.healthy,U2,S3,healthy,gesund,,Green Line 1
+U2.S3.like,U2,S3,like,wie; als ob,,Green Line 1
+U2.S3.salad,U2,S3,salad,Salat,,Green Line 1
+U2.S3.some,U2,S3,some,einige; ein paar; etwas,,Green Line 1
+U2.S3.fruit,U2,S3,fruit,Frucht; Obst,,Green Line 1
+U2.S3.to-get-home,U2,S3,to get home,nach Hause kommen,,Green Line 1
+U2.S3.to-come-out,U2,S3,to come out,herauskommen,,Green Line 1
+U2.S3.flute,U2,S3,flute,Flöte,,Green Line 1
+U2.S3.to-be-lucky,U2,S3,to be lucky,Glück haben,,Green Line 1
+U2.S3.ice-cream-shop,U2,S3,ice-cream shop,Eisdiele,,Green Line 1
+U2.S3.shop,U2,S3,shop,Geschäft; Laden,,Green Line 1
+U2.S3.to-buy,U2,S3,to buy,kaufen,,Green Line 1
+U2.S3.hard,U2,S3,hard,hart; schwer; schwierig,,Green Line 1
+U2.ST.everyone,U2,ST,everyone,jeder; alle,,Green Line 1
+U2.ST.to-wash,U2,ST,to wash,waschen; sich waschen,,Green Line 1
+U2.ST.face,U2,ST,face,Gesicht,,Green Line 1
+U2.ST.after-that,U2,ST,after that,danach,,Green Line 1
+U2.ST.to-make,U2,ST,to make,machen; tun; bilden,,Green Line 1
+U2.ST.own,U2,ST,own,eigene/-r/-s,,Green Line 1
+U2.ST.to-say-goodbye,U2,ST,to say goodbye,sich verabschieden,,Green Line 1
+U2.ST.job,U2,ST,job,Arbeit; Aufgabe; Job,,Green Line 1
+U2.ST.to-look-after,U2,ST,to look after,aufpassen auf; hüten; sich kümmern um,,Green Line 1
+U2.ST.to-learn,U2,ST,to learn,lernen,,Green Line 1
+U2.ST.trick,U2,ST,trick,Kunststückchen,,Green Line 1
+U2.ST.to-chase,U2,ST,to chase,jagen; nachjagen,,Green Line 1
+U2.ST.tail,U2,ST,tail,Schwanz; Schweif,,Green Line 1
+U2.ST.a-lot,U2,ST,a lot,viel,,Green Line 1
+U2.ST.he-has-a-lot-to-learn,U2,ST,He has a lot to learn.,Er muss noch viel lernen.,,Green Line 1
+U2.ST.to-fall-over,U2,ST,to fall over,hinfallen; umkippen,,Green Line 1
+U2.ST.to-throw,U2,ST,to throw,werfen,,Green Line 1
+U2.ST.into,U2,ST,into,in; in … hinein,,Green Line 1
+U2.ST.to-fall-asleep,U2,ST,to fall asleep,einschlafen,,Green Line 1
+U2.ST.right-away,U2,ST,right away,sofort; gleich,,Green Line 1
+U2.ST.to-be-dog-tired,U2,ST,to be dog-tired,hundemüde sein,,Green Line 1
+U2.ST.part,U2,ST,part,Teil,,Green Line 1
+U2.ST.to-sit-down,U2,ST,to sit down,sich hinsetzen; sich setzen,,Green Line 1
+U2.UT.still,U2,UT,still,noch; immer noch,,Green Line 1
+U2.UT.to-stop,U2,UT,to stop,aufhören (mit); anhalten; stoppen,,Green Line 1
+U2.CO.lucky-you,U2,CO,Lucky you.,Du Glückliche/-r.,,Green Line 1
+U2.CO.really,U2,CO,really,wirklich,,Green Line 1
+U2.CO.to-finish,U2,CO,to finish,beenden; enden; fertigstellen; aufhören,,Green Line 1
+U2.CO.outside,U2,CO,outside,nach draußen; draußen; außerhalb (von),,Green Line 1
+U2.CO.what-to,U2,CO,what to …,was man …,,Green Line 1
+U2.CO.italian,U2,CO,Italian,italienisch; Italienisch; aus Italien,,Green Line 1
+U2.CO.restaurant,U2,CO,restaurant,Restaurant; Gaststätte,,Green Line 1
+U2.CO.to-spill,U2,CO,to spill,verschütten; auslaufen,,Green Line 1
+U2.CO.clothes,U2,CO,clothes (pl),Kleider; Kleidung,,Green Line 1
+U2.CO.maths,U2,CO,maths,Mathematik; Mathe,,Green Line 1
+U2.CO.difficult,U2,CO,difficult,schwierig,,Green Line 1
+AC1.special,AC1,,special,besonders; speziell,,Green Line 1
+AC1.corner,AC1,,corner,Ecke,,Green Line 1
+AC1.free,AC1,,free,frei; kostenlos,,Green Line 1
+AC1.history,AC1,,history,Geschichte,,Green Line 1
+AC1.museum,AC1,,museum,Museum,,Green Line 1
+AC1.interesting,AC1,,interesting,interessant,,Green Line 1
+AC1.shopping,AC1,,shopping,Einkaufen; Einkäufe; Einkaufs-,,Green Line 1
+AC1.farm,AC1,,farm,Farm; Bauernhof,,Green Line 1
+AC1.animal,AC1,,animal,Tier,,Green Line 1
+AC1.sea,AC1,,sea,Meer,,Green Line 1
+AC1.simple,AC1,,simple,einfach; simpel,,Green Line 1
+AC1.wonderful,AC1,,wonderful,wunderbar,,Green Line 1
+AC1.long,AC1,,long,lang,,Green Line 1
+AC1.crowded,AC1,,crowded,überfüllt,,Green Line 1
+AC1.ship,AC1,,ship,Schiff,,Green Line 1
+AC1.meal,AC1,,meal,Mahlzeit; Essen,,Green Line 1
+AC1.scary,AC1,,scary,unheimlich; gruselig; beängstigend,,Green Line 1
+AC1.storm,AC1,,storm,Sturm,,Green Line 1
+AC1.dear,AC1,,Dear …,Lieber …; Liebe … (Anrede in Briefen),,Green Line 1
+AC1.diary,AC1,,diary,Tagebuch,,Green Line 1
+AC1.to-visit,AC1,,to visit,besichtigen; besuchen,,Green Line 1
+AC1.exotic,AC1,,exotic,exotisch,,Green Line 1
+AC1.at-sea,AC1,,at sea,auf See,,Green Line 1
+AC1.for-months,AC1,,for months,Monate lang,,Green Line 1
+AC1.nothing,AC1,,nothing,nichts,,Green Line 1
+AC1.water,AC1,,water,Wasser,,Green Line 1
+AC1.more,AC1,,more,mehr; weitere,,Green Line 1
+AC1.wave,AC1,,wave,Welle,,Green Line 1
+AC1.to-get-seasick,AC1,,to get seasick,seekrank werden,,Green Line 1
+AC1.on-board,AC1,,on board,an Bord,,Green Line 1
+AC1.delicious,AC1,,delicious,köstlich,,Green Line 1
+AC1.village,AC1,,village,Dorf,,Green Line 1
+AC1.town,AC1,,town,Stadt; Kleinstadt,,Green Line 1
+AC1.city,AC1,,city,Stadt; Großstadt,,Green Line 1
+AC1.tourist,AC1,,tourist,Tourist/-in,,Green Line 1
+U3.CI.to-mean,U3,CI,to mean,bedeuten; meinen,,Green Line 1
+U3.CI.brochure,U3,CI,brochure,Broschüre; Prospekt,,Green Line 1
+U3.CI.that-s-why,U3,CI,that’s why,deshalb,,Green Line 1
+U3.CI.stall,U3,CI,stall,Stand; Bude,,Green Line 1
+U3.CI.colourful,U3,CI,colourful,farbenfroh; bunt,,Green Line 1
+U3.CI.field,U3,CI,field,Feld; Spielfeld; Wiese; Weide; Acker,,Green Line 1
+U3.CI.way,U3,CI,way,Weg,,Green Line 1
+U3.CI.important,U3,CI,important,wichtig,,Green Line 1
+U3.CI.match,U3,CI,match,Spiel; Match,,Green Line 1
+U3.CI.arab,U3,CI,Arab,arabisch,,Green Line 1
+U3.CI.so,U3,CI,so,also,,Green Line 1
+U3.CI.to-try,U3,CI,to try,versuchen; probieren,,Green Line 1
+U3.CI.sweets,U3,CI,sweets (pl),Süßigkeiten; Bonbons,,Green Line 1
+U3.CI.to-have-fun,U3,CI,to have fun,Spaß haben; sich amüsieren,,Green Line 1
+U3.CI.youth,U3,CI,youth,Jugend,,Green Line 1
+U3.CI.club,U3,CI,club,Klub; Verein; AG,,Green Line 1
+U3.CI.cinema,U3,CI,cinema,Kino,,Green Line 1
+U3.CI.exciting,U3,CI,exciting,spannend; aufregend,,Green Line 1
+U3.CI.to-go-swimming,U3,CI,to go swimming,Schwimmen gehen,,Green Line 1
+U3.CI.slide,U3,CI,slide,Rutschbahn,,Green Line 1
+U3.CI.dream,U3,CI,dream,Traum; Traum-,,Green Line 1
+U3.CI.summer,U3,CI,summer,Sommer,,Green Line 1
+U3.S1.plan,U3,S1,plan,Plan; Entwurf,,Green Line 1
+U3.S1.to-win,U3,S1,to win,gewinnen; siegen,,Green Line 1
+U3.S1.first,U3,S1,first,zuerst; als Erstes,,Green Line 1
+U3.S1.another,U3,S1,another,ein/-e andere/-r/-s; noch ein/-e,,Green Line 1
+U3.S1.to-open,U3,S1,to open,öffnen; aufmachen,,Green Line 1
+U3.S1.before-that,U3,S1,before that,davor,,Green Line 1
+U3.S1.again,U3,S1,again,wieder; noch einmal; noch mal,,Green Line 1
+U3.S1.to-stand,U3,S1,to stand,stehen,,Green Line 1
+U3.S1.foot,U3,S1,"foot, feet (pl)",Fuß,,Green Line 1
+U3.S1.east,U3,S1,east,Osten; Ost-,,Green Line 1
+U3.S1.west,U3,S1,west,Westen; West-,,Green Line 1
+U3.S1.to-check,U3,S1,to check,überprüfen; prüfen; kontrollieren,,Green Line 1
+U3.S1.opening-times,U3,S1,opening times,Öffnungszeiten,,Green Line 1
+U3.S1.cook,U3,S1,cook,Koch/Köchin,,Green Line 1
+U3.S1.i-can-t-wait,U3,S1,I can't wait …,"Ich kann es kaum erwarten, …",,Green Line 1
+U3.S1.to-plan,U3,S1,to plan,planen,,Green Line 1
+U3.S1.to-agree-with,U3,S1,to agree (with),einer Meinung sein (mit); zustimmen,,Green Line 1
+U3.S1.to-wear,U3,S1,to wear,anhaben; tragen (Kleidung),,Green Line 1
+U3.S1.well,U3,S1,well,tja; nun; na ja,,Green Line 1
+U3.S1.to-believe,U3,S1,to believe,glauben,,Green Line 1
+U3.S1.the-biggest,U3,S1,the biggest,der/die/das größte,,Green Line 1
+U3.S1.inner-city,U3,S1,inner-city,Innenstadt-,,Green Line 1
+U3.S1.over,U3,S1,over,über; hinüber,,Green Line 1
+U3.S1.riding,U3,S1,riding,Reiten,,Green Line 1
+U3.S1.if,U3,S1,if,wenn; falls; ob,,Green Line 1
+U3.S1.to-call,U3,S1,to call,anrufen; rufen,,Green Line 1
+U3.S1.to,U3,S1,to,bis,,Green Line 1
+U3.S1.closed,U3,S1,closed,geschlossen; zu,,Green Line 1
+U3.S1.to-cost,U3,S1,to cost,kosten,,Green Line 1
+U3.S1.a-lot-of,U3,S1,a lot of,viel/-e; eine Menge,,Green Line 1
+U3.S1.money,U3,S1,money,Geld,,Green Line 1
+U3.S1.to-give,U3,S1,to give,angeben,,Green Line 1
+U3.S1.to-close,U3,S1,to close,schließen; zumachen,,Green Line 1
+U3.S1.until,U3,S1,until,bis; erst wenn,,Green Line 1
+U3.S1.visit,U3,S1,visit,Besuch,,Green Line 1
+U3.S1.open,U3,S1,open,offen; geöffnet; aufgeschlagen,,Green Line 1
+U3.S1.near,U3,S1,near,nahe; in der Nähe von,,Green Line 1
+U3.S1.wrong,U3,S1,wrong,falsch,,Green Line 1
+U3.S1.by-bike,U3,S1,by (bike),mit (dem Fahrrad),,Green Line 1
+U3.S1.to-say-hello-to,U3,S1,to say hello (to),grüßen; Grüße ausrichten (an),,Green Line 1
+U3.S1.underground,U3,S1,underground,U-Bahn,,Green Line 1
+U3.S1.bus,U3,S1,bus,Bus,,Green Line 1
+U3.S1.activity,U3,S1,activity,Aktivität,,Green Line 1
+U3.S1.bad,U3,S1,bad,schlecht; böse; schlimm,,Green Line 1
+U3.S1.popular,U3,S1,popular,beliebt; populär,,Green Line 1
+U3.S1.person,U3,S1,"person, people (pl)",Person; Mensch,,Green Line 1
+U3.S1.that,U3,S1,that,dass,,Green Line 1
+U3.S2.german,U3,S2,German,deutsch; Deutsch; aus Deutschland; Deutsche/-r,,Green Line 1
+U3.S2.where-to-start,U3,S2,… where to start.,… wo wir anfangen sollen.,,Green Line 1
+U3.S2.past,U3,S2,past,Vergangenheit,,Green Line 1
+U3.S2.ticket,U3,S2,ticket,Ticket; Eintrittskarte,,Green Line 1
+U3.S2.to-get-to,U3,S2,to get to,kommen zu; kommen nach; erreichen,,Green Line 1
+U3.S2.river,U3,S2,river,Fluss,,Green Line 1
+U3.S2.entrance,U3,S2,entrance,Eingang; Eintritt,,Green Line 1
+U3.S2.tourist-information-centre,U3,S2,tourist information centre,Touristeninformation,,Green Line 1
+U3.S2.to-need-to-do,U3,S2,to need (to do),(tun) müssen,,Green Line 1
+U3.S2.next,U3,S2,next,nächste/-r/-s; der/die Nächste(n),,Green Line 1
+U3.S2.answer,U3,S2,answer,Antwort,,Green Line 1
+U3.S2.to-answer,U3,S2,to answer,antworten; beantworten,,Green Line 1
+U3.S2.minute,U3,S2,minute,Minute,,Green Line 1
+U3.S2.goodbye,U3,S2,goodbye,auf Wiedersehen,,Green Line 1
+U3.S2.thank-you,U3,S2,Thank you.,Danke.,,Green Line 1
+U3.S2.you-re-welcome,U3,S2,You’re welcome.,Bitte schön.; Nichts zu danken.; Gern geschehen.,,Green Line 1
+U3.S2.to-speak,U3,S2,to speak,sprechen,,Green Line 1
+U3.S2.english,U3,S2,English,englisch; Englisch; aus England; Engländer/-in,,Green Line 1
+U3.S2.stop,U3,S2,Stop!,Stopp!; Halt!,,Green Line 1
+U3.S2.bus-stop,U3,S2,bus stop,Bushaltestelle,,Green Line 1
+U3.S2.bag,U3,S2,bag,Tasche; Tüte,,Green Line 1
+U3.S2.to-be-in-the-way,U3,S2,to be in the way,im Weg sein/stehen,,Green Line 1
+U3.S2.train,U3,S2,train,Zug,,Green Line 1
+U3.S2.window,U3,S2,window,Fenster,,Green Line 1
+U3.S2.holidays,U3,S2,holidays (pl),Ferien,,Green Line 1
+U3.S3.cumin,U3,S3,cumin,Kreuzkümmel,,Green Line 1
+U3.S3.spice,U3,S3,spice,Gewürz,,Green Line 1
+U3.S3.sweet,U3,S3,sweet,süß,,Green Line 1
+U3.S3.already,U3,S3,already,schon; bereits,,Green Line 1
+U3.S3.joke,U3,S3,joke,Witz,,Green Line 1
+U3.S3.to-post,U3,S3,to post,online stellen; posten,,Green Line 1
+U3.S3.like-this-that,U3,S3,like this/that,so; solche/-r/-s,,Green Line 1
+U3.S3.clothes,U3,S3,clothes (pl),Kleider; Kleidung,,Green Line 1
+U3.S3.just,U3,S3,just,nur; einfach; gerade,,Green Line 1
+U3.S3.social-media,U3,S3,social media,soziale Netzwerke,,Green Line 1
+U3.S3.would,U3,S3,would,würde/-st/-n/-t,,Green Line 1
+U3.S3.to-feel,U3,S3,to feel,fühlen; sich fühlen,,Green Line 1
+U3.S3.to-be-sorry,U3,S3,to be sorry,leid tun,,Green Line 1
+U3.S3.to-think-of,U3,S3,to think of,halten von; denken über,,Green Line 1
+U3.S3.how-many,U3,S3,How many …?,Wie viele …?,,Green Line 1
+U3.ST.brave,U3,ST,brave,mutig; tapfer,,Green Line 1
+U3.ST.sailor,U3,ST,sailor,Seemann; Matrose,,Green Line 1
+U3.ST.tired,U3,ST,tired,müde,,Green Line 1
+U3.ST.round-and-round,U3,ST,round and round,immer wieder herum,,Green Line 1
+U3.ST.at-last,U3,ST,at last,endlich; schließlich,,Green Line 1
+U3.ST.to-happen,U3,ST,to happen,geschehen; passieren,,Green Line 1
+U3.ST.strong,U3,ST,strong,stark,,Green Line 1
+U3.ST.to-get,U3,ST,to get,werden,,Green Line 1
+U3.ST.hungry,U3,ST,hungry,hungrig,,Green Line 1
+U3.ST.what-s-for,U3,ST,What's for …?,Was gibt es zum …?,,Green Line 1
+U3.ST.to-shout,U3,ST,to shout,schreien; rufen,,Green Line 1
+U3.ST.to-thank,U3,ST,to thank,danken,,Green Line 1
+U3.ST.at-sea,U3,ST,at sea,auf See,,Green Line 1
+U3.ST.wave,U3,ST,wave,Welle,,Green Line 1
+U3.ST.captain,U3,ST,captain,Kapitän/-in; Mannschaftsführer/-in,,Green Line 1
+U3.ST.wheel,U3,ST,wheel,Rad; Steuerrad; Steuer,,Green Line 1
+U3.ST.to-reef-the-sails,U3,ST,to reef the sails,die Segel einholen,,Green Line 1
+U3.ST.to-point-to,U3,ST,to point to,deuten auf; hindeuten auf; zeigen auf,,Green Line 1
+U3.ST.rigging,U3,ST,rigging,Takelage,,Green Line 1
+U3.ST.to-climb,U3,ST,to climb,klettern; besteigen; steigen,,Green Line 1
+U3.ST.dangerous,U3,ST,dangerous,gefährlich,,Green Line 1
+U3.ST.slow,U3,ST,slow,langsam,,Green Line 1
+U3.ST.down,U3,ST,down,nach unten; herunter; hinunter,,Green Line 1
+U3.ST.help,U3,ST,help,Hilfe,,Green Line 1
+U3.ST.mate,U3,ST,mate,Schiffsoffizier; Maat,,Green Line 1
+U3.ST.to-drink,U3,ST,to drink,trinken,,Green Line 1
+U3.ST.to-run,U3,ST,to run,rennen; laufen,,Green Line 1
+U3.ST.to-hit,U3,ST,to hit,treffen; schlagen,,Green Line 1
+U3.ST.to-fall,U3,ST,to fall,fallen; hinfallen,,Green Line 1
+U3.ST.trouble,U3,ST,trouble,Ärger; Probleme; Schwierigkeiten,,Green Line 1
+U3.ST.to-swim,U3,ST,to swim,schwimmen,,Green Line 1
+U3.ST.to-save,U3,ST,to save,retten; bergen,,Green Line 1
+U3.ST.lifebuoy,U3,ST,lifebuoy,Rettungsring,,Green Line 1
+U3.ST.lifeboat,U3,ST,lifeboat,Rettungsboot,,Green Line 1
+U3.ST.to-jump,U3,ST,to jump,springen,,Green Line 1
+U3.ST.to-stay,U3,ST,to stay,bleiben,,Green Line 1
+U3.ST.that-s-how,U3,ST,that’s how,so,,Green Line 1
+U3.ST.to-find-out,U3,ST,to find out,herausfinden,,Green Line 1
+U3.ST.proud-of,U3,ST,proud (of),stolz (auf),,Green Line 1
+U3.ST.moment,U3,ST,moment,Moment; Augenblick,,Green Line 1
+U3.ST.to-remember,U3,ST,to remember,sich erinnern (an); sich merken; denken an,,Green Line 1
+U3.CO.to-learn-about,U3,CO,to learn about,erfahren über,,Green Line 1
+U3.CO.trip,U3,CO,trip,Trip; Reise; Ausflug; Fahrt,,Green Line 1
+U3.CO.british,U3,CO,British,britisch; Brite/Britin,,Green Line 1
+U3.CO.car,U3,CO,car,Auto,,Green Line 1
+U3.CO.sure,U3,CO,sure,sicher,,Green Line 1
+U3.CO.the-same,U3,CO,the same,der-/die-/dasselbe; der/die/das gleiche,,Green Line 1
+U3.CO.maybe,U3,CO,maybe,vielleicht,,Green Line 1
+U3.CO.knitting,U3,CO,knitting,Stricken,,Green Line 1
+U3.CO.to-explore,U3,CO,to explore,auf Entdeckungsreise gehen; sich umschauen; erkunden; erforschen,,Green Line 1
+U3.CO.concert,U3,CO,concert,Konzert,,Green Line 1
+U3.CO.hiking,U3,CO,hiking,Wandern,,Green Line 1
+U3.CO.outdoor,U3,CO,outdoor,Freiluft-; Outdoor-,,Green Line 1
+U3.CO.at-night,U3,CO,at night,abends; nachts,,Green Line 1
+AC2.to-taste,AC2,,to taste,probieren; schmecken,,Green Line 1
+AC2.bacon,AC2,,bacon,Schinkenspeck; Speck,,Green Line 1
+AC2.baked-beans,AC2,,baked beans (pl),weiße Bohnen in Tomatensoße,,Green Line 1
+AC2.bread,AC2,,bread,Brot,,Green Line 1
+AC2.cake,AC2,,cake,Kuchen; Torte,,Green Line 1
+AC2.cereal,AC2,,cereal (no pl),Frühstückszerealie; Getreideprodukt (z.B. Cornflakes oder Müsli),,Green Line 1
+AC2.cheese,AC2,,cheese,Käse,,Green Line 1
+AC2.chicken,AC2,,chicken,Huhn; Hähnchen,,Green Line 1
+AC2.dessert,AC2,,dessert,Dessert; Nachspeise,,Green Line 1
+AC2.egg,AC2,,egg,Ei,,Green Line 1
+AC2.fish,AC2,,"fish, fish (pl)",Fisch,,Green Line 1
+AC2.meat,AC2,,meat (no pl),Fleisch,,Green Line 1
+AC2.meatball,AC2,,meatball,Fleischklößchen,,Green Line 1
+AC2.pie,AC2,,pie,Kuchen; Pastete,,Green Line 1
+AC2.rice,AC2,,rice,Reis,,Green Line 1
+AC2.sausage,AC2,,sausage,Wurst; Bratwurst,,Green Line 1
+AC2.soup,AC2,,soup,Suppe,,Green Line 1
+AC2.sauce,AC2,,sauce,Soße,,Green Line 1
+AC2.vegetable,AC2,,vegetable,Gemüse,,Green Line 1
+AC2.dish,AC2,,dish,Gericht; Speise,,Green Line 1
+AC2.strange,AC2,,strange,fremd; seltsam; merkwürdig,,Green Line 1
+AC2.vegetarian,AC2,,vegetarian,Vegetarier/-in,,Green Line 1
+AC2.vegan,AC2,,vegan,Veganer/-in,,Green Line 1
+AC2.much,AC2,,much,viel,,Green Line 1
+AC2.sugar,AC2,,sugar,Zucker,,Green Line 1
+AC2.salt,AC2,,salt,Salz,,Green Line 1
+AC2.fat,AC2,,fat,Fett,,Green Line 1
+AC2.competition,AC2,,competition,Wettbewerb; Turnier,,Green Line 1
+AC2.yummy,AC2,,yummy,lecker,,Green Line 1
+AC2.salty,AC2,,salty,salzig,,Green Line 1
+AC2.unhealthy,AC2,,unhealthy,ungesund,,Green Line 1
+AC2.natural,AC2,,natural,natürlich; Natur-,,Green Line 1
+AC2.main-dish,AC2,,main dish,Hauptgericht; Hauptspeise,,Green Line 1
+AC2.country,AC2,,"country, countries (pl)",Land,,Green Line 1
+AC2.ingredient,AC2,,ingredient,Zutat,,Green Line 1
+U4.CI.happy-birthday,U4,CI,Happy birthday!,Alles Gute zum Geburtstag!; Herzlichen Glückwunsch zum Geburtstag!,,Green Line 1
+U4.CI.theme,U4,CI,theme,Thema; Motto,,Green Line 1
+U4.CI.tropical,U4,CI,tropical,tropisch,,Green Line 1
+U4.CI.beach,U4,CI,beach,Strand,,Green Line 1
+U4.CI.decorations,U4,CI,decorations (pl),Dekoration; Schmuck,,Green Line 1
+U4.CI.stick,U4,CI,stick,Spieß,,Green Line 1
+U4.CI.sleepover,U4,CI,sleepover,Übernachtung,,Green Line 1
+U4.CI.pyjamas,U4,CI,pyjamas (pl),Schlafanzug; Pyjama,,Green Line 1
+U4.CI.crisp,U4,CI,crisp,Kartoffelchip,,Green Line 1
+U4.CI.last,U4,CI,last,letzte/-r/-s,,Green Line 1
+U4.CI.enough,U4,CI,enough,genug; genügend,,Green Line 1
+U4.CI.room,U4,CI,room,Platz,,Green Line 1
+U4.CI.blanket,U4,CI,blanket,Decke; Bettdecke; Wolldecke,,Green Line 1
+U4.CI.to-sound,U4,CI,to sound,klingen,,Green Line 1
+U4.CI.season,U4,CI,season,Saison; Jahreszeit,,Green Line 1
+U4.CI.month,U4,CI,month,Monat,,Green Line 1
+U4.CI.hot,U4,CI,hot,heiß,,Green Line 1
+U4.CI.cold,U4,CI,cold,kalt,,Green Line 1
+U4.CI.weather,U4,CI,weather,Wetter,,Green Line 1
+U4.CI.guest,U4,CI,guest,Gast,,Green Line 1
+U4.CI.invitation,U4,CI,invitation,Einladung,,Green Line 1
+U4.CI.gift,U4,CI,gift,Geschenk,,Green Line 1
+U4.CI.somewhere,U4,CI,somewhere,irgendwo,,Green Line 1
+U4.CI.date,U4,CI,date,Datum,,Green Line 1
+U4.S1.money-doesn-t-grow-on-trees,U4,S1,Money doesn't grow on trees.,Das Geld wächst nicht auf Bäumen.,,Green Line 1
+U4.S1.any,U4,S1,any,irgendein/-e/-er; irgendwelche,,Green Line 1
+U4.S1.to-celebrate,U4,S1,to celebrate,feiern,,Green Line 1
+U4.S1.sightseeing,U4,S1,sightseeing,Sightseeing-; Besichtigungs-,,Green Line 1
+U4.S1.a-few,U4,S1,a few,ein paar; wenige; einige,,Green Line 1
+U4.S1.many,U4,S1,many,viele,,Green Line 1
+U4.S1.to-invite,U4,S1,to invite,einladen,,Green Line 1
+U4.S1.to-go-out,U4,S1,to go out,ausgehen; hinausgehen,,Green Line 1
+U4.S1.costume,U4,S1,costume,Kostüm,,Green Line 1
+U4.S1.trousers,U4,S1,trousers (pl),Hose,,Green Line 1
+U4.S1.skirt,U4,S1,skirt,Rock,,Green Line 1
+U4.S1.dress,U4,S1,dress,Kleid,,Green Line 1
+U4.S1.recipe,U4,S1,recipe,Rezept,,Green Line 1
+U4.S1.a-couple-of,U4,S1,a couple of,ein paar,,Green Line 1
+U4.S1.to-pay-for,U4,S1,to pay (for),bezahlen,,Green Line 1
+U4.S1.pocket-money,U4,S1,pocket money,Taschengeld,,Green Line 1
+U4.S1.flea-market,U4,S1,flea market,Flohmarkt,,Green Line 1
+U4.S1.a-little,U4,S1,a little,ein wenig; etwas,,Green Line 1
+U4.S1.attic,U4,S1,attic,Dachboden,,Green Line 1
+U4.S1.balloon,U4,S1,balloon,Ballon,,Green Line 1
+U4.S1.paper-straw,U4,S1,paper straw,Papiertrinkhalm,,Green Line 1
+U4.S1.to-be-worried,U4,S1,to be worried,beunruhigt sein; besorgt sein,,Green Line 1
+U4.S1.group,U4,S1,group,Gruppe; Klasse,,Green Line 1
+U4.S1.to-make-money,U4,S1,to make money,Geld verdienen,,Green Line 1
+U4.S1.to-suggest,U4,S1,to suggest,vorschlagen,,Green Line 1
+U4.S1.to-bake,U4,S1,to bake,backen,,Green Line 1
+U4.S1.to-choose,U4,S1,to choose,auswählen; wählen,,Green Line 1
+U4.S1.to-decorate,U4,S1,to decorate,dekorieren; verzieren; schmücken,,Green Line 1
+U4.S1.prize,U4,S1,prize,Preis; Gewinn,,Green Line 1
+U4.S1.channel,U4,S1,channel,Kanal; Programm,,Green Line 1
+U4.S1.to-hope,U4,S1,to hope,hoffen,,Green Line 1
+U4.S1.must,U4,S1,must,müssen,,Green Line 1
+U4.S1.to-text,U4,S1,to text,eine Textnachricht schicken,,Green Line 1
+U4.S1.text,U4,S1,text,Textnachricht,,Green Line 1
+U4.S1.pair-of,U4,S1,pair (of),Paar,,Green Line 1
+U4.S1.oh-my-god,U4,S1,Oh my God!,Oh mein Gott!,,Green Line 1
+U4.S1.perfect,U4,S1,perfect,perfekt; vollkommen,,Green Line 1
+U4.S1.it-says,U4,S1,It says …,Hier steht …,,Green Line 1
+U4.S1.should,U4,S1,should,sollte/solltest/solltet/sollten,,Green Line 1
+U4.S1.not-any,U4,S1,not … any,kein/-e/-en,,Green Line 1
+U4.S1.to-agree-on,U4,S1,to agree (on),sich einigen (auf),,Green Line 1
+U4.S1.milk,U4,S1,milk,Milch,,Green Line 1
+U4.S1.bamboo,U4,S1,bamboo,Bambus,,Green Line 1
+U4.S1.juice,U4,S1,juice,Saft,,Green Line 1
+U4.S1.paper,U4,S1,paper,Papier,,Green Line 1
+U4.S1.umbrella,U4,S1,umbrella,Regenschirm; Schirm,,Green Line 1
+U4.S1.flour,U4,S1,flour,Mehl,,Green Line 1
+U4.S2.to-shop,U4,S2,to shop,einkaufen; shoppen,,Green Line 1
+U4.S2.necklace,U4,S2,necklace,Halskette,,Green Line 1
+U4.S2.jewellery,U4,S2,jewellery,Schmuck,,Green Line 1
+U4.S2.woman,U4,S2,"woman, women (pl)",Frau,,Green Line 1
+U4.S2.anything,U4,S2,anything,irgendetwas,,Green Line 1
+U4.S2.how-much-is-are,U4,S2,How much (is/are) …?,Wie viel (kostet/kosten) …?,,Green Line 1
+U4.S2.special-offer,U4,S2,special offer,Sonderangebot,,Green Line 1
+U4.S2.bracelet,U4,S2,bracelet,Armband,,Green Line 1
+U4.S2.key-ring,U4,S2,key ring,Schlüsselanhänger; Schlüsselbund,,Green Line 1
+U4.S2.to-worry,U4,S2,to worry,sich Sorgen machen,,Green Line 1
+U4.S2.real,U4,S2,real,echt; richtig; wirklich,,Green Line 1
+U4.S2.to-wash-off,U4,S2,to wash off,abwaschen,,Green Line 1
+U4.S2.at-the-moment,U4,S2,at the moment,im Moment; gerade,,Green Line 1
+U4.S2.sticker,U4,S2,sticker,Aufkleber,,Green Line 1
+U4.S2.not-yet,U4,S2,not … yet,noch nicht,,Green Line 1
+U4.S2.guy,U4,S2,guy,Typ; Kerl,,Green Line 1
+U4.S2.fake,U4,S2,fake,falsch; gefälscht,,Green Line 1
+U4.S2.to-go-shopping,U4,S2,to go shopping,einkaufen gehen,,Green Line 1
+U4.S2.price,U4,S2,price,Preis,,Green Line 1
+U4.S2.pound,U4,S2,pound (£),Pfund (brit. Währungseinheit),,Green Line 1
+U4.S2.penny,U4,S2,"penny, pence (pl)",Penny; Pence (brit. Währungseinheit),,Green Line 1
+U4.S2.euro,U4,S2,euro,Euro (Währung),,Green Line 1
+U4.S2.assistant,U4,S2,assistant,Verkäufer/-in; Assistent/-in,,Green Line 1
+U4.S2.later,U4,S2,later,später,,Green Line 1
+U4.S2.extra-large-xl,U4,S2,extra large (XL),besonders groß,,Green Line 1
+U4.S2.size,U4,S2,size,Größe; Kleidergröße,,Green Line 1
+U4.S2.may,U4,S2,may,(vielleicht) können; dürfen,,Green Line 1
+U4.S2.quality,U4,S2,quality,Qualität; Eigenschaft,,Green Line 1
+U4.S2.glass,U4,S2,glass,Glas,,Green Line 1
+U4.S2.change,U4,S2,change,Wechselgeld; Münzgeld,,Green Line 1
+U4.S3.anywhere,U4,S3,anywhere,"irgendwo; überall (egal, wo)",,Green Line 1
+U4.S3.sleeping-bag,U4,S3,sleeping bag,Schlafsack,,Green Line 1
+U4.S3.next-time,U4,S3,next time,nächstes Mal,,Green Line 1
+U4.S3.to-let,U4,S3,to let,lassen,,Green Line 1
+U4.S3.difficult,U4,S3,difficult,schwierig,,Green Line 1
+U4.S3.present,U4,S3,present,Geschenk,,Green Line 1
+U4.S3.to-laugh,U4,S3,to laugh,lachen,,Green Line 1
+U4.S3.to-get,U4,S3,to get,besorgen,,Green Line 1
+U4.S3.and-so-on,U4,S3,and so on,und so weiter,,Green Line 1
+U4.ST.troublemaker,U4,ST,troublemaker,Unruhestifter/-in,,Green Line 1
+U4.ST.doorbell,U4,ST,doorbell,Türklingel,,Green Line 1
+U4.ST.to-ring,U4,ST,to ring,klingeln; läuten,,Green Line 1
+U4.ST.inside,U4,ST,inside,innen; im Innern; hinein; nach drinnen; in; drin,,Green Line 1
+U4.ST.till,U4,ST,till,bis,,Green Line 1
+U4.ST.neighbour,U4,ST,neighbour,Nachbar/-in,,Green Line 1
+U4.ST.gave,U4,ST,gave,gab,,Green Line 1
+U4.ST.surprise,U4,ST,surprise,Überraschung,,Green Line 1
+U4.ST.voice,U4,ST,voice,Stimme,,Green Line 1
+U4.ST.shocked,U4,ST,shocked,schockiert; geschockt,,Green Line 1
+U4.ST.quiet,U4,ST,quiet,still; ruhig; leise,,Green Line 1
+U4.ST.to-whisper,U4,ST,to whisper,flüstern,,Green Line 1
+U4.ST.mistake,U4,ST,mistake,Fehler,,Green Line 1
+U4.ST.for-some-reason,U4,ST,for some reason,aus irgendeinem Grund,,Green Line 1
+U4.ST.whole,U4,ST,whole,ganz,,Green Line 1
+U4.ST.to-understand,U4,ST,to understand,verstehen,,Green Line 1
+U4.ST.nobody,U4,ST,nobody,niemand,,Green Line 1
+U4.ST.apron,U4,ST,apron,Schürze,,Green Line 1
+U4.ST.garland,U4,ST,garland,Girlande,,Green Line 1
+U4.ST.to-wrap,U4,ST,to wrap,einwickeln; einpacken,,Green Line 1
+U4.ST.to-move,U4,ST,to move,(sich) bewegen,,Green Line 1
+U4.ST.stop-it,U4,ST,Stop it!,Hör/Hört auf!,,Green Line 1
+U4.ST.to-unwrap,U4,ST,to unwrap,auswickeln; auspacken,,Green Line 1
+U4.ST.remote-control,U4,ST,remote control,Fernbedienung,,Green Line 1
+U4.ST.helicopter,U4,ST,helicopter,Helikopter; Hubschrauber,,Green Line 1
+U4.ST.it-s-turn,U4,ST,It’s … turn.,… ist dran.,,Green Line 1
+U4.ST.candle,U4,ST,candle,Kerze,,Green Line 1
+U4.ST.kit,U4,ST,kit,Bastelsatz,,Green Line 1
+U4.ST.to-laugh,U4,ST,to laugh,lachen,,Green Line 1
+U4.ST.card,U4,ST,card,Karte; Spielkarte,,Green Line 1
+U4.ST.to-wonder,U4,ST,to wonder,sich Gedanken machen; sich fragen,,Green Line 1
+U4.ST.chocolate,U4,ST,chocolate,Schokolade,,Green Line 1
+U4.ST.to-pick-up,U4,ST,to pick up,aufheben; mitnehmen; abholen,,Green Line 1
+U4.ST.frosting,U4,ST,frosting,Glasur,,Green Line 1
+U4.ST.all-over,U4,ST,all over,überall (in),,Green Line 1
+U4.ST.unicorn,U4,ST,unicorn,Einhorn,,Green Line 1
+U4.ST.onesie,U4,ST,onesie,Hausanzug; Body,,Green Line 1
+U4.ST.note,U4,ST,note,Notiz; Anmerkung,,Green Line 1
+U4.ST.to-surprise,U4,ST,to surprise,überraschen,,Green Line 1
+U4.ST.revenge,U4,ST,revenge,Rache,,Green Line 1
+U4.ST.deal,U4,ST,deal,Abmachung; Übereinkunft,,Green Line 1
+U4.ST.to-put-on,U4,ST,to put on,anziehen,,Green Line 1
+U4.ST.entertainment,U4,ST,entertainment (no pl),Unterhaltung,,Green Line 1
+U4.CO.to-take-turns,U4,CO,to take turns,sich abwechseln,,Green Line 1
+U4.CO.someone,U4,CO,someone,jemand,,Green Line 1
+U4.CO.to-point-at-sb-sth,U4,CO,to point at sb/sth,(mit dem Finger) auf jmdn./etw. zeigen,,Green Line 1
+U4.CO.miniature,U4,CO,miniature,Miniatur,,Green Line 1
+U4.CO.event,U4,CO,event,Ereignis; Veranstaltung,,Green Line 1
+TR.to-relax,TR,,to relax,(sich) entspannen,,Green Line 1
+TR.anything-else,TR,,anything else,etwas anderes,,Green Line 1
+TR.camp,TR,,camp,Camp; Lager,,Green Line 1
+TR.coach,TR,,coach,Trainer/-in,,Green Line 1
+TR.trick,TR,,trick,Trick,,Green Line 1
+TR.to-take-part-in,TR,,to take part (in),teilnehmen (an),,Green Line 1
+TR.photography-contest,TR,,photography contest,Fotowettbewerb,,Green Line 1
+TR.to-be-away,TR,,to be away,weg sein,,Green Line 1
+TR.wakeboarding,TR,,wakeboarding,Wakeboarding,,Green Line 1
+TR.to-teach,TR,,to teach,beibringen,,Green Line 1
+TR.paddle-boarding,TR,,paddle boarding,Stand-up-Paddling,,Green Line 1
+TR.to-guess,TR,,to guess,glauben; vermuten,,Green Line 1
+TR.cute,TR,,cute,süß,,Green Line 1
+TR.to-spend,TR,,to spend,verbringen (Zeit),,Green Line 1
+TR.far-south,TR,,far south,tief im Süden,,Green Line 1
+TR.hotel,TR,,hotel,Hotel,,Green Line 1
+TR.pyramid,TR,,pyramid,Pyramide,,Green Line 1
+TR.famous,TR,,famous,berühmt,,Green Line 1
+TR.up-and-down,TR,,up and down,hoch und runter,,Green Line 1
+TR.private,TR,,private,privat,,Green Line 1
+TR.close-to,TR,,close to,nahe an,,Green Line 1
+TR.treetop-trail,TR,,treetop trail,Baumwipfelpfad,,Green Line 1
