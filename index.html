@@ -260,6 +260,48 @@
   }
   .dontknow-btn:disabled{ opacity:0.4; text-decoration:none; }
 
+  /* Units auf der Startseite */
+  .unit-row{ display:flex; gap:6px; }
+  .unit-row .unit-btn{ flex:1; min-width:0; }
+  .unit-toggle{
+    width:46px; flex-shrink:0; border:none; border-radius:16px; background:#fff; color:var(--ink);
+    font-size:18px; font-weight:800; cursor:pointer; box-shadow: inset 0 0 0 1px rgba(31,58,95,0.08);
+    transition: transform .15s ease;
+  }
+  .unit-toggle.open{ background: var(--ink); color:#fff; box-shadow:none; }
+  .section-list{ display:flex; flex-direction:column; gap:6px; margin: -4px 0 4px 18px; }
+  .cat-btn.section-btn{ padding:10px 14px; font-size:14px; border-radius:12px; }
+  .mode-tag{
+    font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;
+    color: var(--amber-text); background: var(--amber-bg); border-radius:8px; padding:2px 6px;
+  }
+  .select-open-btn{ margin-top:6px; }
+  .empty-hint{ text-align:center; color:var(--ink-soft); font-weight:700; font-size:14px; margin:4px 0; }
+
+  /* Lernstoff-Auswahl */
+  .select-title{
+    font-family:'Patrick Hand', cursive; font-size:32px; text-align:center; color:var(--ink);
+    margin:0 0 6px; position:relative; z-index:1;
+  }
+  .select-intro{ position:relative; z-index:1; font-size:13px; color:var(--ink-soft); line-height:1.5; margin:0 0 14px; }
+  .select-list{ position:relative; z-index:1; display:flex; flex-direction:column; gap:10px; }
+  .select-row{ background:#fff; border-radius:16px; padding:12px 14px; box-shadow: inset 0 0 0 1px rgba(31,58,95,0.08); }
+  .select-row.mode-off{ opacity:0.7; }
+  .select-head{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .select-name{ font-weight:800; color:var(--ink); font-size:16px; }
+  .select-stats{ font-size:11px; font-weight:700; color:var(--ink-soft); }
+  .seg{ display:flex; background: var(--paper); border-radius:12px; padding:3px; gap:3px; }
+  .seg button{
+    flex:1; border:none; background:transparent; border-radius:9px; padding:8px 4px;
+    font-family:'Nunito'; font-weight:800; font-size:13px; color:var(--ink-soft); cursor:pointer;
+  }
+  .seg button.on{ background: var(--ink); color:#fff; }
+  .select-row.mode-review .seg button.on{ background: var(--gold); }
+  .select-row.mode-off .seg button.on{ background: var(--ink-soft); }
+
+  .de-word.long{ font-size:34px; }
+  .de-word.very-long{ font-size:27px; }
+
   .hidden{ display:none !important; }
   ::selection{ background: var(--gold); color:#fff; }
 
@@ -351,234 +393,1164 @@
     </div>
   </div>
 
+  <!-- LERNSTOFF-AUSWAHL -->
+  <div id="screen-select" class="hidden">
+    <div class="notebook">
+      <div class="notebook-lines"></div>
+      <div class="select-title" id="txt-select-title">Lernstoff wählen</div>
+      <p class="select-intro" id="txt-select-intro"></p>
+      <div class="select-list" id="select-list"></div>
+      <div class="action-row">
+        <button class="btn btn-primary" id="select-done"><span id="txt-select-done">Fertig</span></button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-/* ---------------- Vokabeldaten (Deutsch -> Englisch) ---------------- */
+/* ---------------- Vokabeldaten (Deutsch -> Englisch) ----------------
+   Quelle: daten/vokabeln_greenline1.csv (komplette Liste Green Line 1).
+   Der Block zwischen den Markern wird von tools/build_vocab.py erzeugt.
+   Jede Vokabel hat eine feste id (z.B. "U1.S2.door") - daran hängt der Lernstand.
+------------------------------------------------------------------- */
+/* VOCAB-DATA:START (generiert aus daten/vokabeln_greenline1.csv - nicht von Hand bearbeiten) */
 const VOCAB = [
-  // Begrüßung & Sätze
-  {de:"Hallo", en:["hello","hi"], cat:"begruessung"},
-  {de:"Ich heiße", en:["my name is"], cat:"begruessung"},
-  {de:"sein", en:["to be"], cat:"begruessung"},
-  {de:"Wie heißt du?", en:["what's your name","whats your name"], cat:"begruessung"},
-  {de:"Ich bin", en:["i'm","i am"], cat:"begruessung"},
-  {de:"Woher kommst du?", en:["where are you from"], cat:"begruessung"},
-  {de:"Ich bin aus", en:["i'm from","i am from"], cat:"begruessung"},
-  {de:"Ich wohne in", en:["i live in"], cat:"begruessung"},
-  {de:"wohnen, leben", en:["to live"], cat:"begruessung"},
-  {de:"Wie alt bist du?", en:["how old are you"], cat:"begruessung"},
-  {de:"Ich auch", en:["me too"], cat:"begruessung"},
-  {de:"Bis dann", en:["see you"], cat:"begruessung"},
-  {de:"sehen", en:["to see"], cat:"begruessung"},
-  {de:"Tschüss", en:["bye"], cat:"begruessung"},
-  {de:"neu", en:["new"], cat:"begruessung"},
-  {de:"Freund/in", en:["friend"], cat:"begruessung"},
-
-  // Zahlen
-  {de:"null", en:["zero"], cat:"zahlen"},
-  {de:"eins", en:["one"], cat:"zahlen"},
-  {de:"zwei", en:["two"], cat:"zahlen"},
-  {de:"drei", en:["three"], cat:"zahlen"},
-  {de:"vier", en:["four"], cat:"zahlen"},
-  {de:"fünf", en:["five"], cat:"zahlen"},
-  {de:"sechs", en:["six"], cat:"zahlen"},
-  {de:"sieben", en:["seven"], cat:"zahlen"},
-  {de:"acht", en:["eight"], cat:"zahlen"},
-  {de:"neun", en:["nine"], cat:"zahlen"},
-  {de:"zehn", en:["ten"], cat:"zahlen"},
-  {de:"elf", en:["eleven"], cat:"zahlen"},
-  {de:"zwölf", en:["twelve"], cat:"zahlen"},
-  {de:"dreißig", en:["thirty"], cat:"zahlen"},
-
-  // Sätze & kleine Wörter
-  {de:"Willkommen in", en:["welcome to"], cat:"saetze"},
-  {de:"Was kannst du hören?", en:["what can you hear"], cat:"saetze"},
-  {de:"hören", en:["to hear"], cat:"saetze"},
-  {de:"der/die/das", en:["the"], cat:"saetze"},
-  {de:"Ich kann", en:["i can"], cat:"saetze"},
-  {de:"ein/eine", en:["a"], cat:"saetze"},
-  {de:"auf/an/in", en:["on"], cat:"saetze"},
-  {de:"ein Picknick machen", en:["to have a picnic"], cat:"saetze"},
-  {de:"lesen", en:["to read"], cat:"saetze"},
-  {de:"spielen", en:["to play"], cat:"saetze"},
-  {de:"Fahrrad fahren", en:["to ride a bike"], cat:"saetze"},
-  {de:"reden mit", en:["to talk to"], cat:"saetze"},
-
-  // Tiere & Natur
-  {de:"Boot", en:["boat"], cat:"tiere"},
-  {de:"Blume", en:["flower"], cat:"tiere"},
-  {de:"Inlineskates", en:["skates"], cat:"tiere"},
-  {de:"Hund", en:["dog"], cat:"tiere"},
-  {de:"Katze", en:["cat"], cat:"tiere"},
-  {de:"Vogel", en:["bird"], cat:"tiere"},
-  {de:"Schmetterling", en:["butterfly"], cat:"tiere"},
-  {de:"Biene", en:["bee"], cat:"tiere"},
-  {de:"Baum", en:["tree"], cat:"tiere"},
-  {de:"Gras", en:["grass"], cat:"tiere"},
-  {de:"Fahrrad", en:["bike","bicycle"], cat:"tiere"},
-  {de:"Buch", en:["book"], cat:"tiere"},
-  {de:"Pferd", en:["horse"], cat:"tiere"},
-
-  // Familie & Freunde
-  {de:"Mädchen", en:["girl"], cat:"familie"},
-  {de:"Junge", en:["boy"], cat:"familie"},
-  {de:"Mutter", en:["mother"], cat:"familie"},
-  {de:"Vater", en:["father"], cat:"familie"},
-  {de:"Schwester", en:["sister"], cat:"familie"},
-  {de:"Bruder", en:["brother"], cat:"familie"},
-  {de:"Zwilling(e)", en:["twin"], cat:"familie"},
-  {de:"Haustier", en:["pet"], cat:"familie"},
-
-  // Farben
-  {de:"schwarz", en:["black"], cat:"farben"},
-  {de:"blau", en:["blue"], cat:"farben"},
-  {de:"braun", en:["brown"], cat:"farben"},
-  {de:"grün", en:["green"], cat:"farben"},
-  {de:"grau", en:["grey","gray"], cat:"farben"},
-  {de:"orange", en:["orange"], cat:"farben"},
-  {de:"rosa", en:["pink"], cat:"farben"},
-  {de:"lila", en:["purple"], cat:"farben"},
-  {de:"rot", en:["red"], cat:"farben"},
-  {de:"weiß", en:["white"], cat:"farben"},
-  {de:"gelb", en:["yellow"], cat:"farben"},
-
-  // Hobbys & Sätze
-  {de:"Mein/e Lieblings...", en:["my favorite","my favourite"], cat:"hobbys"},
-  {de:"Mir gefällt / ich mag", en:["i like"], cat:"hobbys"},
-  {de:"mögen, gerne haben", en:["to like"], cat:"hobbys"},
-  {de:"Fotos machen", en:["to take photos"], cat:"hobbys"},
-  {de:"großartig, toll, super", en:["great"], cat:"hobbys"},
-  {de:"groß", en:["big"], cat:"hobbys"},
-  {de:"beste/r/s", en:["best"], cat:"hobbys"},
-  {de:"und", en:["and"], cat:"hobbys"},
-  {de:"wir sind", en:["we're","we are"], cat:"hobbys"},
-  {de:"haben", en:["to have"], cat:"hobbys"},
-  {de:"lustig, witzig", en:["funny"], cat:"hobbys"},
-  {de:"Fußball", en:["football","soccer"], cat:"hobbys"},
-  {de:"Essen", en:["food"], cat:"hobbys"},
-  {de:"kochen", en:["to cook"], cat:"hobbys"},
-  {de:"Korbball", en:["netball"], cat:"hobbys"},
-  {de:"er ist", en:["he's","he is"], cat:"hobbys"},
-  {de:"gut", en:["good"], cat:"hobbys"},
-  {de:"Wer ist es?", en:["who is it"], cat:"hobbys"},
-  {de:"oder", en:["or"], cat:"hobbys"},
-  {de:"Hobby", en:["hobby"], cat:"hobbys"},
-  {de:"Du/ihr/Sie auch?", en:["you too"], cat:"hobbys"},
-  {de:"du bist", en:["you're","you are"], cat:"hobbys"},
-  {de:"Ich bin dran", en:["my turn"], cat:"hobbys"},
-  {de:"zeichnen", en:["to draw"], cat:"hobbys"},
-  {de:"Bild/Foto", en:["picture"], cat:"hobbys"},
-  {de:"Spiel", en:["game"], cat:"hobbys"},
-  {de:"singen", en:["to sing"], cat:"hobbys"},
-
-  // Schulsachen
-  {de:"Übungsheft", en:["exercise book"], cat:"schulsachen"},
-  {de:"Leuchtstift", en:["marker"], cat:"schulsachen"},
-  {de:"Füller", en:["pen"], cat:"schulsachen"},
-  {de:"Bleistift, Buntstift", en:["pencil"], cat:"schulsachen"},
-  {de:"Federmäppchen, Mäppchen", en:["pencil case"], cat:"schulsachen"},
-  {de:"Radiergummi", en:["rubber","eraser"], cat:"schulsachen"},
-  {de:"Lineal", en:["ruler"], cat:"schulsachen"},
-  {de:"Schultasche", en:["schoolbag","school bag"], cat:"schulsachen"},
-  {de:"Klebstift", en:["glue"], cat:"schulsachen"},
-  {de:"Spitzer", en:["sharpener"], cat:"schulsachen"},
-  {de:"Schere", en:["scissors"], cat:"schulsachen"},
-  {de:"Ding, Sache", en:["thing"], cat:"schulsachen"},
-  {de:"Handbuch, Kalender", en:["planner"], cat:"schulsachen"},
-  {de:"Stundenplan", en:["timetable","time table"], cat:"schulsachen"},
-  {de:"Stadtplan, Landkarte", en:["map"], cat:"schulsachen"},
-  {de:"Regel", en:["rule"], cat:"schulsachen"},
-  {de:"Unterricht", en:["lesson"], cat:"schulsachen"},
-  {de:"Bücherei", en:["library"], cat:"schulsachen"},
-  {de:"Versammlung", en:["assembly"], cat:"schulsachen"},
-
-  // Schule & Orte
-  {de:"Klassenzimmer", en:["classroom"], cat:"schulorte"},
-  {de:"Saal", en:["hall"], cat:"schulorte"},
-  {de:"Turnhalle", en:["gym"], cat:"schulorte"},
-  {de:"Tonstudio", en:["recording studio"], cat:"schulorte"},
-  {de:"Cafeteria", en:["cafeteria"], cat:"schulorte"},
-  {de:"Raum", en:["room"], cat:"schulorte"},
-  {de:"Sportplatz", en:["sports ground","sports field"], cat:"schulorte"},
-
-  // Gefühle & Beschreibungen
-  {de:"froh", en:["happy"], cat:"gefuehle"},
-  {de:"wütend", en:["angry"], cat:"gefuehle"},
-  {de:"überrascht", en:["surprised"], cat:"gefuehle"},
-  {de:"nervös", en:["nervous"], cat:"gefuehle"},
-  {de:"langweilig", en:["boring"], cat:"gefuehle"},
-  {de:"hässlich", en:["ugly"], cat:"gefuehle"},
-  {de:"dumm, doof, albern", en:["silly"], cat:"gefuehle"},
-  {de:"streng", en:["strict"], cat:"gefuehle"},
-  {de:"freundlich, nett", en:["friendly"], cat:"gefuehle"},
-  {de:"verrückt", en:["crazy"], cat:"gefuehle"},
-
-  // Alltag & Sätze
-  {de:"Komm schon!", en:["come on"], cat:"alltag"},
-  {de:"kommen", en:["to come"], cat:"alltag"},
-  {de:"Es ist Zeit für", en:["it's time for","its time for"], cat:"alltag"},
-  {de:"Eis", en:["ice cream"], cat:"alltag"},
-  {de:"kann nicht", en:["can't","cant"], cat:"alltag"},
-  {de:"mich, mir", en:["me"], cat:"alltag"},
-  {de:"anschauen", en:["to look at"], cat:"alltag"},
-  {de:"uns", en:["us"], cat:"alltag"},
-  {de:"schauen", en:["to look"], cat:"alltag"},
-  {de:"da drüben", en:["over there"], cat:"alltag"},
-  {de:"Keine Sorge", en:["don't worry","dont worry"], cat:"alltag"},
-  {de:"sitzen", en:["to sit"], cat:"alltag"},
-  {de:"zusammen", en:["together"], cat:"alltag"},
-  {de:"warum", en:["why"], cat:"alltag"},
-  {de:"Frau", en:["mrs"], cat:"alltag"},
-  {de:"Lehrer/in", en:["teacher"], cat:"alltag"},
-  {de:"Bitte", en:["please"], cat:"alltag"},
-  {de:"nehmen", en:["to take"], cat:"alltag"},
-  {de:"zu Hause", en:["home"], cat:"alltag"},
-  {de:"Schau", en:["look"], cat:"alltag"},
-  {de:"Das ist", en:["that's","thats"], cat:"alltag"},
-  {de:"vor", en:["in front of"], cat:"alltag"},
-  {de:"denken", en:["to think"], cat:"alltag"},
-  {de:"Guten Morgen", en:["good morning"], cat:"alltag"},
-  {de:"nein", en:["no"], cat:"alltag"},
-  {de:"nicht", en:["not"], cat:"alltag"},
-  {de:"helfen", en:["to help"], cat:"alltag"},
-  {de:"Frage", en:["question"], cat:"alltag"},
-  {de:"Komm nicht zu spät zur Schule", en:["don't be late for school","dont be late for school"], cat:"alltag"},
-  {de:"zeigen", en:["to show"], cat:"alltag"},
-  {de:"Tour", en:["tour"], cat:"alltag"},
-  {de:"zu Mittag essen", en:["to have lunch"], cat:"alltag"},
-  {de:"Entschuldigung", en:["excuse me"], cat:"alltag"},
-  {de:"Kunst", en:["art"], cat:"alltag"},
-  {de:"sagen", en:["to say"], cat:"alltag"},
-  {de:"da, dort", en:["there"], cat:"alltag"},
-  {de:"Schüler", en:["student"], cat:"alltag"},
-  {de:"mögen", en:["to want"], cat:"alltag"},
-  {de:"Getränk", en:["drink"], cat:"alltag"},
-  {de:"heute", en:["today"], cat:"alltag"},
-  {de:"Schlafzimmer", en:["bedroom"], cat:"alltag"},
-  {de:"unter", en:["under"], cat:"alltag"},
-  {de:"Bett", en:["bed"], cat:"alltag"},
-  {de:"suchen nach", en:["to look for"], cat:"alltag"},
-  {de:"kein/e", en:["no","none"], cat:"alltag"},
-  {de:"Jahr", en:["year"], cat:"alltag"},
-  {de:"Uniform", en:["uniform"], cat:"alltag"},
+  {"id":"GRS.CI.hello","u":"GRS","s":"CI","de":"Hallo.","en":["hello","hi"],"show":"Hello."},
+  {"id":"GRS.CI.my-name-is","u":"GRS","s":"CI","de":"Ich heiße …","en":["my name is"],"show":"My name is …"},
+  {"id":"GRS.CI.to-be","u":"GRS","s":"CI","de":"sein","en":["to be"],"show":"to be"},
+  {"id":"GRS.CI.what-s-your-name","u":"GRS","s":"CI","de":"Wie heißt du?; Wie heißen Sie?","en":["what's your name","what is your name","whats your name"],"show":"What’s your name?"},
+  {"id":"GRS.CI.hi","u":"GRS","s":"CI","de":"Hi.; Hallo.","en":["hi","hello"],"show":"Hi."},
+  {"id":"GRS.CI.i-m","u":"GRS","s":"CI","de":"Ich bin …","en":["i'm","i am","im"],"show":"I’m …"},
+  {"id":"GRS.CI.where-are-you-from","u":"GRS","s":"CI","de":"Woher kommst du/kommt ihr/kommen Sie?","en":["where are you from"],"show":"Where are you from?"},
+  {"id":"GRS.CI.i-m-from","u":"GRS","s":"CI","de":"Ich bin aus …","en":["i'm from","i am from","im from"],"show":"I’m from …"},
+  {"id":"GRS.CI.but","u":"GRS","s":"CI","de":"aber","en":["but"],"show":"but"},
+  {"id":"GRS.CI.i-live-in","u":"GRS","s":"CI","de":"Ich wohne in …","en":["i live in"],"show":"I live in …"},
+  {"id":"GRS.CI.to-live","u":"GRS","s":"CI","de":"wohnen; leben","en":["to live"],"show":"to live"},
+  {"id":"GRS.CI.how-old-are-you","u":"GRS","s":"CI","de":"Wie alt bist du?; Wie alt sind Sie?","en":["how old are you"],"show":"How old are you?"},
+  {"id":"GRS.CI.me-too","u":"GRS","s":"CI","de":"Ich auch.","en":["me too"],"show":"Me too."},
+  {"id":"GRS.CI.see-you","u":"GRS","s":"CI","de":"Bis dann!; Bis ...","en":["see you"],"show":"See you!"},
+  {"id":"GRS.CI.to-see","u":"GRS","s":"CI","de":"sehen","en":["to see"],"show":"to see"},
+  {"id":"GRS.CI.bye","u":"GRS","s":"CI","de":"Tschüss!","en":["bye"],"show":"Bye!"},
+  {"id":"GRS.CI.new","u":"GRS","s":"CI","de":"neu","en":["new"],"show":"new"},
+  {"id":"GRS.CI.friend","u":"GRS","s":"CI","de":"Freund/-in","en":["friend"],"show":"friend"},
+  {"id":"GRS.S1.welcome-to","u":"GRS","s":"S1","de":"willkommen (in)","en":["welcome","welcome to"],"show":"welcome (to)"},
+  {"id":"GRS.S1.what-can-you-hear","u":"GRS","s":"S1","de":"Was kannst du/könnt ihr hören?","en":["what can you hear"],"show":"What can you hear?"},
+  {"id":"GRS.S1.to-hear","u":"GRS","s":"S1","de":"hören","en":["to hear"],"show":"to hear"},
+  {"id":"GRS.S1.the","u":"GRS","s":"S1","de":"der; die (auch Pl.); das","en":["the"],"show":"the"},
+  {"id":"GRS.S1.to-do","u":"GRS","s":"S1","de":"machen; tun","en":["to do"],"show":"to do"},
+  {"id":"GRS.S1.i-can","u":"GRS","s":"S1","de":"Ich kann …","en":["i can"],"show":"I can …"},
+  {"id":"GRS.S1.a","u":"GRS","s":"S1","de":"ein/-e","en":["a"],"show":"a"},
+  {"id":"GRS.S1.boat","u":"GRS","s":"S1","de":"Boot","en":["boat"],"show":"boat"},
+  {"id":"GRS.S1.flower","u":"GRS","s":"S1","de":"Blume","en":["flower"],"show":"flower"},
+  {"id":"GRS.S1.girl","u":"GRS","s":"S1","de":"Mädchen","en":["girl"],"show":"girl"},
+  {"id":"GRS.S1.on","u":"GRS","s":"S1","de":"auf; an; am; in; im","en":["on"],"show":"on"},
+  {"id":"GRS.S1.skates","u":"GRS","s":"S1","de":"Inlineskates; Rollschuhe; Schlittschuhe","en":["skates"],"show":"skates"},
+  {"id":"GRS.S1.boy","u":"GRS","s":"S1","de":"Junge","en":["boy"],"show":"boy"},
+  {"id":"GRS.S1.mother","u":"GRS","s":"S1","de":"Mutter","en":["mother"],"show":"mother"},
+  {"id":"GRS.S1.father","u":"GRS","s":"S1","de":"Vater","en":["father"],"show":"father"},
+  {"id":"GRS.S1.dog","u":"GRS","s":"S1","de":"Hund","en":["dog"],"show":"dog"},
+  {"id":"GRS.S1.cat","u":"GRS","s":"S1","de":"Katze","en":["cat"],"show":"cat"},
+  {"id":"GRS.S1.bird","u":"GRS","s":"S1","de":"Vogel","en":["bird"],"show":"bird"},
+  {"id":"GRS.S1.butterfly","u":"GRS","s":"S1","de":"Schmetterling","en":["butterfly"],"show":"butterfly"},
+  {"id":"GRS.S1.bee","u":"GRS","s":"S1","de":"Biene","en":["bee"],"show":"bee"},
+  {"id":"GRS.S1.tree","u":"GRS","s":"S1","de":"Baum","en":["tree"],"show":"tree"},
+  {"id":"GRS.S1.grass","u":"GRS","s":"S1","de":"Gras","en":["grass"],"show":"grass"},
+  {"id":"GRS.S1.bike","u":"GRS","s":"S1","de":"Fahrrad","en":["bike","bicycle"],"show":"bike"},
+  {"id":"GRS.S1.to-have-a-picnic","u":"GRS","s":"S1","de":"ein Picknick machen","en":["to have a picnic"],"show":"to have a picnic"},
+  {"id":"GRS.S1.with","u":"GRS","s":"S1","de":"mit; bei","en":["with"],"show":"with"},
+  {"id":"GRS.S1.to-read","u":"GRS","s":"S1","de":"lesen","en":["to read"],"show":"to read"},
+  {"id":"GRS.S1.book","u":"GRS","s":"S1","de":"Buch","en":["book"],"show":"book"},
+  {"id":"GRS.S1.to-play","u":"GRS","s":"S1","de":"spielen","en":["to play"],"show":"to play"},
+  {"id":"GRS.S1.to-ride","u":"GRS","s":"S1","de":"fahren; reiten","en":["to ride"],"show":"to ride"},
+  {"id":"GRS.S1.to-ride-a-bike","u":"GRS","s":"S1","de":"Fahrrad fahren","en":["to ride a bike"],"show":"to ride a bike"},
+  {"id":"GRS.S1.to-talk-to","u":"GRS","s":"S1","de":"reden mit","en":["to talk to"],"show":"to talk to"},
+  {"id":"GRS.S1.number","u":"GRS","s":"S1","de":"Zahl; Nummer","en":["number"],"show":"number"},
+  {"id":"GRS.S1.colour","u":"GRS","s":"S1","de":"Farbe","en":["colour"],"show":"colour"},
+  {"id":"GRS.S1.shorts","u":"GRS","s":"S1","de":"Shorts; kurze Hose","en":["shorts"],"show":"shorts"},
+  {"id":"GRS.S1.zero","u":"GRS","s":"S1","de":"null","en":["zero"],"show":"zero"},
+  {"id":"GRS.S1.one","u":"GRS","s":"S1","de":"eins","en":["one"],"show":"one"},
+  {"id":"GRS.S1.two","u":"GRS","s":"S1","de":"zwei","en":["two"],"show":"two"},
+  {"id":"GRS.S1.three","u":"GRS","s":"S1","de":"drei","en":["three"],"show":"three"},
+  {"id":"GRS.S1.four","u":"GRS","s":"S1","de":"vier","en":["four"],"show":"four"},
+  {"id":"GRS.S1.five","u":"GRS","s":"S1","de":"fünf","en":["five"],"show":"five"},
+  {"id":"GRS.S1.six","u":"GRS","s":"S1","de":"sechs","en":["six"],"show":"six"},
+  {"id":"GRS.S1.seven","u":"GRS","s":"S1","de":"sieben","en":["seven"],"show":"seven"},
+  {"id":"GRS.S1.eight","u":"GRS","s":"S1","de":"acht","en":["eight"],"show":"eight"},
+  {"id":"GRS.S1.nine","u":"GRS","s":"S1","de":"neun","en":["nine"],"show":"nine"},
+  {"id":"GRS.S1.ten","u":"GRS","s":"S1","de":"zehn","en":["ten"],"show":"ten"},
+  {"id":"GRS.S1.eleven","u":"GRS","s":"S1","de":"elf","en":["eleven"],"show":"eleven"},
+  {"id":"GRS.S1.twelve","u":"GRS","s":"S1","de":"zwölf","en":["twelve"],"show":"twelve"},
+  {"id":"GRS.S1.yellow","u":"GRS","s":"S1","de":"gelb","en":["yellow"],"show":"yellow"},
+  {"id":"GRS.S1.white","u":"GRS","s":"S1","de":"weiß","en":["white"],"show":"white"},
+  {"id":"GRS.S1.red","u":"GRS","s":"S1","de":"rot","en":["red"],"show":"red"},
+  {"id":"GRS.S1.orange","u":"GRS","s":"S1","de":"orange","en":["orange"],"show":"orange"},
+  {"id":"GRS.S1.purple","u":"GRS","s":"S1","de":"violett; lila","en":["purple"],"show":"purple"},
+  {"id":"GRS.S1.green","u":"GRS","s":"S1","de":"grün","en":["green"],"show":"green"},
+  {"id":"GRS.S1.brown","u":"GRS","s":"S1","de":"braun","en":["brown"],"show":"brown"},
+  {"id":"GRS.S1.black","u":"GRS","s":"S1","de":"schwarz","en":["black"],"show":"black"},
+  {"id":"GRS.S1.grey","u":"GRS","s":"S1","de":"grau","en":["grey","gray"],"show":"grey"},
+  {"id":"GRS.S1.blue","u":"GRS","s":"S1","de":"blau","en":["blue"],"show":"blue"},
+  {"id":"GRS.S1.pink","u":"GRS","s":"S1","de":"pink; rosa","en":["pink"],"show":"pink"},
+  {"id":"GRS.S2.my-favourite","u":"GRS","s":"S2","de":"Mein/e Lieblings-…","en":["my favourite","my favorite"],"show":"My favourite …"},
+  {"id":"GRS.S2.i-like","u":"GRS","s":"S2","de":"Mir gefällt …; Ich mag …","en":["i like"],"show":"I like …"},
+  {"id":"GRS.S2.to-like","u":"GRS","s":"S2","de":"mögen; gern haben","en":["to like"],"show":"to like"},
+  {"id":"GRS.S2.to-take-photos","u":"GRS","s":"S2","de":"Fotos machen","en":["to take photos"],"show":"to take photos"},
+  {"id":"GRS.S2.great","u":"GRS","s":"S2","de":"großartig; toll; super","en":["great"],"show":"great"},
+  {"id":"GRS.S2.big","u":"GRS","s":"S2","de":"groß","en":["big"],"show":"big"},
+  {"id":"GRS.S2.sister","u":"GRS","s":"S2","de":"Schwester","en":["sister"],"show":"sister"},
+  {"id":"GRS.S2.best","u":"GRS","s":"S2","de":"beste/-r/-s","en":["best"],"show":"best"},
+  {"id":"GRS.S2.and","u":"GRS","s":"S2","de":"und","en":["and"],"show":"and"},
+  {"id":"GRS.S2.we-re","u":"GRS","s":"S2","de":"wir sind","en":["we're","we are"],"show":"we're (= we are)"},
+  {"id":"GRS.S2.twin","u":"GRS","s":"S2","de":"Zwilling; Zwillings-","en":["twin"],"show":"twin"},
+  {"id":"GRS.S2.to-have","u":"GRS","s":"S2","de":"haben","en":["to have"],"show":"to have"},
+  {"id":"GRS.S2.funny","u":"GRS","s":"S2","de":"lustig; witzig","en":["funny"],"show":"funny"},
+  {"id":"GRS.S2.football","u":"GRS","s":"S2","de":"Fußball","en":["football","soccer"],"show":"football"},
+  {"id":"GRS.S2.food","u":"GRS","s":"S2","de":"Essen; Lebensmittel","en":["food"],"show":"food"},
+  {"id":"GRS.S2.to-cook","u":"GRS","s":"S2","de":"kochen","en":["to cook"],"show":"to cook"},
+  {"id":"GRS.S2.netball","u":"GRS","s":"S2","de":"Korbball","en":["netball"],"show":"netball"},
+  {"id":"GRS.S2.he-s","u":"GRS","s":"S2","de":"er ist","en":["he's","he is","hes"],"show":"he’s"},
+  {"id":"GRS.S2.good","u":"GRS","s":"S2","de":"gut","en":["good"],"show":"good"},
+  {"id":"GRS.S2.brother","u":"GRS","s":"S2","de":"Bruder","en":["brother"],"show":"brother"},
+  {"id":"GRS.S2.who-is-it","u":"GRS","s":"S2","de":"Wer ist es?","en":["who is it"],"show":"Who is it?"},
+  {"id":"GRS.S2.or","u":"GRS","s":"S2","de":"oder","en":["or"],"show":"or"},
+  {"id":"GRS.S2.i","u":"GRS","s":"S2","de":"ich","en":["i"],"show":"I"},
+  {"id":"GRS.S2.he","u":"GRS","s":"S2","de":"er","en":["he"],"show":"he"},
+  {"id":"GRS.S2.she","u":"GRS","s":"S2","de":"sie","en":["she"],"show":"she"},
+  {"id":"GRS.S2.it","u":"GRS","s":"S2","de":"es","en":["it"],"show":"it"},
+  {"id":"GRS.S2.we","u":"GRS","s":"S2","de":"wir","en":["we"],"show":"we"},
+  {"id":"GRS.S2.you","u":"GRS","s":"S2","de":"du; ihr; Sie","en":["you"],"show":"you"},
+  {"id":"GRS.S2.they","u":"GRS","s":"S2","de":"sie (Pl.)","en":["they"],"show":"they"},
+  {"id":"GRS.S2.hobby","u":"GRS","s":"S2","de":"Hobby","en":["hobby","hobbies"],"show":"hobby, hobbies"},
+  {"id":"GRS.S2.you-too","u":"GRS","s":"S2","de":"Du/ihr/Sie auch?","en":["you too"],"show":"You too?"},
+  {"id":"GRS.S2.to-watch","u":"GRS","s":"S2","de":"beobachten; (sich) ansehen; zuschauen","en":["to watch"],"show":"to watch"},
+  {"id":"GRS.S2.you-re","u":"GRS","s":"S2","de":"du bist; Sie sind","en":["you're","you are","youre"],"show":"you’re"},
+  {"id":"GRS.S2.my-turn","u":"GRS","s":"S2","de":"Ich bin dran.","en":["my turn"],"show":"My turn."},
+  {"id":"GRS.S2.to-draw","u":"GRS","s":"S2","de":"zeichnen","en":["to draw"],"show":"to draw"},
+  {"id":"GRS.S2.picture","u":"GRS","s":"S2","de":"Bild; Foto","en":["picture"],"show":"picture"},
+  {"id":"GRS.S2.pet","u":"GRS","s":"S2","de":"Haustier","en":["pet"],"show":"pet"},
+  {"id":"GRS.S2.game","u":"GRS","s":"S2","de":"Spiel","en":["game"],"show":"game"},
+  {"id":"GRS.S2.to-sing","u":"GRS","s":"S2","de":"singen","en":["to sing"],"show":"to sing"},
+  {"id":"GRS.S2.horse","u":"GRS","s":"S2","de":"Pferd","en":["horse"],"show":"horse"},
+  {"id":"GRS.S2.to-dance","u":"GRS","s":"S2","de":"tanzen","en":["to dance"],"show":"to dance"},
+  {"id":"GRS.S2.at-ruby-and-ryan-s-house","u":"GRS","s":"S2","de":"bei Ruby und Ryan zu Hause","en":["at ruby and ryan's house","at ruby and ryans house"],"show":"at Ruby and Ryan's house"},
+  {"id":"GRS.S2.at","u":"GRS","s":"S2","de":"in; auf; bei; an","en":["at"],"show":"at"},
+  {"id":"GRS.S2.house","u":"GRS","s":"S2","de":"Haus","en":["house"],"show":"house"},
+  {"id":"GRS.S2.bored","u":"GRS","s":"S2","de":"gelangweilt","en":["bored"],"show":"bored"},
+  {"id":"GRS.S2.let-s","u":"GRS","s":"S2","de":"Lass/Lasst uns …","en":["let's","let us","lets"],"show":"Let’s …"},
+  {"id":"GRS.S2.to-go-to","u":"GRS","s":"S2","de":"gehen (zu/nach); fahren (zu/nach)","en":["to go","to go to"],"show":"to go (to)"},
+  {"id":"GRS.S2.to","u":"GRS","s":"S2","de":"zu; nach; auf; in","en":["to"],"show":"to"},
+  {"id":"GRS.S2.how-are-you","u":"GRS","s":"S2","de":"Wie geht es dir?; Wie geht es euch?; Wie geht es Ihnen?","en":["how are you"],"show":"How are you?"},
+  {"id":"GRS.S2.fine","u":"GRS","s":"S2","de":"gut; in Ordnung; schön","en":["fine"],"show":"fine"},
+  {"id":"GRS.S2.thanks","u":"GRS","s":"S2","de":"Danke.","en":["thanks"],"show":"Thanks."},
+  {"id":"GRS.S2.this","u":"GRS","s":"S2","de":"dies; diese/-r/-s","en":["this"],"show":"this"},
+  {"id":"GRS.S2.here","u":"GRS","s":"S2","de":"hier","en":["here"],"show":"here"},
+  {"id":"GRS.S2.tomorrow","u":"GRS","s":"S2","de":"morgen","en":["tomorrow"],"show":"tomorrow"},
+  {"id":"GRS.S2.the-first-day-of-school","u":"GRS","s":"S2","de":"der erste Schultag","en":["the first day of school"],"show":"the first day of school"},
+  {"id":"GRS.S2.yes","u":"GRS","s":"S2","de":"ja","en":["yes"],"show":"yes"},
+  {"id":"GRS.S2.come-on","u":"GRS","s":"S2","de":"Komm(t) schon!; Komm(t) jetzt!","en":["come on"],"show":"Come on!"},
+  {"id":"GRS.S2.to-come","u":"GRS","s":"S2","de":"kommen","en":["to come"],"show":"to come"},
+  {"id":"GRS.S2.it-s-time-for","u":"GRS","s":"S2","de":"Es ist Zeit für …","en":["it's time for","it is time for","its time for"],"show":"It's time for …"},
+  {"id":"GRS.S2.ice-cream","u":"GRS","s":"S2","de":"Eis; Eiscreme","en":["ice cream"],"show":"ice cream"},
+  {"id":"GRS.S2.can-t","u":"GRS","s":"S2","de":"kann nicht; können nicht","en":["can't","cannot","cant"],"show":"can’t"},
+  {"id":"GRS.S2.me","u":"GRS","s":"S2","de":"mich; mir","en":["me"],"show":"me"},
+  {"id":"GRS.S3.thing","u":"GRS","s":"S3","de":"Ding; Sache","en":["thing"],"show":"thing"},
+  {"id":"GRS.S3.exercise-book","u":"GRS","s":"S3","de":"Übungsheft","en":["exercise book"],"show":"exercise book"},
+  {"id":"GRS.S3.marker","u":"GRS","s":"S3","de":"Leuchtstift","en":["marker"],"show":"marker"},
+  {"id":"GRS.S3.pen","u":"GRS","s":"S3","de":"Füller","en":["pen"],"show":"pen"},
+  {"id":"GRS.S3.pencil","u":"GRS","s":"S3","de":"Bleistift; Buntstift","en":["pencil"],"show":"pencil"},
+  {"id":"GRS.S3.pencil-case","u":"GRS","s":"S3","de":"Federmäppchen; Mäppchen","en":["pencil case"],"show":"pencil case"},
+  {"id":"GRS.S3.rubber","u":"GRS","s":"S3","de":"Radiergummi","en":["rubber","eraser"],"show":"rubber"},
+  {"id":"GRS.S3.ruler","u":"GRS","s":"S3","de":"Lineal","en":["ruler"],"show":"ruler"},
+  {"id":"GRS.S3.schoolbag","u":"GRS","s":"S3","de":"Schultasche","en":["schoolbag","school bag"],"show":"schoolbag"},
+  {"id":"GRS.S3.glue","u":"GRS","s":"S3","de":"Klebstift","en":["glue"],"show":"glue"},
+  {"id":"GRS.S3.sharpener","u":"GRS","s":"S3","de":"Spitzer","en":["sharpener"],"show":"sharpener"},
+  {"id":"GRS.S3.scissors","u":"GRS","s":"S3","de":"Schere","en":["scissors"],"show":"scissors"},
+  {"id":"U1.CI.year","u":"U1","s":"CI","de":"Jahr; Schuljahr","en":["year"],"show":"year"},
+  {"id":"U1.CI.to-look-at","u":"U1","s":"CI","de":"anschauen; ansehen","en":["to look at"],"show":"to look at"},
+  {"id":"U1.CI.us","u":"U1","s":"CI","de":"uns","en":["us"],"show":"us"},
+  {"id":"U1.CI.look","u":"U1","s":"CI","de":"Schau/Schaut mal!","en":["look"],"show":"Look!"},
+  {"id":"U1.CI.to-look","u":"U1","s":"CI","de":"schauen; sehen; aussehen","en":["to look"],"show":"to look"},
+  {"id":"U1.CI.over-there","u":"U1","s":"CI","de":"da drüben; dort drüben; nach dort drüben","en":["over there"],"show":"over there"},
+  {"id":"U1.CI.nervous","u":"U1","s":"CI","de":"nervös; aufgeregt","en":["nervous"],"show":"nervous"},
+  {"id":"U1.CI.don-t-worry","u":"U1","s":"CI","de":"Keine Sorge!","en":["don't worry","do not worry","dont worry"],"show":"Don’t worry!"},
+  {"id":"U1.CI.to-sit","u":"U1","s":"CI","de":"sitzen","en":["to sit"],"show":"to sit"},
+  {"id":"U1.CI.together","u":"U1","s":"CI","de":"zusammen; miteinander; gemeinsam","en":["together"],"show":"together"},
+  {"id":"U1.CI.sports-ground","u":"U1","s":"CI","de":"Sportplatz","en":["sports ground","sports field"],"show":"sports ground"},
+  {"id":"U1.CI.why","u":"U1","s":"CI","de":"warum","en":["why"],"show":"why"},
+  {"id":"U1.CI.mrs","u":"U1","s":"CI","de":"Frau (Anrede)","en":["mrs"],"show":"Mrs"},
+  {"id":"U1.CI.teacher","u":"U1","s":"CI","de":"Lehrer/-in","en":["teacher"],"show":"teacher"},
+  {"id":"U1.CI.please","u":"U1","s":"CI","de":"Bitte.","en":["please"],"show":"Please."},
+  {"id":"U1.CI.to-take","u":"U1","s":"CI","de":"nehmen; mitnehmen; wegnehmen; bringen; mitbringen","en":["to take"],"show":"to take"},
+  {"id":"U1.CI.home","u":"U1","s":"CI","de":"nach Hause","en":["home"],"show":"home"},
+  {"id":"U1.CI.crazy","u":"U1","s":"CI","de":"verrückt","en":["crazy"],"show":"crazy"},
+  {"id":"U1.CI.that-s","u":"U1","s":"CI","de":"Das ist …","en":["that's","that is","thats"],"show":"That's … (= that is)"},
+  {"id":"U1.CI.in-front-of","u":"U1","s":"CI","de":"vor","en":["in front of"],"show":"in front of"},
+  {"id":"U1.CI.happy","u":"U1","s":"CI","de":"glücklich; froh; fröhlich","en":["happy"],"show":"happy"},
+  {"id":"U1.CI.to-think","u":"U1","s":"CI","de":"denken; nachdenken; glauben; finden; meinen","en":["to think"],"show":"to think"},
+  {"id":"U1.CI.angry","u":"U1","s":"CI","de":"wütend; zornig; verärgert; böse","en":["angry"],"show":"angry"},
+  {"id":"U1.CI.surprised","u":"U1","s":"CI","de":"überrascht","en":["surprised"],"show":"surprised"},
+  {"id":"U1.CI.sad","u":"U1","s":"CI","de":"traurig","en":["sad"],"show":"sad"},
+  {"id":"U1.CI.uniform","u":"U1","s":"CI","de":"Uniform","en":["uniform"],"show":"uniform"},
+  {"id":"U1.CI.boring","u":"U1","s":"CI","de":"langweilig","en":["boring"],"show":"boring"},
+  {"id":"U1.CI.ugly","u":"U1","s":"CI","de":"hässlich","en":["ugly"],"show":"ugly"},
+  {"id":"U1.CI.silly","u":"U1","s":"CI","de":"dumm; doof; albern","en":["silly"],"show":"silly"},
+  {"id":"U1.CI.to-look-for","u":"U1","s":"CI","de":"suchen nach","en":["to look for"],"show":"to look for"},
+  {"id":"U1.CI.no","u":"U1","s":"CI","de":"kein/-e","en":["no","none"],"show":"no"},
+  {"id":"U1.CI.today","u":"U1","s":"CI","de":"heute","en":["today"],"show":"today"},
+  {"id":"U1.CI.bedroom","u":"U1","s":"CI","de":"Schlafzimmer","en":["bedroom"],"show":"bedroom"},
+  {"id":"U1.CI.under","u":"U1","s":"CI","de":"unter","en":["under"],"show":"under"},
+  {"id":"U1.CI.bed","u":"U1","s":"CI","de":"Bett","en":["bed"],"show":"bed"},
+  {"id":"U1.S1.good-morning","u":"U1","s":"S1","de":"Guten Morgen.","en":["good morning"],"show":"Good morning."},
+  {"id":"U1.S1.tutor","u":"U1","s":"S1","de":"Klassenlehrer/-in","en":["tutor"],"show":"tutor"},
+  {"id":"U1.S1.no","u":"U1","s":"S1","de":"nein","en":["no"],"show":"no"},
+  {"id":"U1.S1.not","u":"U1","s":"S1","de":"nicht","en":["not"],"show":"not"},
+  {"id":"U1.S1.friendly","u":"U1","s":"S1","de":"freundlich; nett","en":["friendly"],"show":"friendly"},
+  {"id":"U1.S1.to-help","u":"U1","s":"S1","de":"helfen","en":["to help"],"show":"to help"},
+  {"id":"U1.S1.question","u":"U1","s":"S1","de":"Frage","en":["question"],"show":"question"},
+  {"id":"U1.S1.planner","u":"U1","s":"S1","de":"Handbuch; Kalender","en":["planner"],"show":"planner"},
+  {"id":"U1.S1.timetable","u":"U1","s":"S1","de":"Stundenplan; Fahrplan","en":["timetable","time table"],"show":"timetable"},
+  {"id":"U1.S1.map","u":"U1","s":"S1","de":"Stadtplan; Landkarte","en":["map"],"show":"map"},
+  {"id":"U1.S1.rule","u":"U1","s":"S1","de":"Regel","en":["rule"],"show":"rule"},
+  {"id":"U1.S1.don-t-be-late-for-school","u":"U1","s":"S1","de":"Komm nicht zu spät zur Schule.","en":["don't be late for school","do not be late for school","dont be late for school"],"show":"Don't be late for school."},
+  {"id":"U1.S1.late","u":"U1","s":"S1","de":"spät; zu spät","en":["late"],"show":"late"},
+  {"id":"U1.S1.lesson","u":"U1","s":"S1","de":"Unterrichtsstunde; Schulstunde; Unterricht","en":["lesson"],"show":"lesson"},
+  {"id":"U1.S1.strict","u":"U1","s":"S1","de":"streng; strikt","en":["strict"],"show":"strict"},
+  {"id":"U1.S1.library","u":"U1","s":"S1","de":"Bibliothek; Bücherei","en":["library"],"show":"library"},
+  {"id":"U1.S1.an","u":"U1","s":"S1","de":"ein/-e","en":["an"],"show":"an"},
+  {"id":"U1.S1.assembly","u":"U1","s":"S1","de":"Versammlung; Morgenappell","en":["assembly"],"show":"assembly"},
+  {"id":"U1.S1.hall","u":"U1","s":"S1","de":"Halle; Saal","en":["hall"],"show":"hall"},
+  {"id":"U1.S1.gym-nasium","u":"U1","s":"S1","de":"Turnhalle","en":["gym","gymnasium"],"show":"gym(nasium)"},
+  {"id":"U1.S1.recording-studio","u":"U1","s":"S1","de":"Aufnahmestudio; Tonstudio","en":["recording studio"],"show":"recording studio"},
+  {"id":"U1.S1.to-show","u":"U1","s":"S1","de":"zeigen","en":["to show"],"show":"to show"},
+  {"id":"U1.S1.tour","u":"U1","s":"S1","de":"Tour; Fahrt; Rundgang","en":["tour"],"show":"tour"},
+  {"id":"U1.S1.to-have-lunch","u":"U1","s":"S1","de":"zu Mittag essen","en":["to have lunch"],"show":"to have lunch"},
+  {"id":"U1.S1.cafeteria","u":"U1","s":"S1","de":"Cafeteria","en":["cafeteria"],"show":"cafeteria"},
+  {"id":"U1.S1.excuse-me","u":"U1","s":"S1","de":"Entschuldigung!; Entschuldigen Sie!","en":["excuse me"],"show":"Excuse me …"},
+  {"id":"U1.S1.art","u":"U1","s":"S1","de":"Kunst; Kunstunterricht","en":["art"],"show":"art"},
+  {"id":"U1.S1.room","u":"U1","s":"S1","de":"Zimmer; Raum","en":["room"],"show":"room"},
+  {"id":"U1.S1.to-say","u":"U1","s":"S1","de":"sagen; aufsagen; sprechen","en":["to say"],"show":"to say"},
+  {"id":"U1.S1.there","u":"U1","s":"S1","de":"da; dort; dahin; dorthin","en":["there"],"show":"there"},
+  {"id":"U1.S1.student","u":"U1","s":"S1","de":"Schüler/-in; Student/-in","en":["student"],"show":"student"},
+  {"id":"U1.S1.to-want-to","u":"U1","s":"S1","de":"wollen; mögen","en":["to want","to want to"],"show":"to want (to)"},
+  {"id":"U1.S1.drink","u":"U1","s":"S1","de":"Getränk","en":["drink"],"show":"drink"},
+  {"id":"U1.S1.classroom","u":"U1","s":"S1","de":"Klassenzimmer","en":["classroom"],"show":"classroom"},
+  {"id":"U1.S1.what-s-wrong","u":"U1","s":"S1","de":"Was ist los?; Was stimmt nicht?","en":["what's wrong","what is wrong","whats wrong"],"show":"What’s wrong?"},
+  {"id":"U1.S1.scary","u":"U1","s":"S1","de":"unheimlich; gruselig; beängstigend","en":["scary"],"show":"scary"},
+  {"id":"U1.S1.everything","u":"U1","s":"S1","de":"alles","en":["everything"],"show":"everything"},
+  {"id":"U1.S1.mum","u":"U1","s":"S1","de":"Mama","en":["mum"],"show":"mum"},
+  {"id":"U1.S1.parents","u":"U1","s":"S1","de":"Eltern","en":["parents"],"show":"parents"},
+  {"id":"U1.S1.divorced","u":"U1","s":"S1","de":"geschieden","en":["divorced"],"show":"divorced"},
+  {"id":"U1.S1.alone","u":"U1","s":"S1","de":"allein; ohne fremde Hilfe","en":["alone"],"show":"alone"},
+  {"id":"U1.S1.easy","u":"U1","s":"S1","de":"einfach; leicht","en":["easy"],"show":"easy"},
+  {"id":"U1.S1.after","u":"U1","s":"S1","de":"nach (zeitlich)","en":["after"],"show":"after"},
+  {"id":"U1.S1.dad","u":"U1","s":"S1","de":"Papa","en":["dad"],"show":"dad"},
+  {"id":"U1.S1.to-be-right","u":"U1","s":"S1","de":"recht haben","en":["to be right"],"show":"to be right"},
+  {"id":"U1.S1.family","u":"U1","s":"S1","de":"Familie","en":["family"],"show":"family"},
+  {"id":"U1.S1.word","u":"U1","s":"S1","de":"Wort","en":["word"],"show":"word"},
+  {"id":"U1.S1.place","u":"U1","s":"S1","de":"Ort; Stelle; Platz","en":["place"],"show":"place"},
+  {"id":"U1.S1.people","u":"U1","s":"S1","de":"Leute; Menschen","en":["people"],"show":"people"},
+  {"id":"U1.S1.nice","u":"U1","s":"S1","de":"schön; nett; lieb","en":["nice"],"show":"nice"},
+  {"id":"U1.S2.there-is-are","u":"U1","s":"S2","de":"da ist/sind; es gibt","en":["there is","there are"],"show":"there is/are"},
+  {"id":"U1.S2.class","u":"U1","s":"S2","de":"Klasse; Schulklasse","en":["class"],"show":"class"},
+  {"id":"U1.S2.media-centre","u":"U1","s":"S2","de":"Medienzentrum","en":["media centre"],"show":"media centre"},
+  {"id":"U1.S2.table","u":"U1","s":"S2","de":"Tisch","en":["table"],"show":"table"},
+  {"id":"U1.S2.headphones","u":"U1","s":"S2","de":"Kopfhörer","en":["headphones"],"show":"headphones"},
+  {"id":"U1.S2.to-use","u":"U1","s":"S2","de":"benutzen; verwenden; gebrauchen","en":["to use"],"show":"to use"},
+  {"id":"U1.S2.break","u":"U1","s":"S2","de":"Pause","en":["break"],"show":"break"},
+  {"id":"U1.S2.power-socket","u":"U1","s":"S2","de":"Steckdose","en":["power socket"],"show":"power socket"},
+  {"id":"U1.S2.reading-corner","u":"U1","s":"S2","de":"Leseecke","en":["reading corner"],"show":"reading corner"},
+  {"id":"U1.S2.news-paper","u":"U1","s":"S2","de":"Zeitung","en":["paper","newspaper"],"show":"(news)paper"},
+  {"id":"U1.S2.magazine","u":"U1","s":"S2","de":"Zeitschrift","en":["magazine"],"show":"magazine"},
+  {"id":"U1.S2.to-find","u":"U1","s":"S2","de":"finden; herausfinden","en":["to find"],"show":"to find"},
+  {"id":"U1.S2.man","u":"U1","s":"S2","de":"Mann","en":["man","men"],"show":"man, men"},
+  {"id":"U1.S2.behind","u":"U1","s":"S2","de":"hinter","en":["behind"],"show":"behind"},
+  {"id":"U1.S2.information-desk","u":"U1","s":"S2","de":"Infotheke","en":["information desk"],"show":"information desk"},
+  {"id":"U1.S2.noticeboard","u":"U1","s":"S2","de":"schwarzes Brett","en":["noticeboard"],"show":"noticeboard"},
+  {"id":"U1.S2.next-to","u":"U1","s":"S2","de":"neben","en":["next to"],"show":"next to"},
+  {"id":"U1.S2.door","u":"U1","s":"S2","de":"Tür","en":["door"],"show":"door"},
+  {"id":"U1.S2.wall","u":"U1","s":"S2","de":"Wand; Mauer","en":["wall"],"show":"wall"},
+  {"id":"U1.S2.chair","u":"U1","s":"S2","de":"Stuhl","en":["chair"],"show":"chair"},
+  {"id":"U1.S2.clock","u":"U1","s":"S2","de":"Uhr","en":["clock"],"show":"clock"},
+  {"id":"U1.S2.about","u":"U1","s":"S2","de":"über; von","en":["about"],"show":"about"},
+  {"id":"U1.S2.desk","u":"U1","s":"S2","de":"Schreibtisch","en":["desk"],"show":"desk"},
+  {"id":"U1.S3.to-forget","u":"U1","s":"S3","de":"vergessen","en":["to forget"],"show":"to forget"},
+  {"id":"U1.S3.veggie","u":"U1","s":"S3","de":"vegetarisch","en":["veggie"],"show":"veggie"},
+  {"id":"U1.S3.chips","u":"U1","s":"S3","de":"Pommes frites","en":["chips"],"show":"chips"},
+  {"id":"U1.S3.yuk","u":"U1","s":"S3","de":"igitt","en":["yuk"],"show":"yuk"},
+  {"id":"U1.S3.allergic-to","u":"U1","s":"S3","de":"allergisch gegen","en":["allergic to"],"show":"allergic to"},
+  {"id":"U1.S3.tomato","u":"U1","s":"S3","de":"Tomate","en":["tomato","tomatoes"],"show":"tomato, tomatoes"},
+  {"id":"U1.S3.fresh","u":"U1","s":"S3","de":"frisch","en":["fresh"],"show":"fresh"},
+  {"id":"U1.S3.all","u":"U1","s":"S3","de":"alle/-s; ganz","en":["all"],"show":"all"},
+  {"id":"U1.S3.to-stare","u":"U1","s":"S3","de":"starren; anstarren","en":["to stare"],"show":"to stare"},
+  {"id":"U1.S3.rude","u":"U1","s":"S3","de":"unhöflich; unverschämt","en":["rude"],"show":"rude"},
+  {"id":"U1.S3.year","u":"U1","s":"S3","de":"Jahrgangsstufe; Klasse","en":["year"],"show":"year"},
+  {"id":"U1.S3.to-do","u":"U1","s":"S3","de":"machen; tun","en":["to do"],"show":"to do"},
+  {"id":"U1.S3.to-bring","u":"U1","s":"S3","de":"bringen; mitbringen","en":["to bring"],"show":"to bring"},
+  {"id":"U1.S3.to-buy","u":"U1","s":"S3","de":"kaufen","en":["to buy"],"show":"to buy"},
+  {"id":"U1.S3.to-eat","u":"U1","s":"S3","de":"essen; fressen","en":["to eat"],"show":"to eat"},
+  {"id":"U1.S3.our","u":"U1","s":"S3","de":"unser/-e","en":["our"],"show":"our"},
+  {"id":"U1.S3.to-talk-about","u":"U1","s":"S3","de":"sprechen (über); reden (über)","en":["to talk","to talk about"],"show":"to talk (about)"},
+  {"id":"U1.S3.polite","u":"U1","s":"S3","de":"höflich","en":["polite"],"show":"polite"},
+  {"id":"U1.S3.too","u":"U1","s":"S3","de":"zu","en":["too"],"show":"too"},
+  {"id":"U1.S3.classmate","u":"U1","s":"S3","de":"Klassenkamerad/-in; Mitschüler/-in","en":["classmate"],"show":"classmate"},
+  {"id":"U1.S3.homework","u":"U1","s":"S3","de":"Hausaufgabe(n)","en":["homework"],"show":"homework"},
+  {"id":"U1.S3.right","u":"U1","s":"S3","de":"richtig; korrekt","en":["right"],"show":"right"},
+  {"id":"U1.S3.to-sleep","u":"U1","s":"S3","de":"schlafen","en":["to sleep"],"show":"to sleep"},
+  {"id":"U1.S3.on-the-phone","u":"U1","s":"S3","de":"am Telefon","en":["on the phone"],"show":"on the phone"},
+  {"id":"U1.S3.to-ask","u":"U1","s":"S3","de":"fragen; bitten","en":["to ask"],"show":"to ask"},
+  {"id":"U1.S3.to-send","u":"U1","s":"S3","de":"schicken; senden","en":["to send"],"show":"to send"},
+  {"id":"U1.S3.hair","u":"U1","s":"S3","de":"Haar; Haare","en":["hair"],"show":"hair"},
+  {"id":"U1.S3.take-a-tour-of","u":"U1","s":"S3","de":"Begib dich/Begebt euch auf eine Tour durch …","en":["take a tour of"],"show":"Take a tour of …"},
+  {"id":"U1.S3.reception-area","u":"U1","s":"S3","de":"Empfangsbereich","en":["reception area"],"show":"reception area"},
+  {"id":"U1.S3.fast","u":"U1","s":"S3","de":"schnell","en":["fast"],"show":"fast"},
+  {"id":"U1.S3.to-be-prepared","u":"U1","s":"S3","de":"bereit sein","en":["to be prepared"],"show":"to be prepared"},
+  {"id":"U1.S3.to-focus-on","u":"U1","s":"S3","de":"sich konzentrieren (auf)","en":["to focus","to focus on"],"show":"to focus (on)"},
+  {"id":"U1.S3.other","u":"U1","s":"S3","de":"anders; andere/-r/-s; weitere","en":["other"],"show":"other"},
+  {"id":"U1.S3.to-give","u":"U1","s":"S3","de":"geben; schenken","en":["to give"],"show":"to give"},
+  {"id":"U1.ST.problem","u":"U1","s":"ST","de":"Problem; Schwierigkeit","en":["problem"],"show":"problem"},
+  {"id":"U1.ST.cupboard","u":"U1","s":"ST","de":"Küchenschrank; Schrank","en":["cupboard"],"show":"cupboard"},
+  {"id":"U1.ST.what-a-mess","u":"U1","s":"ST","de":"Was für eine Unordnung/Sauerei!","en":["what a mess"],"show":"What a mess!"},
+  {"id":"U1.ST.to-break-a-rule","u":"U1","s":"ST","de":"gegen eine Regel verstoßen","en":["to break a rule"],"show":"to break a rule"},
+  {"id":"U1.ST.sorry","u":"U1","s":"ST","de":"Entschuldigung!; Tut mir leid!","en":["sorry"],"show":"Sorry!"},
+  {"id":"U1.ST.the-others","u":"U1","s":"ST","de":"die anderen","en":["the others"],"show":"the others"},
+  {"id":"U1.CO.to-listen-to","u":"U1","s":"CO","de":"zuhören; anhören","en":["to listen","to listen to"],"show":"to listen (to)"},
+  {"id":"U1.CO.everywhere","u":"U1","s":"CO","de":"überall","en":["everywhere"],"show":"everywhere"},
+  {"id":"U1.CO.special","u":"U1","s":"CO","de":"besonders; speziell","en":["special"],"show":"special"},
+  {"id":"U1.CO.dream","u":"U1","s":"CO","de":"Traum; Traum-","en":["dream"],"show":"dream"},
+  {"id":"U1.CO.to-wear","u":"U1","s":"CO","de":"anhaben; tragen (Kleidung)","en":["to wear"],"show":"to wear"},
+  {"id":"U1.CO.hoodie","u":"U1","s":"CO","de":"Kapuzenpulli","en":["hoodie"],"show":"hoodie"},
+  {"id":"U1.CO.cap","u":"U1","s":"CO","de":"Kappe; Mütze","en":["cap"],"show":"cap"},
+  {"id":"U1.CO.every-day","u":"U1","s":"CO","de":"jeden Tag","en":["every day"],"show":"every day"},
+  {"id":"MS1.to-write","u":"MS1","s":"","de":"schreiben","en":["to write"],"show":"to write"},
+  {"id":"MS1.to-need-to","u":"MS1","s":"","de":"brauchen; benötigen","en":["to need","to need to"],"show":"to need (to)"},
+  {"id":"MS1.to-write-down","u":"MS1","s":"","de":"aufschreiben","en":["to write down"],"show":"to write down"},
+  {"id":"MS1.to-think-about","u":"MS1","s":"","de":"nachdenken über; denken über; halten von","en":["to think about"],"show":"to think about"},
+  {"id":"MS1.to-organise","u":"MS1","s":"","de":"organisieren","en":["to organise"],"show":"to organise"},
+  {"id":"MS1.idea","u":"MS1","s":"","de":"Idee; Einfall","en":["idea"],"show":"idea"},
+  {"id":"MS1.to-turn-off","u":"MS1","s":"","de":"abschalten; ausschalten","en":["to turn off"],"show":"to turn off"},
+  {"id":"MS1.headphones","u":"MS1","s":"","de":"Kopfhörer","en":["headphones"],"show":"headphones"},
+  {"id":"MS1.audio","u":"MS1","s":"","de":"Audio-; Hör-","en":["audio"],"show":"audio"},
+  {"id":"MS1.work","u":"MS1","s":"","de":"Arbeit","en":["work"],"show":"work"},
+  {"id":"MS1.before","u":"MS1","s":"","de":"vor (zeitlich); bevor","en":["before"],"show":"before"},
+  {"id":"MS1.at-home","u":"MS1","s":"","de":"zu Hause","en":["at home"],"show":"at home"},
+  {"id":"MS1.fun","u":"MS1","s":"","de":"Freude; Spaß","en":["fun"],"show":"fun"},
+  {"id":"MS1.be-careful","u":"MS1","s":"","de":"Vorsicht!; Pass/Passt auf!","en":["be careful"],"show":"Be careful!"},
+  {"id":"MS1.expensive","u":"MS1","s":"","de":"teuer","en":["expensive"],"show":"expensive"},
+  {"id":"MS1.sound","u":"MS1","s":"","de":"Ton; Geräusch; Klang","en":["sound"],"show":"sound"},
+  {"id":"MS1.to-leave","u":"MS1","s":"","de":"verlassen; lassen; abfahren","en":["to leave"],"show":"to leave"},
+  {"id":"MS1.floor","u":"MS1","s":"","de":"Fußboden","en":["floor"],"show":"floor"},
+  {"id":"MS1.what-about","u":"MS1","s":"","de":"Was ist mit …?; Wie wär’s mit …?","en":["what about"],"show":"What about …?"},
+  {"id":"MS1.small","u":"MS1","s":"","de":"klein","en":["small"],"show":"small"},
+  {"id":"MS1.each","u":"MS1","s":"","de":"jede/-r/-s","en":["each"],"show":"each"},
+  {"id":"MS1.oops","u":"MS1","s":"","de":"Hoppla!; Huch!","en":["oops"],"show":"Oops!"},
+  {"id":"MS1.between","u":"MS1","s":"","de":"zwischen","en":["between"],"show":"between"},
+  {"id":"MS1.to-change","u":"MS1","s":"","de":"(sich) ändern; wechseln","en":["to change"],"show":"to change"},
+  {"id":"U2.CI.to-be-fun","u":"U2","s":"CI","de":"Spaß machen; witzig sein","en":["to be fun"],"show":"to be fun"},
+  {"id":"U2.CI.living-room","u":"U2","s":"CI","de":"Wohnzimmer","en":["living room"],"show":"living room"},
+  {"id":"U2.CI.garden","u":"U2","s":"CI","de":"Garten","en":["garden"],"show":"garden"},
+  {"id":"U2.CI.bathroom","u":"U2","s":"CI","de":"Bad; Badezimmer","en":["bathroom"],"show":"bathroom"},
+  {"id":"U2.CI.kitchen","u":"U2","s":"CI","de":"Küche","en":["kitchen"],"show":"kitchen"},
+  {"id":"U2.CI.to-be-scared-of","u":"U2","s":"CI","de":"Angst haben (vor)","en":["to be scared","to be scared of"],"show":"to be scared (of)"},
+  {"id":"U2.CI.to-get","u":"U2","s":"CI","de":"holen; bringen; bekommen","en":["to get"],"show":"to get"},
+  {"id":"U2.CI.these","u":"U2","s":"CI","de":"diese (hier)","en":["these"],"show":"these"},
+  {"id":"U2.S1.different","u":"U2","s":"S1","de":"anders; unterschiedlich; verschieden","en":["different"],"show":"different"},
+  {"id":"U2.S1.home","u":"U2","s":"S1","de":"Zuhause; Heim","en":["home"],"show":"home"},
+  {"id":"U2.S1.armchair","u":"U2","s":"S1","de":"Sessel","en":["armchair"],"show":"armchair"},
+  {"id":"U2.S1.bath","u":"U2","s":"S1","de":"Bad; Badewanne","en":["bath"],"show":"bath"},
+  {"id":"U2.S1.carpet","u":"U2","s":"S1","de":"Teppich","en":["carpet"],"show":"carpet"},
+  {"id":"U2.S1.cooker","u":"U2","s":"S1","de":"Herd","en":["cooker"],"show":"cooker"},
+  {"id":"U2.S1.fridge","u":"U2","s":"S1","de":"Kühlschrank","en":["fridge"],"show":"fridge"},
+  {"id":"U2.S1.lamp","u":"U2","s":"S1","de":"Lampe; Leuchte","en":["lamp"],"show":"lamp"},
+  {"id":"U2.S1.shelf","u":"U2","s":"S1","de":"Regal; Regalbrett","en":["shelf","shelves"],"show":"shelf, shelves"},
+  {"id":"U2.S1.shower","u":"U2","s":"S1","de":"Dusche","en":["shower"],"show":"shower"},
+  {"id":"U2.S1.sink","u":"U2","s":"S1","de":"Becken; Spülbecken; Abwaschbecken","en":["sink"],"show":"sink"},
+  {"id":"U2.S1.toilet","u":"U2","s":"S1","de":"Toilette","en":["toilet"],"show":"toilet"},
+  {"id":"U2.S1.tv","u":"U2","s":"S1","de":"Fernsehen; Fernseher","en":["tv","television"],"show":"TV (= television)"},
+  {"id":"U2.S1.wardrobe","u":"U2","s":"S1","de":"Kleiderschrank","en":["wardrobe"],"show":"wardrobe"},
+  {"id":"U2.S1.washbasin","u":"U2","s":"S1","de":"Waschbecken","en":["washbasin"],"show":"washbasin"},
+  {"id":"U2.S1.shoe","u":"U2","s":"S1","de":"Schuh","en":["shoe"],"show":"shoe"},
+  {"id":"U2.S1.glasses","u":"U2","s":"S1","de":"Brille","en":["glasses"],"show":"glasses"},
+  {"id":"U2.S1.banana","u":"U2","s":"S1","de":"Banane","en":["banana"],"show":"banana"},
+  {"id":"U2.S1.cap","u":"U2","s":"S1","de":"Kappe; Mütze","en":["cap"],"show":"cap"},
+  {"id":"U2.S1.fire","u":"U2","s":"S1","de":"Feuer","en":["fire"],"show":"fire"},
+  {"id":"U2.S1.flat","u":"U2","s":"S1","de":"Wohnung","en":["flat"],"show":"flat"},
+  {"id":"U2.S1.fantasy","u":"U2","s":"S1","de":"Fantasie; Traum-","en":["fantasy"],"show":"fantasy"},
+  {"id":"U2.S1.because","u":"U2","s":"S1","de":"weil; da","en":["because"],"show":"because"},
+  {"id":"U2.S1.a-one-hundred","u":"U2","s":"S1","de":"(ein)hundert","en":["a hundred","one hundred"],"show":"a/one hundred"},
+  {"id":"U2.S1.ninety","u":"U2","s":"S1","de":"neunzig","en":["ninety"],"show":"ninety"},
+  {"id":"U2.S1.eighty","u":"U2","s":"S1","de":"achtzig","en":["eighty"],"show":"eighty"},
+  {"id":"U2.S1.seventy","u":"U2","s":"S1","de":"siebzig","en":["seventy"],"show":"seventy"},
+  {"id":"U2.S1.sixty","u":"U2","s":"S1","de":"sechzig","en":["sixty"],"show":"sixty"},
+  {"id":"U2.S1.fifty","u":"U2","s":"S1","de":"fünfzig","en":["fifty"],"show":"fifty"},
+  {"id":"U2.S1.forty","u":"U2","s":"S1","de":"vierzig","en":["forty"],"show":"forty"},
+  {"id":"U2.S1.thirty","u":"U2","s":"S1","de":"dreißig","en":["thirty"],"show":"thirty"},
+  {"id":"U2.S2.grandma","u":"U2","s":"S2","de":"Oma","en":["grandma"],"show":"grandma"},
+  {"id":"U2.S2.grandpa","u":"U2","s":"S2","de":"Opa","en":["grandpa"],"show":"grandpa"},
+  {"id":"U2.S2.uncle","u":"U2","s":"S2","de":"Onkel","en":["uncle"],"show":"uncle"},
+  {"id":"U2.S2.aunt","u":"U2","s":"S2","de":"Tante","en":["aunt"],"show":"aunt"},
+  {"id":"U2.S2.cousin","u":"U2","s":"S2","de":"Cousin/Cousine","en":["cousin"],"show":"cousin"},
+  {"id":"U2.S2.to-work","u":"U2","s":"S2","de":"arbeiten","en":["to work"],"show":"to work"},
+  {"id":"U2.S2.office","u":"U2","s":"S2","de":"Büro","en":["office"],"show":"office"},
+  {"id":"U2.S2.free-time","u":"U2","s":"S2","de":"Freizeit","en":["free time"],"show":"free time"},
+  {"id":"U2.S2.to-paint","u":"U2","s":"S2","de":"anmalen; malen","en":["to paint"],"show":"to paint"},
+  {"id":"U2.S2.to-sell","u":"U2","s":"S2","de":"verkaufen","en":["to sell"],"show":"to sell"},
+  {"id":"U2.S2.them","u":"U2","s":"S2","de":"sie (Pl.); ihnen","en":["them"],"show":"them"},
+  {"id":"U2.S2.market","u":"U2","s":"S2","de":"Markt","en":["market"],"show":"market"},
+  {"id":"U2.S2.when","u":"U2","s":"S2","de":"wenn; wann; als","en":["when"],"show":"when"},
+  {"id":"U2.S2.to-hide","u":"U2","s":"S2","de":"(sich) verstecken","en":["to hide"],"show":"to hide"},
+  {"id":"U2.S2.divorced","u":"U2","s":"S2","de":"geschieden","en":["divorced"],"show":"divorced"},
+  {"id":"U2.S2.daughter","u":"U2","s":"S2","de":"Tochter","en":["daughter"],"show":"daughter"},
+  {"id":"U2.S2.only-child","u":"U2","s":"S2","de":"Einzelkind","en":["only child"],"show":"only child"},
+  {"id":"U2.S2.at-weekends","u":"U2","s":"S2","de":"am Wochenende; an den Wochenenden","en":["at weekends"],"show":"at weekends"},
+  {"id":"U2.S2.grandparents","u":"U2","s":"S2","de":"Großeltern","en":["grandparents"],"show":"grandparents"},
+  {"id":"U2.S2.son","u":"U2","s":"S2","de":"Sohn","en":["son"],"show":"son"},
+  {"id":"U2.S2.to-have-got","u":"U2","s":"S2","de":"besitzen; haben","en":["to have got"],"show":"to have got"},
+  {"id":"U2.S2.to-love","u":"U2","s":"S2","de":"lieben; gern mögen","en":["to love"],"show":"to love"},
+  {"id":"U2.S2.mr","u":"U2","s":"S2","de":"Herr (Anrede)","en":["mr"],"show":"Mr"},
+  {"id":"U2.S2.cooking","u":"U2","s":"S2","de":"Kochen","en":["cooking"],"show":"cooking"},
+  {"id":"U2.S2.now","u":"U2","s":"S2","de":"jetzt; nun","en":["now"],"show":"now"},
+  {"id":"U2.S2.music","u":"U2","s":"S2","de":"Musik","en":["music"],"show":"music"},
+  {"id":"U2.S2.guitar","u":"U2","s":"S2","de":"Gitarre","en":["guitar"],"show":"guitar"},
+  {"id":"U2.S2.every","u":"U2","s":"S2","de":"jede/-r/-s","en":["every"],"show":"every"},
+  {"id":"U2.S2.afternoon","u":"U2","s":"S2","de":"Nachmittag","en":["afternoon"],"show":"afternoon"},
+  {"id":"U2.S2.fun","u":"U2","s":"S2","de":"lustig; witzig; fröhlich","en":["fun"],"show":"fun"},
+  {"id":"U2.S2.little","u":"U2","s":"S2","de":"klein","en":["little"],"show":"little"},
+  {"id":"U2.S2.to-be-wrong","u":"U2","s":"S2","de":"unrecht haben; sich irren","en":["to be wrong"],"show":"to be wrong"},
+  {"id":"U2.S2.skateboarding","u":"U2","s":"S2","de":"Skateboardfahren","en":["skateboarding"],"show":"skateboarding"},
+  {"id":"U2.S2.sometimes","u":"U2","s":"S2","de":"manchmal","en":["sometimes"],"show":"sometimes"},
+  {"id":"U2.S2.wheelchair","u":"U2","s":"S2","de":"Rollstuhl","en":["wheelchair"],"show":"wheelchair"},
+  {"id":"U2.S2.to-miss","u":"U2","s":"S2","de":"vermissen","en":["to miss"],"show":"to miss"},
+  {"id":"U2.S3.it-gets-on-my-nerves","u":"U2","s":"S3","de":"Es geht mir auf die Nerven!","en":["it gets on my nerves"],"show":"It gets on my nerves!"},
+  {"id":"U2.S3.past","u":"U2","s":"S3","de":"nach (bei Uhrzeitangaben)","en":["past"],"show":"past"},
+  {"id":"U2.S3.to-start","u":"U2","s":"S3","de":"anfangen; beginnen; starten","en":["to start"],"show":"to start"},
+  {"id":"U2.S3.to-know","u":"U2","s":"S3","de":"kennen; wissen","en":["to know"],"show":"to know"},
+  {"id":"U2.S3.always","u":"U2","s":"S3","de":"immer; ständig","en":["always"],"show":"always"},
+  {"id":"U2.S3.head","u":"U2","s":"S3","de":"Kopf","en":["head"],"show":"head"},
+  {"id":"U2.S3.very","u":"U2","s":"S3","de":"sehr","en":["very"],"show":"very"},
+  {"id":"U2.S3.of-course","u":"U2","s":"S3","de":"natürlich; selbstverständlich","en":["of course"],"show":"of course"},
+  {"id":"U2.S3.never","u":"U2","s":"S3","de":"nie; niemals","en":["never"],"show":"never"},
+  {"id":"U2.S3.to-lose","u":"U2","s":"S3","de":"verlieren","en":["to lose"],"show":"to lose"},
+  {"id":"U2.S3.usually","u":"U2","s":"S3","de":"normalerweise; gewöhnlich; meistens","en":["usually"],"show":"usually"},
+  {"id":"U2.S3.to-put","u":"U2","s":"S3","de":"setzen; stellen; legen","en":["to put"],"show":"to put"},
+  {"id":"U2.S3.busy","u":"U2","s":"S3","de":"beschäftigt","en":["busy"],"show":"busy"},
+  {"id":"U2.S3.lots-of","u":"U2","s":"S3","de":"viel/-e; jede Menge","en":["lots","lots of"],"show":"lots (of)"},
+  {"id":"U2.S3.often","u":"U2","s":"S3","de":"oft; häufig","en":["often"],"show":"often"},
+  {"id":"U2.S3.in-the-street","u":"U2","s":"S3","de":"in der Straße; auf der Straße","en":["in the street"],"show":"in the street"},
+  {"id":"U2.S3.mouth","u":"U2","s":"S3","de":"Mund; Maul","en":["mouth"],"show":"mouth"},
+  {"id":"U2.S3.to-come-back","u":"U2","s":"S3","de":"zurückkommen","en":["to come back"],"show":"to come back"},
+  {"id":"U2.S3.to-be-late","u":"U2","s":"S3","de":"zu spät dran sein; zu spät kommen","en":["to be late"],"show":"to be late"},
+  {"id":"U2.S3.to-wait-for","u":"U2","s":"S3","de":"warten (auf)","en":["to wait","to wait for"],"show":"to wait (for)"},
+  {"id":"U2.S3.character","u":"U2","s":"S3","de":"Charakter; Figur","en":["character"],"show":"character"},
+  {"id":"U2.S3.freeze-frame","u":"U2","s":"S3","de":"Standbild","en":["freeze frame"],"show":"freeze frame"},
+  {"id":"U2.S3.helpless","u":"U2","s":"S3","de":"hilflos","en":["helpless"],"show":"helpless"},
+  {"id":"U2.S3.confused","u":"U2","s":"S3","de":"verwirrt; wirr; konfus","en":["confused"],"show":"confused"},
+  {"id":"U2.S3.what-s-the-time","u":"U2","s":"S3","de":"Wie spät ist es?; Wie viel Uhr ist es?","en":["what's the time","what is the time","whats the time"],"show":"What’s the time?"},
+  {"id":"U2.S3.time","u":"U2","s":"S3","de":"Uhrzeit","en":["time"],"show":"time"},
+  {"id":"U2.S3.o-clock","u":"U2","s":"S3","de":"Uhr (Zeitangabe bei vollen Stunden)","en":["o'clock","oclock"],"show":"o’clock"},
+  {"id":"U2.S3.half","u":"U2","s":"S3","de":"halb","en":["half"],"show":"half"},
+  {"id":"U2.S3.quarter-past-to","u":"U2","s":"S3","de":"Viertel nach/vor","en":["quarter past","quarter to"],"show":"quarter past/to"},
+  {"id":"U2.S3.to","u":"U2","s":"S3","de":"vor (bei Uhrzeitangaben)","en":["to"],"show":"to"},
+  {"id":"U2.S3.scene","u":"U2","s":"S3","de":"Szene","en":["scene"],"show":"scene"},
+  {"id":"U2.S3.to-get-up","u":"U2","s":"S3","de":"aufstehen","en":["to get up"],"show":"to get up"},
+  {"id":"U2.S3.to-have-breakfast","u":"U2","s":"S3","de":"frühstücken","en":["to have breakfast"],"show":"to have breakfast"},
+  {"id":"U2.S3.dinner","u":"U2","s":"S3","de":"Abendessen","en":["dinner"],"show":"dinner"},
+  {"id":"U2.S3.to-go-to-bed","u":"U2","s":"S3","de":"ins Bett gehen","en":["to go to bed"],"show":"to go to bed"},
+  {"id":"U2.S3.then","u":"U2","s":"S3","de":"dann; danach","en":["then"],"show":"then"},
+  {"id":"U2.S3.in-the-evenings","u":"U2","s":"S3","de":"abends","en":["in the evenings"],"show":"in the evenings"},
+  {"id":"U2.S3.evening","u":"U2","s":"S3","de":"Abend","en":["evening"],"show":"evening"},
+  {"id":"U2.S3.on-mondays","u":"U2","s":"S3","de":"montags","en":["on mondays"],"show":"on Mondays"},
+  {"id":"U2.S3.to-tell","u":"U2","s":"S3","de":"erzählen; sagen; mitteilen","en":["to tell"],"show":"to tell"},
+  {"id":"U2.S3.p-m","u":"U2","s":"S3","de":"nachmittags (Uhrzeit); abends (Uhrzeit)","en":["pm"],"show":"p.m."},
+  {"id":"U2.S3.week","u":"U2","s":"S3","de":"Woche","en":["week"],"show":"week"},
+  {"id":"U2.S3.to-walk","u":"U2","s":"S3","de":"gehen; laufen","en":["to walk"],"show":"to walk"},
+  {"id":"U2.S3.to-meet","u":"U2","s":"S3","de":"treffen; sich treffen","en":["to meet"],"show":"to meet"},
+  {"id":"U2.S3.something","u":"U2","s":"S3","de":"etwas","en":["something"],"show":"something"},
+  {"id":"U2.S3.typical","u":"U2","s":"S3","de":"typisch","en":["typical"],"show":"typical"},
+  {"id":"U2.S3.life","u":"U2","s":"S3","de":"Leben","en":["life","lives"],"show":"life, lives"},
+  {"id":"U2.S3.stressful","u":"U2","s":"S3","de":"stressig","en":["stressful"],"show":"stressful"},
+  {"id":"U2.S3.only","u":"U2","s":"S3","de":"erst; bloß; nur","en":["only"],"show":"only"},
+  {"id":"U2.S3.healthy","u":"U2","s":"S3","de":"gesund","en":["healthy"],"show":"healthy"},
+  {"id":"U2.S3.like","u":"U2","s":"S3","de":"wie; als ob","en":["like"],"show":"like"},
+  {"id":"U2.S3.salad","u":"U2","s":"S3","de":"Salat","en":["salad"],"show":"salad"},
+  {"id":"U2.S3.some","u":"U2","s":"S3","de":"einige; ein paar; etwas","en":["some"],"show":"some"},
+  {"id":"U2.S3.fruit","u":"U2","s":"S3","de":"Frucht; Obst","en":["fruit"],"show":"fruit"},
+  {"id":"U2.S3.to-get-home","u":"U2","s":"S3","de":"nach Hause kommen","en":["to get home"],"show":"to get home"},
+  {"id":"U2.S3.to-come-out","u":"U2","s":"S3","de":"herauskommen","en":["to come out"],"show":"to come out"},
+  {"id":"U2.S3.flute","u":"U2","s":"S3","de":"Flöte","en":["flute"],"show":"flute"},
+  {"id":"U2.S3.to-be-lucky","u":"U2","s":"S3","de":"Glück haben","en":["to be lucky"],"show":"to be lucky"},
+  {"id":"U2.S3.ice-cream-shop","u":"U2","s":"S3","de":"Eisdiele","en":["ice-cream shop"],"show":"ice-cream shop"},
+  {"id":"U2.S3.shop","u":"U2","s":"S3","de":"Geschäft; Laden","en":["shop"],"show":"shop"},
+  {"id":"U2.S3.to-buy","u":"U2","s":"S3","de":"kaufen","en":["to buy"],"show":"to buy"},
+  {"id":"U2.S3.hard","u":"U2","s":"S3","de":"hart; schwer; schwierig","en":["hard"],"show":"hard"},
+  {"id":"U2.ST.everyone","u":"U2","s":"ST","de":"jeder; alle","en":["everyone"],"show":"everyone"},
+  {"id":"U2.ST.to-wash","u":"U2","s":"ST","de":"waschen; sich waschen","en":["to wash"],"show":"to wash"},
+  {"id":"U2.ST.face","u":"U2","s":"ST","de":"Gesicht","en":["face"],"show":"face"},
+  {"id":"U2.ST.after-that","u":"U2","s":"ST","de":"danach","en":["after that"],"show":"after that"},
+  {"id":"U2.ST.to-make","u":"U2","s":"ST","de":"machen; tun; bilden","en":["to make"],"show":"to make"},
+  {"id":"U2.ST.own","u":"U2","s":"ST","de":"eigene/-r/-s","en":["own"],"show":"own"},
+  {"id":"U2.ST.to-say-goodbye","u":"U2","s":"ST","de":"sich verabschieden","en":["to say goodbye"],"show":"to say goodbye"},
+  {"id":"U2.ST.job","u":"U2","s":"ST","de":"Arbeit; Aufgabe; Job","en":["job"],"show":"job"},
+  {"id":"U2.ST.to-look-after","u":"U2","s":"ST","de":"aufpassen auf; hüten; sich kümmern um","en":["to look after"],"show":"to look after"},
+  {"id":"U2.ST.to-learn","u":"U2","s":"ST","de":"lernen","en":["to learn"],"show":"to learn"},
+  {"id":"U2.ST.trick","u":"U2","s":"ST","de":"Kunststückchen","en":["trick"],"show":"trick"},
+  {"id":"U2.ST.to-chase","u":"U2","s":"ST","de":"jagen; nachjagen","en":["to chase"],"show":"to chase"},
+  {"id":"U2.ST.tail","u":"U2","s":"ST","de":"Schwanz; Schweif","en":["tail"],"show":"tail"},
+  {"id":"U2.ST.a-lot","u":"U2","s":"ST","de":"viel","en":["a lot"],"show":"a lot"},
+  {"id":"U2.ST.he-has-a-lot-to-learn","u":"U2","s":"ST","de":"Er muss noch viel lernen.","en":["he has a lot to learn"],"show":"He has a lot to learn."},
+  {"id":"U2.ST.to-fall-over","u":"U2","s":"ST","de":"hinfallen; umkippen","en":["to fall over"],"show":"to fall over"},
+  {"id":"U2.ST.to-throw","u":"U2","s":"ST","de":"werfen","en":["to throw"],"show":"to throw"},
+  {"id":"U2.ST.into","u":"U2","s":"ST","de":"in; in … hinein","en":["into"],"show":"into"},
+  {"id":"U2.ST.to-fall-asleep","u":"U2","s":"ST","de":"einschlafen","en":["to fall asleep"],"show":"to fall asleep"},
+  {"id":"U2.ST.right-away","u":"U2","s":"ST","de":"sofort; gleich","en":["right away"],"show":"right away"},
+  {"id":"U2.ST.to-be-dog-tired","u":"U2","s":"ST","de":"hundemüde sein","en":["to be dog-tired"],"show":"to be dog-tired"},
+  {"id":"U2.ST.part","u":"U2","s":"ST","de":"Teil","en":["part"],"show":"part"},
+  {"id":"U2.ST.to-sit-down","u":"U2","s":"ST","de":"sich hinsetzen; sich setzen","en":["to sit down"],"show":"to sit down"},
+  {"id":"U2.UT.still","u":"U2","s":"UT","de":"noch; immer noch","en":["still"],"show":"still"},
+  {"id":"U2.UT.to-stop","u":"U2","s":"UT","de":"aufhören (mit); anhalten; stoppen","en":["to stop"],"show":"to stop"},
+  {"id":"U2.CO.lucky-you","u":"U2","s":"CO","de":"Du Glückliche/-r.","en":["lucky you"],"show":"Lucky you."},
+  {"id":"U2.CO.really","u":"U2","s":"CO","de":"wirklich","en":["really"],"show":"really"},
+  {"id":"U2.CO.to-finish","u":"U2","s":"CO","de":"beenden; enden; fertigstellen; aufhören","en":["to finish"],"show":"to finish"},
+  {"id":"U2.CO.outside","u":"U2","s":"CO","de":"nach draußen; draußen; außerhalb (von)","en":["outside"],"show":"outside"},
+  {"id":"U2.CO.what-to","u":"U2","s":"CO","de":"was man …","en":["what to"],"show":"what to …"},
+  {"id":"U2.CO.italian","u":"U2","s":"CO","de":"italienisch; Italienisch; aus Italien","en":["italian"],"show":"Italian"},
+  {"id":"U2.CO.restaurant","u":"U2","s":"CO","de":"Restaurant; Gaststätte","en":["restaurant"],"show":"restaurant"},
+  {"id":"U2.CO.to-spill","u":"U2","s":"CO","de":"verschütten; auslaufen","en":["to spill"],"show":"to spill"},
+  {"id":"U2.CO.clothes","u":"U2","s":"CO","de":"Kleider; Kleidung","en":["clothes"],"show":"clothes"},
+  {"id":"U2.CO.maths","u":"U2","s":"CO","de":"Mathematik; Mathe","en":["maths"],"show":"maths"},
+  {"id":"U2.CO.difficult","u":"U2","s":"CO","de":"schwierig","en":["difficult"],"show":"difficult"},
+  {"id":"AC1.special","u":"AC1","s":"","de":"besonders; speziell","en":["special"],"show":"special"},
+  {"id":"AC1.corner","u":"AC1","s":"","de":"Ecke","en":["corner"],"show":"corner"},
+  {"id":"AC1.free","u":"AC1","s":"","de":"frei; kostenlos","en":["free"],"show":"free"},
+  {"id":"AC1.history","u":"AC1","s":"","de":"Geschichte","en":["history"],"show":"history"},
+  {"id":"AC1.museum","u":"AC1","s":"","de":"Museum","en":["museum"],"show":"museum"},
+  {"id":"AC1.interesting","u":"AC1","s":"","de":"interessant","en":["interesting"],"show":"interesting"},
+  {"id":"AC1.shopping","u":"AC1","s":"","de":"Einkaufen; Einkäufe; Einkaufs-","en":["shopping"],"show":"shopping"},
+  {"id":"AC1.farm","u":"AC1","s":"","de":"Farm; Bauernhof","en":["farm"],"show":"farm"},
+  {"id":"AC1.animal","u":"AC1","s":"","de":"Tier","en":["animal"],"show":"animal"},
+  {"id":"AC1.sea","u":"AC1","s":"","de":"Meer","en":["sea"],"show":"sea"},
+  {"id":"AC1.simple","u":"AC1","s":"","de":"einfach; simpel","en":["simple"],"show":"simple"},
+  {"id":"AC1.wonderful","u":"AC1","s":"","de":"wunderbar","en":["wonderful"],"show":"wonderful"},
+  {"id":"AC1.long","u":"AC1","s":"","de":"lang","en":["long"],"show":"long"},
+  {"id":"AC1.crowded","u":"AC1","s":"","de":"überfüllt","en":["crowded"],"show":"crowded"},
+  {"id":"AC1.ship","u":"AC1","s":"","de":"Schiff","en":["ship"],"show":"ship"},
+  {"id":"AC1.meal","u":"AC1","s":"","de":"Mahlzeit; Essen","en":["meal"],"show":"meal"},
+  {"id":"AC1.scary","u":"AC1","s":"","de":"unheimlich; gruselig; beängstigend","en":["scary"],"show":"scary"},
+  {"id":"AC1.storm","u":"AC1","s":"","de":"Sturm","en":["storm"],"show":"storm"},
+  {"id":"AC1.dear","u":"AC1","s":"","de":"Lieber …; Liebe … (Anrede in Briefen)","en":["dear"],"show":"Dear …"},
+  {"id":"AC1.diary","u":"AC1","s":"","de":"Tagebuch","en":["diary"],"show":"diary"},
+  {"id":"AC1.to-visit","u":"AC1","s":"","de":"besichtigen; besuchen","en":["to visit"],"show":"to visit"},
+  {"id":"AC1.exotic","u":"AC1","s":"","de":"exotisch","en":["exotic"],"show":"exotic"},
+  {"id":"AC1.at-sea","u":"AC1","s":"","de":"auf See","en":["at sea"],"show":"at sea"},
+  {"id":"AC1.for-months","u":"AC1","s":"","de":"Monate lang","en":["for months"],"show":"for months"},
+  {"id":"AC1.nothing","u":"AC1","s":"","de":"nichts","en":["nothing"],"show":"nothing"},
+  {"id":"AC1.water","u":"AC1","s":"","de":"Wasser","en":["water"],"show":"water"},
+  {"id":"AC1.more","u":"AC1","s":"","de":"mehr; weitere","en":["more"],"show":"more"},
+  {"id":"AC1.wave","u":"AC1","s":"","de":"Welle","en":["wave"],"show":"wave"},
+  {"id":"AC1.to-get-seasick","u":"AC1","s":"","de":"seekrank werden","en":["to get seasick"],"show":"to get seasick"},
+  {"id":"AC1.on-board","u":"AC1","s":"","de":"an Bord","en":["on board"],"show":"on board"},
+  {"id":"AC1.delicious","u":"AC1","s":"","de":"köstlich","en":["delicious"],"show":"delicious"},
+  {"id":"AC1.village","u":"AC1","s":"","de":"Dorf","en":["village"],"show":"village"},
+  {"id":"AC1.town","u":"AC1","s":"","de":"Stadt; Kleinstadt","en":["town"],"show":"town"},
+  {"id":"AC1.city","u":"AC1","s":"","de":"Stadt; Großstadt","en":["city"],"show":"city"},
+  {"id":"AC1.tourist","u":"AC1","s":"","de":"Tourist/-in","en":["tourist"],"show":"tourist"},
+  {"id":"U3.CI.to-mean","u":"U3","s":"CI","de":"bedeuten; meinen","en":["to mean"],"show":"to mean"},
+  {"id":"U3.CI.brochure","u":"U3","s":"CI","de":"Broschüre; Prospekt","en":["brochure"],"show":"brochure"},
+  {"id":"U3.CI.that-s-why","u":"U3","s":"CI","de":"deshalb","en":["that's why","that is why","thats why"],"show":"that’s why"},
+  {"id":"U3.CI.stall","u":"U3","s":"CI","de":"Stand; Bude","en":["stall"],"show":"stall"},
+  {"id":"U3.CI.colourful","u":"U3","s":"CI","de":"farbenfroh; bunt","en":["colourful"],"show":"colourful"},
+  {"id":"U3.CI.field","u":"U3","s":"CI","de":"Feld; Spielfeld; Wiese; Weide; Acker","en":["field"],"show":"field"},
+  {"id":"U3.CI.way","u":"U3","s":"CI","de":"Weg","en":["way"],"show":"way"},
+  {"id":"U3.CI.important","u":"U3","s":"CI","de":"wichtig","en":["important"],"show":"important"},
+  {"id":"U3.CI.match","u":"U3","s":"CI","de":"Spiel; Match","en":["match"],"show":"match"},
+  {"id":"U3.CI.arab","u":"U3","s":"CI","de":"arabisch","en":["arab"],"show":"Arab"},
+  {"id":"U3.CI.so","u":"U3","s":"CI","de":"also","en":["so"],"show":"so"},
+  {"id":"U3.CI.to-try","u":"U3","s":"CI","de":"versuchen; probieren","en":["to try"],"show":"to try"},
+  {"id":"U3.CI.sweets","u":"U3","s":"CI","de":"Süßigkeiten; Bonbons","en":["sweets"],"show":"sweets"},
+  {"id":"U3.CI.to-have-fun","u":"U3","s":"CI","de":"Spaß haben; sich amüsieren","en":["to have fun"],"show":"to have fun"},
+  {"id":"U3.CI.youth","u":"U3","s":"CI","de":"Jugend","en":["youth"],"show":"youth"},
+  {"id":"U3.CI.club","u":"U3","s":"CI","de":"Klub; Verein; AG","en":["club"],"show":"club"},
+  {"id":"U3.CI.cinema","u":"U3","s":"CI","de":"Kino","en":["cinema"],"show":"cinema"},
+  {"id":"U3.CI.exciting","u":"U3","s":"CI","de":"spannend; aufregend","en":["exciting"],"show":"exciting"},
+  {"id":"U3.CI.to-go-swimming","u":"U3","s":"CI","de":"Schwimmen gehen","en":["to go swimming"],"show":"to go swimming"},
+  {"id":"U3.CI.slide","u":"U3","s":"CI","de":"Rutschbahn","en":["slide"],"show":"slide"},
+  {"id":"U3.CI.dream","u":"U3","s":"CI","de":"Traum; Traum-","en":["dream"],"show":"dream"},
+  {"id":"U3.CI.summer","u":"U3","s":"CI","de":"Sommer","en":["summer"],"show":"summer"},
+  {"id":"U3.S1.plan","u":"U3","s":"S1","de":"Plan; Entwurf","en":["plan"],"show":"plan"},
+  {"id":"U3.S1.to-win","u":"U3","s":"S1","de":"gewinnen; siegen","en":["to win"],"show":"to win"},
+  {"id":"U3.S1.first","u":"U3","s":"S1","de":"zuerst; als Erstes","en":["first"],"show":"first"},
+  {"id":"U3.S1.another","u":"U3","s":"S1","de":"ein/-e andere/-r/-s; noch ein/-e","en":["another"],"show":"another"},
+  {"id":"U3.S1.to-open","u":"U3","s":"S1","de":"öffnen; aufmachen","en":["to open"],"show":"to open"},
+  {"id":"U3.S1.before-that","u":"U3","s":"S1","de":"davor","en":["before that"],"show":"before that"},
+  {"id":"U3.S1.again","u":"U3","s":"S1","de":"wieder; noch einmal; noch mal","en":["again"],"show":"again"},
+  {"id":"U3.S1.to-stand","u":"U3","s":"S1","de":"stehen","en":["to stand"],"show":"to stand"},
+  {"id":"U3.S1.foot","u":"U3","s":"S1","de":"Fuß","en":["foot","feet"],"show":"foot, feet"},
+  {"id":"U3.S1.east","u":"U3","s":"S1","de":"Osten; Ost-","en":["east"],"show":"east"},
+  {"id":"U3.S1.west","u":"U3","s":"S1","de":"Westen; West-","en":["west"],"show":"west"},
+  {"id":"U3.S1.to-check","u":"U3","s":"S1","de":"überprüfen; prüfen; kontrollieren","en":["to check"],"show":"to check"},
+  {"id":"U3.S1.opening-times","u":"U3","s":"S1","de":"Öffnungszeiten","en":["opening times"],"show":"opening times"},
+  {"id":"U3.S1.cook","u":"U3","s":"S1","de":"Koch/Köchin","en":["cook"],"show":"cook"},
+  {"id":"U3.S1.i-can-t-wait","u":"U3","s":"S1","de":"Ich kann es kaum erwarten, …","en":["i can't wait","i cannot wait","i cant wait"],"show":"I can't wait …"},
+  {"id":"U3.S1.to-plan","u":"U3","s":"S1","de":"planen","en":["to plan"],"show":"to plan"},
+  {"id":"U3.S1.to-agree-with","u":"U3","s":"S1","de":"einer Meinung sein (mit); zustimmen","en":["to agree","to agree with"],"show":"to agree (with)"},
+  {"id":"U3.S1.to-wear","u":"U3","s":"S1","de":"anhaben; tragen (Kleidung)","en":["to wear"],"show":"to wear"},
+  {"id":"U3.S1.well","u":"U3","s":"S1","de":"tja; nun; na ja","en":[],"show":"well"},
+  {"id":"U3.S1.to-believe","u":"U3","s":"S1","de":"glauben","en":["to believe"],"show":"to believe"},
+  {"id":"U3.S1.the-biggest","u":"U3","s":"S1","de":"der/die/das größte","en":["the biggest"],"show":"the biggest"},
+  {"id":"U3.S1.inner-city","u":"U3","s":"S1","de":"Innenstadt-","en":["inner-city"],"show":"inner-city"},
+  {"id":"U3.S1.over","u":"U3","s":"S1","de":"über; hinüber","en":["over"],"show":"over"},
+  {"id":"U3.S1.riding","u":"U3","s":"S1","de":"Reiten","en":["riding"],"show":"riding"},
+  {"id":"U3.S1.if","u":"U3","s":"S1","de":"wenn; falls; ob","en":["if"],"show":"if"},
+  {"id":"U3.S1.to-call","u":"U3","s":"S1","de":"anrufen; rufen","en":["to call"],"show":"to call"},
+  {"id":"U3.S1.to","u":"U3","s":"S1","de":"bis","en":["to"],"show":"to"},
+  {"id":"U3.S1.closed","u":"U3","s":"S1","de":"geschlossen; zu","en":["closed"],"show":"closed"},
+  {"id":"U3.S1.to-cost","u":"U3","s":"S1","de":"kosten","en":["to cost"],"show":"to cost"},
+  {"id":"U3.S1.a-lot-of","u":"U3","s":"S1","de":"viel/-e; eine Menge","en":["a lot of"],"show":"a lot of"},
+  {"id":"U3.S1.money","u":"U3","s":"S1","de":"Geld","en":["money"],"show":"money"},
+  {"id":"U3.S1.to-give","u":"U3","s":"S1","de":"angeben","en":["to give"],"show":"to give"},
+  {"id":"U3.S1.to-close","u":"U3","s":"S1","de":"schließen; zumachen","en":["to close"],"show":"to close"},
+  {"id":"U3.S1.until","u":"U3","s":"S1","de":"bis; erst wenn","en":["until"],"show":"until"},
+  {"id":"U3.S1.visit","u":"U3","s":"S1","de":"Besuch","en":["visit"],"show":"visit"},
+  {"id":"U3.S1.open","u":"U3","s":"S1","de":"offen; geöffnet; aufgeschlagen","en":["open"],"show":"open"},
+  {"id":"U3.S1.near","u":"U3","s":"S1","de":"nahe; in der Nähe von","en":["near"],"show":"near"},
+  {"id":"U3.S1.wrong","u":"U3","s":"S1","de":"falsch","en":["wrong"],"show":"wrong"},
+  {"id":"U3.S1.by-bike","u":"U3","s":"S1","de":"mit (dem Fahrrad)","en":["by","by bike"],"show":"by (bike)"},
+  {"id":"U3.S1.to-say-hello-to","u":"U3","s":"S1","de":"grüßen; Grüße ausrichten (an)","en":["to say hello","to say hello to"],"show":"to say hello (to)"},
+  {"id":"U3.S1.underground","u":"U3","s":"S1","de":"U-Bahn","en":["underground"],"show":"underground"},
+  {"id":"U3.S1.bus","u":"U3","s":"S1","de":"Bus","en":["bus"],"show":"bus"},
+  {"id":"U3.S1.activity","u":"U3","s":"S1","de":"Aktivität","en":["activity"],"show":"activity"},
+  {"id":"U3.S1.bad","u":"U3","s":"S1","de":"schlecht; böse; schlimm","en":["bad"],"show":"bad"},
+  {"id":"U3.S1.popular","u":"U3","s":"S1","de":"beliebt; populär","en":["popular"],"show":"popular"},
+  {"id":"U3.S1.person","u":"U3","s":"S1","de":"Person; Mensch","en":["person","people"],"show":"person, people"},
+  {"id":"U3.S1.that","u":"U3","s":"S1","de":"dass","en":["that"],"show":"that"},
+  {"id":"U3.S2.german","u":"U3","s":"S2","de":"deutsch; Deutsch; aus Deutschland; Deutsche/-r","en":["german"],"show":"German"},
+  {"id":"U3.S2.where-to-start","u":"U3","s":"S2","de":"… wo wir anfangen sollen.","en":["where to start"],"show":"… where to start."},
+  {"id":"U3.S2.past","u":"U3","s":"S2","de":"Vergangenheit","en":["past"],"show":"past"},
+  {"id":"U3.S2.ticket","u":"U3","s":"S2","de":"Ticket; Eintrittskarte","en":["ticket"],"show":"ticket"},
+  {"id":"U3.S2.to-get-to","u":"U3","s":"S2","de":"kommen zu; kommen nach; erreichen","en":["to get to"],"show":"to get to"},
+  {"id":"U3.S2.river","u":"U3","s":"S2","de":"Fluss","en":["river"],"show":"river"},
+  {"id":"U3.S2.entrance","u":"U3","s":"S2","de":"Eingang; Eintritt","en":["entrance"],"show":"entrance"},
+  {"id":"U3.S2.tourist-information-centre","u":"U3","s":"S2","de":"Touristeninformation","en":["tourist information centre"],"show":"tourist information centre"},
+  {"id":"U3.S2.to-need-to-do","u":"U3","s":"S2","de":"(tun) müssen","en":["to need","to need to do"],"show":"to need (to do)"},
+  {"id":"U3.S2.next","u":"U3","s":"S2","de":"nächste/-r/-s; der/die Nächste(n)","en":["next"],"show":"next"},
+  {"id":"U3.S2.answer","u":"U3","s":"S2","de":"Antwort","en":["answer"],"show":"answer"},
+  {"id":"U3.S2.to-answer","u":"U3","s":"S2","de":"antworten; beantworten","en":["to answer"],"show":"to answer"},
+  {"id":"U3.S2.minute","u":"U3","s":"S2","de":"Minute","en":["minute"],"show":"minute"},
+  {"id":"U3.S2.goodbye","u":"U3","s":"S2","de":"auf Wiedersehen","en":["goodbye"],"show":"goodbye"},
+  {"id":"U3.S2.thank-you","u":"U3","s":"S2","de":"Danke.","en":["thank you"],"show":"Thank you."},
+  {"id":"U3.S2.you-re-welcome","u":"U3","s":"S2","de":"Bitte schön.; Nichts zu danken.; Gern geschehen.","en":["you're welcome","you are welcome","youre welcome"],"show":"You’re welcome."},
+  {"id":"U3.S2.to-speak","u":"U3","s":"S2","de":"sprechen","en":["to speak"],"show":"to speak"},
+  {"id":"U3.S2.english","u":"U3","s":"S2","de":"englisch; Englisch; aus England; Engländer/-in","en":["english"],"show":"English"},
+  {"id":"U3.S2.stop","u":"U3","s":"S2","de":"Stopp!; Halt!","en":["stop"],"show":"Stop!"},
+  {"id":"U3.S2.bus-stop","u":"U3","s":"S2","de":"Bushaltestelle","en":["bus stop"],"show":"bus stop"},
+  {"id":"U3.S2.bag","u":"U3","s":"S2","de":"Tasche; Tüte","en":["bag"],"show":"bag"},
+  {"id":"U3.S2.to-be-in-the-way","u":"U3","s":"S2","de":"im Weg sein/stehen","en":["to be in the way"],"show":"to be in the way"},
+  {"id":"U3.S2.train","u":"U3","s":"S2","de":"Zug","en":["train"],"show":"train"},
+  {"id":"U3.S2.window","u":"U3","s":"S2","de":"Fenster","en":["window"],"show":"window"},
+  {"id":"U3.S2.holidays","u":"U3","s":"S2","de":"Ferien","en":["holidays"],"show":"holidays"},
+  {"id":"U3.S3.cumin","u":"U3","s":"S3","de":"Kreuzkümmel","en":["cumin"],"show":"cumin"},
+  {"id":"U3.S3.spice","u":"U3","s":"S3","de":"Gewürz","en":["spice"],"show":"spice"},
+  {"id":"U3.S3.sweet","u":"U3","s":"S3","de":"süß","en":["sweet"],"show":"sweet"},
+  {"id":"U3.S3.already","u":"U3","s":"S3","de":"schon; bereits","en":["already"],"show":"already"},
+  {"id":"U3.S3.joke","u":"U3","s":"S3","de":"Witz","en":["joke"],"show":"joke"},
+  {"id":"U3.S3.to-post","u":"U3","s":"S3","de":"online stellen; posten","en":["to post"],"show":"to post"},
+  {"id":"U3.S3.like-this-that","u":"U3","s":"S3","de":"so; solche/-r/-s","en":["like this","like that"],"show":"like this/that"},
+  {"id":"U3.S3.clothes","u":"U3","s":"S3","de":"Kleider; Kleidung","en":["clothes"],"show":"clothes"},
+  {"id":"U3.S3.just","u":"U3","s":"S3","de":"nur; einfach; gerade","en":["just"],"show":"just"},
+  {"id":"U3.S3.social-media","u":"U3","s":"S3","de":"soziale Netzwerke","en":["social media"],"show":"social media"},
+  {"id":"U3.S3.would","u":"U3","s":"S3","de":"würde/-st/-n/-t","en":["would"],"show":"would"},
+  {"id":"U3.S3.to-feel","u":"U3","s":"S3","de":"fühlen; sich fühlen","en":["to feel"],"show":"to feel"},
+  {"id":"U3.S3.to-be-sorry","u":"U3","s":"S3","de":"leid tun","en":["to be sorry"],"show":"to be sorry"},
+  {"id":"U3.S3.to-think-of","u":"U3","s":"S3","de":"halten von; denken über","en":["to think of"],"show":"to think of"},
+  {"id":"U3.S3.how-many","u":"U3","s":"S3","de":"Wie viele …?","en":["how many"],"show":"How many …?"},
+  {"id":"U3.ST.brave","u":"U3","s":"ST","de":"mutig; tapfer","en":["brave"],"show":"brave"},
+  {"id":"U3.ST.sailor","u":"U3","s":"ST","de":"Seemann; Matrose","en":["sailor"],"show":"sailor"},
+  {"id":"U3.ST.tired","u":"U3","s":"ST","de":"müde","en":["tired"],"show":"tired"},
+  {"id":"U3.ST.round-and-round","u":"U3","s":"ST","de":"immer wieder herum","en":["round and round"],"show":"round and round"},
+  {"id":"U3.ST.at-last","u":"U3","s":"ST","de":"endlich; schließlich","en":["at last"],"show":"at last"},
+  {"id":"U3.ST.to-happen","u":"U3","s":"ST","de":"geschehen; passieren","en":["to happen"],"show":"to happen"},
+  {"id":"U3.ST.strong","u":"U3","s":"ST","de":"stark","en":["strong"],"show":"strong"},
+  {"id":"U3.ST.to-get","u":"U3","s":"ST","de":"werden","en":["to get"],"show":"to get"},
+  {"id":"U3.ST.hungry","u":"U3","s":"ST","de":"hungrig","en":["hungry"],"show":"hungry"},
+  {"id":"U3.ST.what-s-for","u":"U3","s":"ST","de":"Was gibt es zum …?","en":["what's for","what is for","whats for"],"show":"What's for …?"},
+  {"id":"U3.ST.to-shout","u":"U3","s":"ST","de":"schreien; rufen","en":["to shout"],"show":"to shout"},
+  {"id":"U3.ST.to-thank","u":"U3","s":"ST","de":"danken","en":["to thank"],"show":"to thank"},
+  {"id":"U3.ST.at-sea","u":"U3","s":"ST","de":"auf See","en":["at sea"],"show":"at sea"},
+  {"id":"U3.ST.wave","u":"U3","s":"ST","de":"Welle","en":["wave"],"show":"wave"},
+  {"id":"U3.ST.captain","u":"U3","s":"ST","de":"Kapitän/-in; Mannschaftsführer/-in","en":["captain"],"show":"captain"},
+  {"id":"U3.ST.wheel","u":"U3","s":"ST","de":"Rad; Steuerrad; Steuer","en":["wheel"],"show":"wheel"},
+  {"id":"U3.ST.to-reef-the-sails","u":"U3","s":"ST","de":"die Segel einholen","en":["to reef the sails"],"show":"to reef the sails"},
+  {"id":"U3.ST.to-point-to","u":"U3","s":"ST","de":"deuten auf; hindeuten auf; zeigen auf","en":["to point to"],"show":"to point to"},
+  {"id":"U3.ST.rigging","u":"U3","s":"ST","de":"Takelage","en":["rigging"],"show":"rigging"},
+  {"id":"U3.ST.to-climb","u":"U3","s":"ST","de":"klettern; besteigen; steigen","en":["to climb"],"show":"to climb"},
+  {"id":"U3.ST.dangerous","u":"U3","s":"ST","de":"gefährlich","en":["dangerous"],"show":"dangerous"},
+  {"id":"U3.ST.slow","u":"U3","s":"ST","de":"langsam","en":["slow"],"show":"slow"},
+  {"id":"U3.ST.down","u":"U3","s":"ST","de":"nach unten; herunter; hinunter","en":["down"],"show":"down"},
+  {"id":"U3.ST.help","u":"U3","s":"ST","de":"Hilfe","en":["help"],"show":"help"},
+  {"id":"U3.ST.mate","u":"U3","s":"ST","de":"Schiffsoffizier; Maat","en":["mate"],"show":"mate"},
+  {"id":"U3.ST.to-drink","u":"U3","s":"ST","de":"trinken","en":["to drink"],"show":"to drink"},
+  {"id":"U3.ST.to-run","u":"U3","s":"ST","de":"rennen; laufen","en":["to run"],"show":"to run"},
+  {"id":"U3.ST.to-hit","u":"U3","s":"ST","de":"treffen; schlagen","en":["to hit"],"show":"to hit"},
+  {"id":"U3.ST.to-fall","u":"U3","s":"ST","de":"fallen; hinfallen","en":["to fall"],"show":"to fall"},
+  {"id":"U3.ST.trouble","u":"U3","s":"ST","de":"Ärger; Probleme; Schwierigkeiten","en":["trouble"],"show":"trouble"},
+  {"id":"U3.ST.to-swim","u":"U3","s":"ST","de":"schwimmen","en":["to swim"],"show":"to swim"},
+  {"id":"U3.ST.to-save","u":"U3","s":"ST","de":"retten; bergen","en":["to save"],"show":"to save"},
+  {"id":"U3.ST.lifebuoy","u":"U3","s":"ST","de":"Rettungsring","en":["lifebuoy"],"show":"lifebuoy"},
+  {"id":"U3.ST.lifeboat","u":"U3","s":"ST","de":"Rettungsboot","en":["lifeboat"],"show":"lifeboat"},
+  {"id":"U3.ST.to-jump","u":"U3","s":"ST","de":"springen","en":["to jump"],"show":"to jump"},
+  {"id":"U3.ST.to-stay","u":"U3","s":"ST","de":"bleiben","en":["to stay"],"show":"to stay"},
+  {"id":"U3.ST.that-s-how","u":"U3","s":"ST","de":"so","en":["that's how","that is how","thats how"],"show":"that’s how"},
+  {"id":"U3.ST.to-find-out","u":"U3","s":"ST","de":"herausfinden","en":["to find out"],"show":"to find out"},
+  {"id":"U3.ST.proud-of","u":"U3","s":"ST","de":"stolz (auf)","en":["proud","proud of"],"show":"proud (of)"},
+  {"id":"U3.ST.moment","u":"U3","s":"ST","de":"Moment; Augenblick","en":["moment"],"show":"moment"},
+  {"id":"U3.ST.to-remember","u":"U3","s":"ST","de":"sich erinnern (an); sich merken; denken an","en":["to remember"],"show":"to remember"},
+  {"id":"U3.CO.to-learn-about","u":"U3","s":"CO","de":"erfahren über","en":["to learn about"],"show":"to learn about"},
+  {"id":"U3.CO.trip","u":"U3","s":"CO","de":"Trip; Reise; Ausflug; Fahrt","en":["trip"],"show":"trip"},
+  {"id":"U3.CO.british","u":"U3","s":"CO","de":"britisch; Brite/Britin","en":["british"],"show":"British"},
+  {"id":"U3.CO.car","u":"U3","s":"CO","de":"Auto","en":["car"],"show":"car"},
+  {"id":"U3.CO.sure","u":"U3","s":"CO","de":"sicher","en":["sure"],"show":"sure"},
+  {"id":"U3.CO.the-same","u":"U3","s":"CO","de":"der-/die-/dasselbe; der/die/das gleiche","en":["the same"],"show":"the same"},
+  {"id":"U3.CO.maybe","u":"U3","s":"CO","de":"vielleicht","en":["maybe"],"show":"maybe"},
+  {"id":"U3.CO.knitting","u":"U3","s":"CO","de":"Stricken","en":["knitting"],"show":"knitting"},
+  {"id":"U3.CO.to-explore","u":"U3","s":"CO","de":"auf Entdeckungsreise gehen; sich umschauen; erkunden; erforschen","en":["to explore"],"show":"to explore"},
+  {"id":"U3.CO.concert","u":"U3","s":"CO","de":"Konzert","en":["concert"],"show":"concert"},
+  {"id":"U3.CO.hiking","u":"U3","s":"CO","de":"Wandern","en":["hiking"],"show":"hiking"},
+  {"id":"U3.CO.outdoor","u":"U3","s":"CO","de":"Freiluft-; Outdoor-","en":["outdoor"],"show":"outdoor"},
+  {"id":"U3.CO.at-night","u":"U3","s":"CO","de":"abends; nachts","en":["at night"],"show":"at night"},
+  {"id":"AC2.to-taste","u":"AC2","s":"","de":"probieren; schmecken","en":["to taste"],"show":"to taste"},
+  {"id":"AC2.bacon","u":"AC2","s":"","de":"Schinkenspeck; Speck","en":["bacon"],"show":"bacon"},
+  {"id":"AC2.baked-beans","u":"AC2","s":"","de":"weiße Bohnen in Tomatensoße","en":["baked beans"],"show":"baked beans"},
+  {"id":"AC2.bread","u":"AC2","s":"","de":"Brot","en":["bread"],"show":"bread"},
+  {"id":"AC2.cake","u":"AC2","s":"","de":"Kuchen; Torte","en":["cake"],"show":"cake"},
+  {"id":"AC2.cereal","u":"AC2","s":"","de":"Frühstückszerealie; Getreideprodukt (z.B. Cornflakes oder Müsli)","en":["cereal"],"show":"cereal"},
+  {"id":"AC2.cheese","u":"AC2","s":"","de":"Käse","en":["cheese"],"show":"cheese"},
+  {"id":"AC2.chicken","u":"AC2","s":"","de":"Huhn; Hähnchen","en":["chicken"],"show":"chicken"},
+  {"id":"AC2.dessert","u":"AC2","s":"","de":"Dessert; Nachspeise","en":["dessert"],"show":"dessert"},
+  {"id":"AC2.egg","u":"AC2","s":"","de":"Ei","en":["egg"],"show":"egg"},
+  {"id":"AC2.fish","u":"AC2","s":"","de":"Fisch","en":["fish"],"show":"fish, fish"},
+  {"id":"AC2.meat","u":"AC2","s":"","de":"Fleisch","en":["meat"],"show":"meat"},
+  {"id":"AC2.meatball","u":"AC2","s":"","de":"Fleischklößchen","en":["meatball"],"show":"meatball"},
+  {"id":"AC2.pie","u":"AC2","s":"","de":"Kuchen; Pastete","en":["pie"],"show":"pie"},
+  {"id":"AC2.rice","u":"AC2","s":"","de":"Reis","en":["rice"],"show":"rice"},
+  {"id":"AC2.sausage","u":"AC2","s":"","de":"Wurst; Bratwurst","en":["sausage"],"show":"sausage"},
+  {"id":"AC2.soup","u":"AC2","s":"","de":"Suppe","en":["soup"],"show":"soup"},
+  {"id":"AC2.sauce","u":"AC2","s":"","de":"Soße","en":["sauce"],"show":"sauce"},
+  {"id":"AC2.vegetable","u":"AC2","s":"","de":"Gemüse","en":["vegetable"],"show":"vegetable"},
+  {"id":"AC2.dish","u":"AC2","s":"","de":"Gericht; Speise","en":["dish"],"show":"dish"},
+  {"id":"AC2.strange","u":"AC2","s":"","de":"fremd; seltsam; merkwürdig","en":["strange"],"show":"strange"},
+  {"id":"AC2.vegetarian","u":"AC2","s":"","de":"Vegetarier/-in","en":["vegetarian"],"show":"vegetarian"},
+  {"id":"AC2.vegan","u":"AC2","s":"","de":"Veganer/-in","en":["vegan"],"show":"vegan"},
+  {"id":"AC2.much","u":"AC2","s":"","de":"viel","en":["much"],"show":"much"},
+  {"id":"AC2.sugar","u":"AC2","s":"","de":"Zucker","en":["sugar"],"show":"sugar"},
+  {"id":"AC2.salt","u":"AC2","s":"","de":"Salz","en":["salt"],"show":"salt"},
+  {"id":"AC2.fat","u":"AC2","s":"","de":"Fett","en":["fat"],"show":"fat"},
+  {"id":"AC2.competition","u":"AC2","s":"","de":"Wettbewerb; Turnier","en":["competition"],"show":"competition"},
+  {"id":"AC2.yummy","u":"AC2","s":"","de":"lecker","en":["yummy"],"show":"yummy"},
+  {"id":"AC2.salty","u":"AC2","s":"","de":"salzig","en":["salty"],"show":"salty"},
+  {"id":"AC2.unhealthy","u":"AC2","s":"","de":"ungesund","en":["unhealthy"],"show":"unhealthy"},
+  {"id":"AC2.natural","u":"AC2","s":"","de":"natürlich; Natur-","en":["natural"],"show":"natural"},
+  {"id":"AC2.main-dish","u":"AC2","s":"","de":"Hauptgericht; Hauptspeise","en":["main dish"],"show":"main dish"},
+  {"id":"AC2.country","u":"AC2","s":"","de":"Land","en":["country","countries"],"show":"country, countries"},
+  {"id":"AC2.ingredient","u":"AC2","s":"","de":"Zutat","en":["ingredient"],"show":"ingredient"},
+  {"id":"U4.CI.happy-birthday","u":"U4","s":"CI","de":"Alles Gute zum Geburtstag!; Herzlichen Glückwunsch zum Geburtstag!","en":["happy birthday"],"show":"Happy birthday!"},
+  {"id":"U4.CI.theme","u":"U4","s":"CI","de":"Thema; Motto","en":["theme"],"show":"theme"},
+  {"id":"U4.CI.tropical","u":"U4","s":"CI","de":"tropisch","en":["tropical"],"show":"tropical"},
+  {"id":"U4.CI.beach","u":"U4","s":"CI","de":"Strand","en":["beach"],"show":"beach"},
+  {"id":"U4.CI.decorations","u":"U4","s":"CI","de":"Dekoration; Schmuck","en":["decorations"],"show":"decorations"},
+  {"id":"U4.CI.stick","u":"U4","s":"CI","de":"Spieß","en":["stick"],"show":"stick"},
+  {"id":"U4.CI.sleepover","u":"U4","s":"CI","de":"Übernachtung","en":["sleepover"],"show":"sleepover"},
+  {"id":"U4.CI.pyjamas","u":"U4","s":"CI","de":"Schlafanzug; Pyjama","en":["pyjamas"],"show":"pyjamas"},
+  {"id":"U4.CI.crisp","u":"U4","s":"CI","de":"Kartoffelchip","en":["crisp"],"show":"crisp"},
+  {"id":"U4.CI.last","u":"U4","s":"CI","de":"letzte/-r/-s","en":["last"],"show":"last"},
+  {"id":"U4.CI.enough","u":"U4","s":"CI","de":"genug; genügend","en":["enough"],"show":"enough"},
+  {"id":"U4.CI.room","u":"U4","s":"CI","de":"Platz","en":["room"],"show":"room"},
+  {"id":"U4.CI.blanket","u":"U4","s":"CI","de":"Decke; Bettdecke; Wolldecke","en":["blanket"],"show":"blanket"},
+  {"id":"U4.CI.to-sound","u":"U4","s":"CI","de":"klingen","en":["to sound"],"show":"to sound"},
+  {"id":"U4.CI.season","u":"U4","s":"CI","de":"Saison; Jahreszeit","en":["season"],"show":"season"},
+  {"id":"U4.CI.month","u":"U4","s":"CI","de":"Monat","en":["month"],"show":"month"},
+  {"id":"U4.CI.hot","u":"U4","s":"CI","de":"heiß","en":["hot"],"show":"hot"},
+  {"id":"U4.CI.cold","u":"U4","s":"CI","de":"kalt","en":["cold"],"show":"cold"},
+  {"id":"U4.CI.weather","u":"U4","s":"CI","de":"Wetter","en":["weather"],"show":"weather"},
+  {"id":"U4.CI.guest","u":"U4","s":"CI","de":"Gast","en":["guest"],"show":"guest"},
+  {"id":"U4.CI.invitation","u":"U4","s":"CI","de":"Einladung","en":["invitation"],"show":"invitation"},
+  {"id":"U4.CI.gift","u":"U4","s":"CI","de":"Geschenk","en":["gift"],"show":"gift"},
+  {"id":"U4.CI.somewhere","u":"U4","s":"CI","de":"irgendwo","en":["somewhere"],"show":"somewhere"},
+  {"id":"U4.CI.date","u":"U4","s":"CI","de":"Datum","en":["date"],"show":"date"},
+  {"id":"U4.S1.money-doesn-t-grow-on-trees","u":"U4","s":"S1","de":"Das Geld wächst nicht auf Bäumen.","en":["money doesn't grow on trees","money does not grow on trees","money doesnt grow on trees"],"show":"Money doesn't grow on trees."},
+  {"id":"U4.S1.any","u":"U4","s":"S1","de":"irgendein/-e/-er; irgendwelche","en":["any"],"show":"any"},
+  {"id":"U4.S1.to-celebrate","u":"U4","s":"S1","de":"feiern","en":["to celebrate"],"show":"to celebrate"},
+  {"id":"U4.S1.sightseeing","u":"U4","s":"S1","de":"Sightseeing-; Besichtigungs-","en":["sightseeing"],"show":"sightseeing"},
+  {"id":"U4.S1.a-few","u":"U4","s":"S1","de":"ein paar; wenige; einige","en":["a few"],"show":"a few"},
+  {"id":"U4.S1.many","u":"U4","s":"S1","de":"viele","en":["many"],"show":"many"},
+  {"id":"U4.S1.to-invite","u":"U4","s":"S1","de":"einladen","en":["to invite"],"show":"to invite"},
+  {"id":"U4.S1.to-go-out","u":"U4","s":"S1","de":"ausgehen; hinausgehen","en":["to go out"],"show":"to go out"},
+  {"id":"U4.S1.costume","u":"U4","s":"S1","de":"Kostüm","en":["costume"],"show":"costume"},
+  {"id":"U4.S1.trousers","u":"U4","s":"S1","de":"Hose","en":["trousers"],"show":"trousers"},
+  {"id":"U4.S1.skirt","u":"U4","s":"S1","de":"Rock","en":["skirt"],"show":"skirt"},
+  {"id":"U4.S1.dress","u":"U4","s":"S1","de":"Kleid","en":["dress"],"show":"dress"},
+  {"id":"U4.S1.recipe","u":"U4","s":"S1","de":"Rezept","en":["recipe"],"show":"recipe"},
+  {"id":"U4.S1.a-couple-of","u":"U4","s":"S1","de":"ein paar","en":["a couple of"],"show":"a couple of"},
+  {"id":"U4.S1.to-pay-for","u":"U4","s":"S1","de":"bezahlen","en":["to pay","to pay for"],"show":"to pay (for)"},
+  {"id":"U4.S1.pocket-money","u":"U4","s":"S1","de":"Taschengeld","en":["pocket money"],"show":"pocket money"},
+  {"id":"U4.S1.flea-market","u":"U4","s":"S1","de":"Flohmarkt","en":["flea market"],"show":"flea market"},
+  {"id":"U4.S1.a-little","u":"U4","s":"S1","de":"ein wenig; etwas","en":["a little"],"show":"a little"},
+  {"id":"U4.S1.attic","u":"U4","s":"S1","de":"Dachboden","en":["attic"],"show":"attic"},
+  {"id":"U4.S1.balloon","u":"U4","s":"S1","de":"Ballon","en":["balloon"],"show":"balloon"},
+  {"id":"U4.S1.paper-straw","u":"U4","s":"S1","de":"Papiertrinkhalm","en":["paper straw"],"show":"paper straw"},
+  {"id":"U4.S1.to-be-worried","u":"U4","s":"S1","de":"beunruhigt sein; besorgt sein","en":["to be worried"],"show":"to be worried"},
+  {"id":"U4.S1.group","u":"U4","s":"S1","de":"Gruppe; Klasse","en":["group"],"show":"group"},
+  {"id":"U4.S1.to-make-money","u":"U4","s":"S1","de":"Geld verdienen","en":["to make money"],"show":"to make money"},
+  {"id":"U4.S1.to-suggest","u":"U4","s":"S1","de":"vorschlagen","en":["to suggest"],"show":"to suggest"},
+  {"id":"U4.S1.to-bake","u":"U4","s":"S1","de":"backen","en":["to bake"],"show":"to bake"},
+  {"id":"U4.S1.to-choose","u":"U4","s":"S1","de":"auswählen; wählen","en":["to choose"],"show":"to choose"},
+  {"id":"U4.S1.to-decorate","u":"U4","s":"S1","de":"dekorieren; verzieren; schmücken","en":["to decorate"],"show":"to decorate"},
+  {"id":"U4.S1.prize","u":"U4","s":"S1","de":"Preis; Gewinn","en":["prize"],"show":"prize"},
+  {"id":"U4.S1.channel","u":"U4","s":"S1","de":"Kanal; Programm","en":["channel"],"show":"channel"},
+  {"id":"U4.S1.to-hope","u":"U4","s":"S1","de":"hoffen","en":["to hope"],"show":"to hope"},
+  {"id":"U4.S1.must","u":"U4","s":"S1","de":"müssen","en":["must"],"show":"must"},
+  {"id":"U4.S1.to-text","u":"U4","s":"S1","de":"eine Textnachricht schicken","en":["to text"],"show":"to text"},
+  {"id":"U4.S1.text","u":"U4","s":"S1","de":"Textnachricht","en":["text"],"show":"text"},
+  {"id":"U4.S1.pair-of","u":"U4","s":"S1","de":"Paar","en":["pair","pair of"],"show":"pair (of)"},
+  {"id":"U4.S1.oh-my-god","u":"U4","s":"S1","de":"Oh mein Gott!","en":["oh my god"],"show":"Oh my God!"},
+  {"id":"U4.S1.perfect","u":"U4","s":"S1","de":"perfekt; vollkommen","en":["perfect"],"show":"perfect"},
+  {"id":"U4.S1.it-says","u":"U4","s":"S1","de":"Hier steht …","en":["it says"],"show":"It says …"},
+  {"id":"U4.S1.should","u":"U4","s":"S1","de":"sollte/solltest/solltet/sollten","en":["should"],"show":"should"},
+  {"id":"U4.S1.not-any","u":"U4","s":"S1","de":"kein/-e/-en","en":["not any"],"show":"not … any"},
+  {"id":"U4.S1.to-agree-on","u":"U4","s":"S1","de":"sich einigen (auf)","en":["to agree","to agree on"],"show":"to agree (on)"},
+  {"id":"U4.S1.milk","u":"U4","s":"S1","de":"Milch","en":["milk"],"show":"milk"},
+  {"id":"U4.S1.bamboo","u":"U4","s":"S1","de":"Bambus","en":["bamboo"],"show":"bamboo"},
+  {"id":"U4.S1.juice","u":"U4","s":"S1","de":"Saft","en":["juice"],"show":"juice"},
+  {"id":"U4.S1.paper","u":"U4","s":"S1","de":"Papier","en":["paper"],"show":"paper"},
+  {"id":"U4.S1.umbrella","u":"U4","s":"S1","de":"Regenschirm; Schirm","en":["umbrella"],"show":"umbrella"},
+  {"id":"U4.S1.flour","u":"U4","s":"S1","de":"Mehl","en":["flour"],"show":"flour"},
+  {"id":"U4.S2.to-shop","u":"U4","s":"S2","de":"einkaufen; shoppen","en":["to shop"],"show":"to shop"},
+  {"id":"U4.S2.necklace","u":"U4","s":"S2","de":"Halskette","en":["necklace"],"show":"necklace"},
+  {"id":"U4.S2.jewellery","u":"U4","s":"S2","de":"Schmuck","en":["jewellery"],"show":"jewellery"},
+  {"id":"U4.S2.woman","u":"U4","s":"S2","de":"Frau","en":["woman","women"],"show":"woman, women"},
+  {"id":"U4.S2.anything","u":"U4","s":"S2","de":"irgendetwas","en":["anything"],"show":"anything"},
+  {"id":"U4.S2.how-much-is-are","u":"U4","s":"S2","de":"Wie viel (kostet/kosten) …?","en":["how much","how much is","how much are"],"show":"How much (is/are) …?"},
+  {"id":"U4.S2.special-offer","u":"U4","s":"S2","de":"Sonderangebot","en":["special offer"],"show":"special offer"},
+  {"id":"U4.S2.bracelet","u":"U4","s":"S2","de":"Armband","en":["bracelet"],"show":"bracelet"},
+  {"id":"U4.S2.key-ring","u":"U4","s":"S2","de":"Schlüsselanhänger; Schlüsselbund","en":["key ring"],"show":"key ring"},
+  {"id":"U4.S2.to-worry","u":"U4","s":"S2","de":"sich Sorgen machen","en":["to worry"],"show":"to worry"},
+  {"id":"U4.S2.real","u":"U4","s":"S2","de":"echt; richtig; wirklich","en":["real"],"show":"real"},
+  {"id":"U4.S2.to-wash-off","u":"U4","s":"S2","de":"abwaschen","en":["to wash off"],"show":"to wash off"},
+  {"id":"U4.S2.at-the-moment","u":"U4","s":"S2","de":"im Moment; gerade","en":["at the moment"],"show":"at the moment"},
+  {"id":"U4.S2.sticker","u":"U4","s":"S2","de":"Aufkleber","en":["sticker"],"show":"sticker"},
+  {"id":"U4.S2.not-yet","u":"U4","s":"S2","de":"noch nicht","en":["not yet"],"show":"not … yet"},
+  {"id":"U4.S2.guy","u":"U4","s":"S2","de":"Typ; Kerl","en":["guy"],"show":"guy"},
+  {"id":"U4.S2.fake","u":"U4","s":"S2","de":"falsch; gefälscht","en":["fake"],"show":"fake"},
+  {"id":"U4.S2.to-go-shopping","u":"U4","s":"S2","de":"einkaufen gehen","en":["to go shopping"],"show":"to go shopping"},
+  {"id":"U4.S2.price","u":"U4","s":"S2","de":"Preis","en":["price"],"show":"price"},
+  {"id":"U4.S2.pound","u":"U4","s":"S2","de":"Pfund (brit. Währungseinheit)","en":["pound"],"show":"pound (£)"},
+  {"id":"U4.S2.penny","u":"U4","s":"S2","de":"Penny; Pence (brit. Währungseinheit)","en":["penny","pence"],"show":"penny, pence"},
+  {"id":"U4.S2.euro","u":"U4","s":"S2","de":"Euro (Währung)","en":["euro"],"show":"euro"},
+  {"id":"U4.S2.assistant","u":"U4","s":"S2","de":"Verkäufer/-in; Assistent/-in","en":["assistant"],"show":"assistant"},
+  {"id":"U4.S2.later","u":"U4","s":"S2","de":"später","en":["later"],"show":"later"},
+  {"id":"U4.S2.extra-large-xl","u":"U4","s":"S2","de":"besonders groß","en":["extra large","extra large xl"],"show":"extra large (XL)"},
+  {"id":"U4.S2.size","u":"U4","s":"S2","de":"Größe; Kleidergröße","en":["size"],"show":"size"},
+  {"id":"U4.S2.may","u":"U4","s":"S2","de":"(vielleicht) können; dürfen","en":["may"],"show":"may"},
+  {"id":"U4.S2.quality","u":"U4","s":"S2","de":"Qualität; Eigenschaft","en":["quality"],"show":"quality"},
+  {"id":"U4.S2.glass","u":"U4","s":"S2","de":"Glas","en":["glass"],"show":"glass"},
+  {"id":"U4.S2.change","u":"U4","s":"S2","de":"Wechselgeld; Münzgeld","en":["change"],"show":"change"},
+  {"id":"U4.S3.anywhere","u":"U4","s":"S3","de":"irgendwo; überall (egal, wo)","en":["anywhere"],"show":"anywhere"},
+  {"id":"U4.S3.sleeping-bag","u":"U4","s":"S3","de":"Schlafsack","en":["sleeping bag"],"show":"sleeping bag"},
+  {"id":"U4.S3.next-time","u":"U4","s":"S3","de":"nächstes Mal","en":["next time"],"show":"next time"},
+  {"id":"U4.S3.to-let","u":"U4","s":"S3","de":"lassen","en":["to let"],"show":"to let"},
+  {"id":"U4.S3.difficult","u":"U4","s":"S3","de":"schwierig","en":["difficult"],"show":"difficult"},
+  {"id":"U4.S3.present","u":"U4","s":"S3","de":"Geschenk","en":["present"],"show":"present"},
+  {"id":"U4.S3.to-laugh","u":"U4","s":"S3","de":"lachen","en":["to laugh"],"show":"to laugh"},
+  {"id":"U4.S3.to-get","u":"U4","s":"S3","de":"besorgen","en":["to get"],"show":"to get"},
+  {"id":"U4.S3.and-so-on","u":"U4","s":"S3","de":"und so weiter","en":["and so on"],"show":"and so on"},
+  {"id":"U4.ST.troublemaker","u":"U4","s":"ST","de":"Unruhestifter/-in","en":["troublemaker"],"show":"troublemaker"},
+  {"id":"U4.ST.doorbell","u":"U4","s":"ST","de":"Türklingel","en":["doorbell"],"show":"doorbell"},
+  {"id":"U4.ST.to-ring","u":"U4","s":"ST","de":"klingeln; läuten","en":["to ring"],"show":"to ring"},
+  {"id":"U4.ST.inside","u":"U4","s":"ST","de":"innen; im Innern; hinein; nach drinnen; in; drin","en":["inside"],"show":"inside"},
+  {"id":"U4.ST.till","u":"U4","s":"ST","de":"bis","en":["till"],"show":"till"},
+  {"id":"U4.ST.neighbour","u":"U4","s":"ST","de":"Nachbar/-in","en":["neighbour"],"show":"neighbour"},
+  {"id":"U4.ST.gave","u":"U4","s":"ST","de":"gab","en":["gave"],"show":"gave"},
+  {"id":"U4.ST.surprise","u":"U4","s":"ST","de":"Überraschung","en":["surprise"],"show":"surprise"},
+  {"id":"U4.ST.voice","u":"U4","s":"ST","de":"Stimme","en":["voice"],"show":"voice"},
+  {"id":"U4.ST.shocked","u":"U4","s":"ST","de":"schockiert; geschockt","en":["shocked"],"show":"shocked"},
+  {"id":"U4.ST.quiet","u":"U4","s":"ST","de":"still; ruhig; leise","en":["quiet"],"show":"quiet"},
+  {"id":"U4.ST.to-whisper","u":"U4","s":"ST","de":"flüstern","en":["to whisper"],"show":"to whisper"},
+  {"id":"U4.ST.mistake","u":"U4","s":"ST","de":"Fehler","en":["mistake"],"show":"mistake"},
+  {"id":"U4.ST.for-some-reason","u":"U4","s":"ST","de":"aus irgendeinem Grund","en":["for some reason"],"show":"for some reason"},
+  {"id":"U4.ST.whole","u":"U4","s":"ST","de":"ganz","en":["whole"],"show":"whole"},
+  {"id":"U4.ST.to-understand","u":"U4","s":"ST","de":"verstehen","en":["to understand"],"show":"to understand"},
+  {"id":"U4.ST.nobody","u":"U4","s":"ST","de":"niemand","en":["nobody"],"show":"nobody"},
+  {"id":"U4.ST.apron","u":"U4","s":"ST","de":"Schürze","en":["apron"],"show":"apron"},
+  {"id":"U4.ST.garland","u":"U4","s":"ST","de":"Girlande","en":["garland"],"show":"garland"},
+  {"id":"U4.ST.to-wrap","u":"U4","s":"ST","de":"einwickeln; einpacken","en":["to wrap"],"show":"to wrap"},
+  {"id":"U4.ST.to-move","u":"U4","s":"ST","de":"(sich) bewegen","en":["to move"],"show":"to move"},
+  {"id":"U4.ST.stop-it","u":"U4","s":"ST","de":"Hör/Hört auf!","en":["stop it"],"show":"Stop it!"},
+  {"id":"U4.ST.to-unwrap","u":"U4","s":"ST","de":"auswickeln; auspacken","en":["to unwrap"],"show":"to unwrap"},
+  {"id":"U4.ST.remote-control","u":"U4","s":"ST","de":"Fernbedienung","en":["remote control"],"show":"remote control"},
+  {"id":"U4.ST.helicopter","u":"U4","s":"ST","de":"Helikopter; Hubschrauber","en":["helicopter"],"show":"helicopter"},
+  {"id":"U4.ST.it-s-turn","u":"U4","s":"ST","de":"… ist dran.","en":["it's turn","it is turn","its turn"],"show":"It’s … turn."},
+  {"id":"U4.ST.candle","u":"U4","s":"ST","de":"Kerze","en":["candle"],"show":"candle"},
+  {"id":"U4.ST.kit","u":"U4","s":"ST","de":"Bastelsatz","en":["kit"],"show":"kit"},
+  {"id":"U4.ST.to-laugh","u":"U4","s":"ST","de":"lachen","en":["to laugh"],"show":"to laugh"},
+  {"id":"U4.ST.card","u":"U4","s":"ST","de":"Karte; Spielkarte","en":["card"],"show":"card"},
+  {"id":"U4.ST.to-wonder","u":"U4","s":"ST","de":"sich Gedanken machen; sich fragen","en":["to wonder"],"show":"to wonder"},
+  {"id":"U4.ST.chocolate","u":"U4","s":"ST","de":"Schokolade","en":["chocolate"],"show":"chocolate"},
+  {"id":"U4.ST.to-pick-up","u":"U4","s":"ST","de":"aufheben; mitnehmen; abholen","en":["to pick up"],"show":"to pick up"},
+  {"id":"U4.ST.frosting","u":"U4","s":"ST","de":"Glasur","en":["frosting"],"show":"frosting"},
+  {"id":"U4.ST.all-over","u":"U4","s":"ST","de":"überall (in)","en":["all over"],"show":"all over"},
+  {"id":"U4.ST.unicorn","u":"U4","s":"ST","de":"Einhorn","en":["unicorn"],"show":"unicorn"},
+  {"id":"U4.ST.onesie","u":"U4","s":"ST","de":"Hausanzug; Body","en":["onesie"],"show":"onesie"},
+  {"id":"U4.ST.note","u":"U4","s":"ST","de":"Notiz; Anmerkung","en":["note"],"show":"note"},
+  {"id":"U4.ST.to-surprise","u":"U4","s":"ST","de":"überraschen","en":["to surprise"],"show":"to surprise"},
+  {"id":"U4.ST.revenge","u":"U4","s":"ST","de":"Rache","en":["revenge"],"show":"revenge"},
+  {"id":"U4.ST.deal","u":"U4","s":"ST","de":"Abmachung; Übereinkunft","en":["deal"],"show":"deal"},
+  {"id":"U4.ST.to-put-on","u":"U4","s":"ST","de":"anziehen","en":["to put on"],"show":"to put on"},
+  {"id":"U4.ST.entertainment","u":"U4","s":"ST","de":"Unterhaltung","en":["entertainment"],"show":"entertainment"},
+  {"id":"U4.CO.to-take-turns","u":"U4","s":"CO","de":"sich abwechseln","en":["to take turns"],"show":"to take turns"},
+  {"id":"U4.CO.someone","u":"U4","s":"CO","de":"jemand","en":["someone"],"show":"someone"},
+  {"id":"U4.CO.to-point-at-sb-sth","u":"U4","s":"CO","de":"(mit dem Finger) auf jmdn./etw. zeigen","en":["to point at"],"show":"to point at sb/sth"},
+  {"id":"U4.CO.miniature","u":"U4","s":"CO","de":"Miniatur","en":["miniature"],"show":"miniature"},
+  {"id":"U4.CO.event","u":"U4","s":"CO","de":"Ereignis; Veranstaltung","en":["event"],"show":"event"},
+  {"id":"TR.to-relax","u":"TR","s":"","de":"(sich) entspannen","en":["to relax"],"show":"to relax"},
+  {"id":"TR.anything-else","u":"TR","s":"","de":"etwas anderes","en":["anything else"],"show":"anything else"},
+  {"id":"TR.camp","u":"TR","s":"","de":"Camp; Lager","en":["camp"],"show":"camp"},
+  {"id":"TR.coach","u":"TR","s":"","de":"Trainer/-in","en":["coach"],"show":"coach"},
+  {"id":"TR.trick","u":"TR","s":"","de":"Trick","en":["trick"],"show":"trick"},
+  {"id":"TR.to-take-part-in","u":"TR","s":"","de":"teilnehmen (an)","en":["to take part","to take part in"],"show":"to take part (in)"},
+  {"id":"TR.photography-contest","u":"TR","s":"","de":"Fotowettbewerb","en":["photography contest"],"show":"photography contest"},
+  {"id":"TR.to-be-away","u":"TR","s":"","de":"weg sein","en":["to be away"],"show":"to be away"},
+  {"id":"TR.wakeboarding","u":"TR","s":"","de":"Wakeboarding","en":["wakeboarding"],"show":"wakeboarding"},
+  {"id":"TR.to-teach","u":"TR","s":"","de":"beibringen","en":["to teach"],"show":"to teach"},
+  {"id":"TR.paddle-boarding","u":"TR","s":"","de":"Stand-up-Paddling","en":["paddle boarding"],"show":"paddle boarding"},
+  {"id":"TR.to-guess","u":"TR","s":"","de":"glauben; vermuten","en":["to guess"],"show":"to guess"},
+  {"id":"TR.cute","u":"TR","s":"","de":"süß","en":["cute"],"show":"cute"},
+  {"id":"TR.to-spend","u":"TR","s":"","de":"verbringen (Zeit)","en":["to spend"],"show":"to spend"},
+  {"id":"TR.far-south","u":"TR","s":"","de":"tief im Süden","en":["far south"],"show":"far south"},
+  {"id":"TR.hotel","u":"TR","s":"","de":"Hotel","en":["hotel"],"show":"hotel"},
+  {"id":"TR.pyramid","u":"TR","s":"","de":"Pyramide","en":["pyramid"],"show":"pyramid"},
+  {"id":"TR.famous","u":"TR","s":"","de":"berühmt","en":["famous"],"show":"famous"},
+  {"id":"TR.up-and-down","u":"TR","s":"","de":"hoch und runter","en":["up and down"],"show":"up and down"},
+  {"id":"TR.private","u":"TR","s":"","de":"privat","en":["private"],"show":"private"},
+  {"id":"TR.close-to","u":"TR","s":"","de":"nahe an","en":["close to"],"show":"close to"},
+  {"id":"TR.treetop-trail","u":"TR","s":"","de":"Baumwipfelpfad","en":["treetop trail"],"show":"treetop trail"},
 ];
-VOCAB.forEach((w,i)=> w.id = "w"+i);
+/* VOCAB-DATA:END */
 const VOCAB_BY_ID = {};
 VOCAB.forEach(w=> VOCAB_BY_ID[w.id] = w);
 
-const CATEGORIES = [
-  {key:"begruessung", label:"Begrüßung & Sätze", labelEn:"Greetings & Phrases", emoji:"👋"},
-  {key:"zahlen", label:"Zahlen", labelEn:"Numbers", emoji:"🔢"},
-  {key:"saetze", label:"Sätze & kleine Wörter", labelEn:"Phrases & Small Words", emoji:"💬"},
-  {key:"tiere", label:"Tiere & Natur", labelEn:"Animals & Nature", emoji:"🐝"},
-  {key:"familie", label:"Familie & Freunde", labelEn:"Family & Friends", emoji:"👨‍👩‍👧"},
-  {key:"farben", label:"Farben", labelEn:"Colors", emoji:"🎨"},
-  {key:"hobbys", label:"Hobbys & mehr", labelEn:"Hobbies & More", emoji:"⚽"},
-  {key:"schulsachen", label:"Schulsachen", labelEn:"School Supplies", emoji:"✏️"},
-  {key:"schulorte", label:"Schule & Orte", labelEn:"School & Places", emoji:"🏫"},
-  {key:"gefuehle", label:"Gefühle & Beschreibungen", labelEn:"Feelings & Descriptions", emoji:"😊"},
-  {key:"alltag", label:"Alltag & Sätze", labelEn:"Everyday & Phrases", emoji:"💬"},
+// Alte Version: ids waren "w0", "w1", ... (Position in der Liste). Index hier = alte Nummer,
+// Wert = neue id(s). Wird einmalig beim Start zur Übernahme des Lernstands genutzt.
+const LEGACY_IDS = [
+  ["GRS.CI.hello", "GRS.CI.hi"],
+  ["GRS.CI.my-name-is"],
+  ["GRS.CI.to-be"],
+  ["GRS.CI.what-s-your-name"],
+  ["GRS.CI.i-m"],
+  ["GRS.CI.where-are-you-from"],
+  ["GRS.CI.i-m-from"],
+  ["GRS.CI.i-live-in"],
+  ["GRS.CI.to-live"],
+  ["GRS.CI.how-old-are-you"],
+  ["GRS.CI.me-too"],
+  ["GRS.CI.see-you"],
+  ["GRS.CI.to-see"],
+  ["GRS.CI.bye"],
+  ["GRS.CI.new"],
+  ["GRS.CI.friend"],
+  ["GRS.S1.zero"],
+  ["GRS.S1.one"],
+  ["GRS.S1.two"],
+  ["GRS.S1.three"],
+  ["GRS.S1.four"],
+  ["GRS.S1.five"],
+  ["GRS.S1.six"],
+  ["GRS.S1.seven"],
+  ["GRS.S1.eight"],
+  ["GRS.S1.nine"],
+  ["GRS.S1.ten"],
+  ["GRS.S1.eleven"],
+  ["GRS.S1.twelve"],
+  ["U2.S1.thirty"],
+  ["GRS.S1.welcome-to"],
+  ["GRS.S1.what-can-you-hear"],
+  ["GRS.S1.to-hear"],
+  ["GRS.S1.the"],
+  ["GRS.S1.i-can"],
+  ["GRS.S1.a"],
+  ["GRS.S1.on"],
+  ["GRS.S1.to-have-a-picnic"],
+  ["GRS.S1.to-read"],
+  ["GRS.S1.to-play"],
+  ["GRS.S1.to-ride-a-bike"],
+  ["GRS.S1.to-talk-to"],
+  ["GRS.S1.boat"],
+  ["GRS.S1.flower"],
+  ["GRS.S1.skates"],
+  ["GRS.S1.dog"],
+  ["GRS.S1.cat"],
+  ["GRS.S1.bird"],
+  ["GRS.S1.butterfly"],
+  ["GRS.S1.bee"],
+  ["GRS.S1.tree"],
+  ["GRS.S1.grass"],
+  ["GRS.S1.bike"],
+  ["GRS.S1.book"],
+  ["GRS.S2.horse"],
+  ["GRS.S1.girl"],
+  ["GRS.S1.boy"],
+  ["GRS.S1.mother"],
+  ["GRS.S1.father"],
+  ["GRS.S2.sister"],
+  ["GRS.S2.brother"],
+  ["GRS.S2.twin"],
+  ["GRS.S2.pet"],
+  ["GRS.S1.black"],
+  ["GRS.S1.blue"],
+  ["GRS.S1.brown"],
+  ["GRS.S1.green"],
+  ["GRS.S1.grey"],
+  ["GRS.S1.orange"],
+  ["GRS.S1.pink"],
+  ["GRS.S1.purple"],
+  ["GRS.S1.red"],
+  ["GRS.S1.white"],
+  ["GRS.S1.yellow"],
+  ["GRS.S2.my-favourite"],
+  ["GRS.S2.i-like"],
+  ["GRS.S2.to-like"],
+  ["GRS.S2.to-take-photos"],
+  ["GRS.S2.great"],
+  ["GRS.S2.big"],
+  ["GRS.S2.best"],
+  ["GRS.S2.and"],
+  ["GRS.S2.we-re"],
+  ["GRS.S2.to-have"],
+  ["GRS.S2.funny"],
+  ["GRS.S2.football"],
+  ["GRS.S2.food"],
+  ["GRS.S2.to-cook"],
+  ["GRS.S2.netball"],
+  ["GRS.S2.he-s"],
+  ["GRS.S2.good"],
+  ["GRS.S2.who-is-it"],
+  ["GRS.S2.or"],
+  ["GRS.S2.hobby"],
+  ["GRS.S2.you-too"],
+  ["GRS.S2.you-re"],
+  ["GRS.S2.my-turn"],
+  ["GRS.S2.to-draw"],
+  ["GRS.S2.picture"],
+  ["GRS.S2.game"],
+  ["GRS.S2.to-sing"],
+  ["GRS.S3.exercise-book"],
+  ["GRS.S3.marker"],
+  ["GRS.S3.pen"],
+  ["GRS.S3.pencil"],
+  ["GRS.S3.pencil-case"],
+  ["GRS.S3.rubber"],
+  ["GRS.S3.ruler"],
+  ["GRS.S3.schoolbag"],
+  ["GRS.S3.glue"],
+  ["GRS.S3.sharpener"],
+  ["GRS.S3.scissors"],
+  ["GRS.S3.thing"],
+  ["U1.S1.planner"],
+  ["U1.S1.timetable"],
+  ["U1.S1.map"],
+  ["U1.S1.rule"],
+  ["U1.S1.lesson"],
+  ["U1.S1.library"],
+  ["U1.S1.assembly"],
+  ["U1.S1.classroom"],
+  ["U1.S1.hall"],
+  ["U1.S1.gym-nasium"],
+  ["U1.S1.recording-studio"],
+  ["U1.S1.cafeteria"],
+  ["U1.S1.room"],
+  ["U1.CI.sports-ground"],
+  ["U1.CI.happy"],
+  ["U1.CI.angry"],
+  ["U1.CI.surprised"],
+  ["U1.CI.nervous"],
+  ["U1.CI.boring"],
+  ["U1.CI.ugly"],
+  ["U1.CI.silly"],
+  ["U1.S1.strict"],
+  ["U1.S1.friendly"],
+  ["U1.CI.crazy"],
+  ["GRS.S2.come-on"],
+  ["GRS.S2.to-come"],
+  ["GRS.S2.it-s-time-for"],
+  ["GRS.S2.ice-cream"],
+  ["GRS.S2.can-t"],
+  ["GRS.S2.me"],
+  ["U1.CI.to-look-at"],
+  ["U1.CI.us"],
+  ["U1.CI.to-look"],
+  ["U1.CI.over-there"],
+  ["U1.CI.don-t-worry"],
+  ["U1.CI.to-sit"],
+  ["U1.CI.together"],
+  ["U1.CI.why"],
+  ["U1.CI.mrs"],
+  ["U1.CI.teacher"],
+  ["U1.CI.please"],
+  ["U1.CI.to-take"],
+  ["U1.CI.home"],
+  ["U1.CI.look"],
+  ["U1.CI.that-s"],
+  ["U1.CI.in-front-of"],
+  ["U1.CI.to-think"],
+  ["U1.S1.good-morning"],
+  ["U1.S1.no"],
+  ["U1.S1.not"],
+  ["U1.S1.to-help"],
+  ["U1.S1.question"],
+  ["U1.S1.don-t-be-late-for-school"],
+  ["U1.S1.to-show"],
+  ["U1.S1.tour"],
+  ["U1.S1.to-have-lunch"],
+  ["U1.S1.excuse-me"],
+  ["U1.S1.art"],
+  ["U1.S1.to-say"],
+  ["U1.S1.there"],
+  ["U1.S1.student"],
+  ["U1.S1.to-want-to"],
+  ["U1.S1.drink"],
+  ["U1.CI.today"],
+  ["U1.CI.bedroom"],
+  ["U1.CI.under"],
+  ["U1.CI.bed"],
+  ["U1.CI.to-look-for"],
+  ["U1.CI.no"],
+  ["U1.CI.year"],
+  ["U1.CI.uniform"]
 ];
+
+// Reihenfolge wie im Buch. Neue Units hier ergänzen (key = Spalte "unit" in der CSV).
+const UNITS = [
+  {key:"GRS", label:"Get ready", labelEn:"Get ready", emoji:"👋"},
+  {key:"U1",  label:"Unit 1", labelEn:"Unit 1", emoji:"🏫"},
+  {key:"MS1", label:"Zusatzteil MS1", labelEn:"Extra MS1", emoji:"🎧"},
+  {key:"U2",  label:"Unit 2", labelEn:"Unit 2", emoji:"🏠"},
+  {key:"AC1", label:"Across cultures 1", labelEn:"Across cultures 1", emoji:"⛵"},
+  {key:"U3",  label:"Unit 3", labelEn:"Unit 3", emoji:"🚲"},
+  {key:"AC2", label:"Across cultures 2", labelEn:"Across cultures 2", emoji:"🍳"},
+  {key:"U4",  label:"Unit 4", labelEn:"Unit 4", emoji:"🎂"},
+  {key:"TR",  label:"Zusatzteil TR", labelEn:"Extra TR", emoji:"🏕️"},
+];
+const SECTION_LABELS = {
+  CI:{de:"Check-in", en:"Check-in"}, S1:{de:"Station 1", en:"Station 1"}, S2:{de:"Station 2", en:"Station 2"},
+  S3:{de:"Station 3", en:"Station 3"}, ST:{de:"Story", en:"Story"}, UT:{de:"Unit task", en:"Unit task"},
+  CO:{de:"Check-out", en:"Check-out"}
+};
+// Unbekannte Units aus der CSV trotzdem anzeigen (hinten angehängt)
+VOCAB.forEach(w=>{ if(!UNITS.some(u=>u.key===w.u)) UNITS.push({key:w.u, label:w.u, labelEn:w.u, emoji:"📘"}); });
+function unitLabel(u){ return uiLang === "en" ? u.labelEn : u.label; }
+function sectionLabel(s){ const l = SECTION_LABELS[s]; return l ? l[uiLang] : s; }
+
+// Anzeige: Buch trennt Bedeutungen mit ";" -> für Tino lesbarer mit " / "
+function deText(w){ return w.de.replace(/\s*;\s*/g, " / "); }
+function answerText(w){ return w.show || w.en[0]; }
 
 /* ---------------- Oberflächen-Sprache (Deutsch/Englisch) ----------------
    Betrifft nur die Bedienoberfläche (Buttons, Beschriftungen, Rückmeldungen).
@@ -637,6 +1609,16 @@ const STRINGS = {
     lastPointNone: "(noch keiner)",
     historyEmpty: "Noch keine Superpunkte",
     pointsCount: (n)=> n===1 ? `${n} Punkt` : `${n} Punkte`,
+    selectBtn: "📚 Lernstoff wählen",
+    selectTitle: "Lernstoff wählen",
+    selectIntro: "<b>Aktiv</b>: neue Vokabeln + Wiederholung.<br><b>Wiederholen</b>: nur schon geübte Vokabeln kommen wieder dran, wenn sie fällig sind – nichts Neues.<br><b>Aus</b>: ausgeblendet. Der Lernstand bleibt gespeichert und geht beim Einschalten weiter.",
+    selectDone: "Fertig",
+    modeActive: "Aktiv", modeReview: "Wiederholen", modeOff: "Aus",
+    modeReviewShort: "Wdh.",
+    unitStats: (n,s,m)=>`${n} Wörter · ${s} geübt · ${m} gekonnt`,
+    noWordsSelected: "Noch kein Lernstoff ausgewählt – unten auf „Lernstoff wählen“ tippen.",
+    sectionsToggle: "Abschnitte anzeigen",
+    feedbackAltIntro: "Auch richtig! Hier wird aber ein anderes Wort gesucht:",
   },
   en: {
     eyebrow: "English Vocabulary Notebook",
@@ -687,6 +1669,16 @@ const STRINGS = {
     lastPointNone: "(none yet)",
     historyEmpty: "No super points yet",
     pointsCount: (n)=> n===1 ? `${n} point` : `${n} points`,
+    selectBtn: "📚 Choose what to learn",
+    selectTitle: "Choose what to learn",
+    selectIntro: "<b>Active</b>: new words + review.<br><b>Review</b>: only words you've already practiced come back when due – nothing new.<br><b>Off</b>: hidden. Your progress is kept and continues when you switch it back on.",
+    selectDone: "Done",
+    modeActive: "Active", modeReview: "Review", modeOff: "Off",
+    modeReviewShort: "review",
+    unitStats: (n,s,m)=>`${n} words · ${s} practiced · ${m} mastered`,
+    noWordsSelected: "Nothing selected yet – tap “Choose what to learn” below.",
+    sectionsToggle: "Show sections",
+    feedbackAltIntro: "Also right! But a different word is wanted here:",
   }
 };
 function t(key, ...args){
@@ -741,6 +1733,7 @@ function setUiLang(lang){
   saveUiLang();
   applyStaticLabels();
   renderHome();
+  if(!screenSelect.classList.contains("hidden")) renderSelect();
 }
 document.getElementById("lang-btn-de").addEventListener("click", ()=>setUiLang("de"));
 document.getElementById("lang-btn-en").addEventListener("click", ()=>setUiLang("en"));
@@ -799,6 +1792,95 @@ async function saveProgress(){
   try{ localStorage.setItem(STORAGE_KEY, json); }
   catch(e){ /* Speicher hier nicht verfügbar - App funktioniert trotzdem für die Sitzung */ }
 }
+
+/* ---------------- Übernahme des alten Lernstands ----------------
+   Alte Version speicherte unter "w0", "w1", ... (Position in der Liste). Diese Einträge
+   werden auf die neuen festen ids umgeschrieben. Vorher wird der komplette alte Stand
+   einmalig als Sicherung abgelegt. Läuft bei jedem Start, sobald irgendwo noch alte
+   Schlüssel auftauchen (z.B. weil ein Gerät noch die alte Version offen hatte) -
+   doppelte Einträge werden zusammengeführt, die höhere Phase gewinnt.
+------------------------------------------------------------------- */
+const PROGRESS_BACKUP_KEY = "vokabel-progress-v1-backup-alt";
+const LEGACY_KEY_RE = /^w(\d+)$/;
+
+function mapLegacyId(id){
+  const m = LEGACY_KEY_RE.exec(id);
+  if(!m) return [id];
+  return LEGACY_IDS[Number(m[1])] || [];
+}
+function rawPhase(raw){
+  if(!raw) return 0;
+  if(raw.phase !== undefined) return raw.phase;
+  return (raw.streak||0) >= 2 ? 3 : 1;
+}
+async function migrateLegacyProgress(){
+  const legacyKeys = Object.keys(progress).filter(k=>LEGACY_KEY_RE.test(k));
+  if(!legacyKeys.length) return;
+  const backupJson = JSON.stringify(progress);
+  let hasBackup = false;
+  try{
+    if(window.storage){
+      const res = await window.storage.get(PROGRESS_BACKUP_KEY, false);
+      hasBackup = !!(res && res.value);
+    }
+  }catch(e){}
+  if(!hasBackup){ try{ hasBackup = !!localStorage.getItem(PROGRESS_BACKUP_KEY); }catch(e){} }
+  if(!hasBackup){
+    try{ if(window.storage){ await window.storage.set(PROGRESS_BACKUP_KEY, backupJson, false); } }catch(e){}
+    try{ localStorage.setItem(PROGRESS_BACKUP_KEY, backupJson); }catch(e){}
+  }
+  legacyKeys.forEach(oldKey=>{
+    const raw = progress[oldKey];
+    mapLegacyId(oldKey).forEach(newId=>{
+      if(!VOCAB_BY_ID[newId]) return;
+      if(rawPhase(raw) > rawPhase(progress[newId]) || !progress[newId]){
+        progress[newId] = JSON.parse(JSON.stringify(raw));
+      }
+    });
+    delete progress[oldKey];
+  });
+  await saveProgress();
+}
+
+/* ---------------- Lernstoff-Auswahl (pro Unit) ----------------
+   "active" = neue Vokabeln + Wiederholung
+   "review" = nur schon geübte Vokabeln kommen weiter dran (nichts Neues)
+   "off"    = ausgeblendet; der Lernstand bleibt gespeichert und läuft beim
+              Wieder-Einschalten einfach weiter (überfällige Wörter sind dann fällig).
+------------------------------------------------------------------- */
+const SELECTION_KEY = "vokabel-selection-v1";
+const DEFAULT_SELECTION = {GRS:"active", U1:"active"};
+let selection = {...DEFAULT_SELECTION};
+
+async function loadSelection(){
+  let stored = null;
+  try{
+    if(window.storage){
+      const res = await window.storage.get(SELECTION_KEY, false);
+      if(res && res.value){ stored = JSON.parse(res.value); }
+    }
+  }catch(e){}
+  if(!stored){
+    try{ const local = localStorage.getItem(SELECTION_KEY); if(local){ stored = JSON.parse(local); } }catch(e){}
+  }
+  if(stored && typeof stored === "object"){ selection = stored; }
+}
+async function saveSelection(){
+  const json = JSON.stringify(selection);
+  try{ if(window.storage){ await window.storage.set(SELECTION_KEY, json, false); } }catch(e){}
+  try{ localStorage.setItem(SELECTION_KEY, json); }catch(e){}
+}
+function unitMode(unitKey){ return selection[unitKey] || "off"; }
+function isStarted(id){
+  const raw = progress[id];
+  return !!raw && ((raw.seen||0) > 0 || rawPhase(raw) > 1);
+}
+function isInPlay(w){
+  const mode = unitMode(w.u);
+  return mode === "active" || (mode === "review" && isStarted(w.id));
+}
+// Alle Vokabeln, die aktuell zum Lernstoff gehören (Basis für Tages-Herausforderung, Statistik, Übungen)
+function playPool(){ return VOCAB.filter(isInPlay); }
 
 function getTodayKey(){
   const d = new Date();
@@ -874,8 +1956,9 @@ const DAILY_STRUGGLE_COUNT = DAILY_COUNT - DAILY_REINFORCE_COUNT; // Rest: wackl
 // Auswahl gefunden (z.B. am Anfang), mit unbekannten Vokabeln aufgefüllt.
 function buildDailySelection(excludeIds){
   excludeIds = excludeIds || new Set();
-  const pool = VOCAB.filter(w=>!excludeIds.has(w.id));
-  const usePool = pool.length >= DAILY_COUNT ? pool : VOCAB; // Sicherheitsnetz, falls zu wenig übrig bleibt
+  const all = playPool();
+  const pool = all.filter(w=>!excludeIds.has(w.id));
+  const usePool = pool.length >= DAILY_COUNT ? pool : all; // Sicherheitsnetz, falls zu wenig übrig bleibt
 
   const masteredWords = usePool.filter(w=>isMastered(w.id));
   const notMastered = usePool.filter(w=>!isMastered(w.id));
@@ -906,7 +1989,7 @@ function buildDailySelection(excludeIds){
   if(combined.length < DAILY_COUNT){
     // Letztes Sicherheitsnetz: aus dem Gesamtpool auffüllen (auch ausgeschlossene, falls nötig)
     const usedIds = new Set(combined.map(w=>w.id));
-    const filler = VOCAB.filter(w=>!usedIds.has(w.id));
+    const filler = all.filter(w=>!usedIds.has(w.id));
     combined = combined.concat(shuffle(filler).slice(0, DAILY_COUNT-combined.length));
   }
   return shuffle(combined).map(w=>w.id);
@@ -928,7 +2011,9 @@ async function getDailyWordIds(){
     }catch(e){ /* ignorieren */ }
   }
   if(stored && stored.date === todayKey && Array.isArray(stored.ids) && stored.ids.length){
-    return stored.ids;
+    // alte ids ("w12") umschreiben; Wörter, die inzwischen abgewählt sind, weglassen
+    const ids = [...new Set(stored.ids.flatMap(mapLegacyId))].filter(id=>VOCAB_BY_ID[id] && isInPlay(VOCAB_BY_ID[id]));
+    if(ids.length) return ids;
   }
   // Neuer Tag (oder erster Aufruf) -> frisch auswählen: gemischt aus wackligen + sicheren Vokabeln
   const ids = buildDailySelection();
@@ -1055,6 +2140,32 @@ function checkAnswer(input, accepted){
   return {status:"wrong"};
 }
 
+/* ---------------- Gleiche Bedeutung, anderes Wort ----------------
+   Beispiel: "gut" -> gesucht ist "good", Tino schreibt "fine" (steht im Buch auch bei "gut").
+   Das ist nicht falsch - es zählt nicht als Fehler, die gesuchte Vokabel kommt aber
+   nochmal dran, damit sie geübt wird.
+------------------------------------------------------------------- */
+function germanTokens(de){
+  return de.toLowerCase().replace(/…|\.\.\./g, " ").split(/[;,]/)
+    .map(p=>p.replace(/\(.*?\)/g, " ").replace(/[.!?]/g, "").replace(/\/-/g, "/").replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+}
+let germanIndex = null; // Token -> Vokabeln
+function sameMeaningMatch(w, input){
+  if(!germanIndex){
+    germanIndex = {};
+    VOCAB.forEach(v=> germanTokens(v.de).forEach(tok=>{ (germanIndex[tok] = germanIndex[tok] || []).push(v); }));
+  }
+  const norm = normalize(input);
+  for(const tok of germanTokens(w.de)){
+    for(const other of (germanIndex[tok] || [])){
+      if(other.id === w.id) continue;
+      if(other.en.some(a=> normalize(a) === norm)) return other;
+    }
+  }
+  return null;
+}
+
 /* ---------------- App-Status ---------------- */
 let session = { words:[], index:0, correctCount:0, closeCount:0, wrongCount:0, shownCount:0, mistakes:[], revealedIds:new Set(), mode:"normal", remainingIds:null, dailyTotal:0 };
 let currentCatKey = "alle";
@@ -1062,19 +2173,29 @@ let currentCatKey = "alle";
 const screenHome = document.getElementById("screen-home");
 const screenQuiz = document.getElementById("screen-quiz");
 const screenSummary = document.getElementById("screen-summary");
+const screenSelect = document.getElementById("screen-select");
 
 function show(screen){
-  [screenHome, screenQuiz, screenSummary].forEach(s=>s.classList.add("hidden"));
+  [screenHome, screenQuiz, screenSummary, screenSelect].forEach(s=>s.classList.add("hidden"));
   screen.classList.remove("hidden");
 }
 
 /* ---------------- Home Screen ---------------- */
+const expandedUnits = new Set(); // aufgeklappte Units auf der Startseite (nur für diese Sitzung)
+
+function progressBadge(words){
+  const mastered = words.filter(w=>isMastered(w.id)).length;
+  const done = words.length > 0 && mastered === words.length;
+  return `<span class="cat-progress ${done?'done':''}">${mastered}/${words.length}</span>`;
+}
+
 function renderHome(){
   document.getElementById("super-score-history").classList.add("hidden");
-  const total = VOCAB.length;
-  const masteredCount = VOCAB.filter(w=>isMastered(w.id)).length;
+  const pool = playPool();
+  const total = pool.length;
+  const masteredCount = pool.filter(w=>isMastered(w.id)).length;
   let bestPhase = 1;
-  VOCAB.forEach(w=> bestPhase = Math.max(bestPhase, getStat(w.id).phase));
+  pool.forEach(w=> bestPhase = Math.max(bestPhase, getStat(w.id).phase));
 
   document.getElementById("stat-mastered").textContent = masteredCount;
   document.getElementById("stat-total").textContent = total;
@@ -1094,26 +2215,106 @@ function renderHome(){
   const list = document.getElementById("cat-list");
   list.innerHTML = "";
 
-  const allBtn = document.createElement("button");
-  allBtn.className = "cat-btn all";
-  allBtn.innerHTML = `<span>${t("allWordsBtn")}</span>
-    <span class="cat-right"><span class="cat-progress">${masteredCount}/${total}</span></span>`;
-  allBtn.onclick = ()=> startSession("alle");
-  list.appendChild(allBtn);
-
   document.getElementById("daily-btn").onclick = handleDailyBtnClick;
 
-  CATEGORIES.forEach(cat=>{
-    const words = VOCAB.filter(w=>w.cat===cat.key);
-    const mastered = words.filter(w=>isMastered(w.id)).length;
+  if(!total){
+    const empty = document.createElement("p");
+    empty.className = "empty-hint";
+    empty.textContent = t("noWordsSelected");
+    list.appendChild(empty);
+  } else {
+    const allBtn = document.createElement("button");
+    allBtn.className = "cat-btn all";
+    allBtn.innerHTML = `<span>${t("allWordsBtn")}</span>
+      <span class="cat-right"><span class="cat-progress">${masteredCount}/${total}</span></span>`;
+    allBtn.onclick = ()=> startSession("alle");
+    list.appendChild(allBtn);
+  }
+
+  UNITS.forEach(unit=>{
+    const words = pool.filter(w=>w.u===unit.key);
+    if(!words.length) return;
+    const isReview = unitMode(unit.key) === "review";
+    const open = expandedUnits.has(unit.key);
+
+    const row = document.createElement("div");
+    row.className = "unit-row";
     const btn = document.createElement("button");
-    btn.className = "cat-btn";
-    const done = mastered === words.length;
-    const label = uiLang === "en" ? cat.labelEn : cat.label;
-    btn.innerHTML = `<span class="cat-right"><span class="cat-emoji">${cat.emoji}</span> ${label}</span>
-      <span class="cat-progress ${done?'done':''}">${mastered}/${words.length}</span>`;
-    btn.onclick = ()=> startSession(cat.key);
-    list.appendChild(btn);
+    btn.className = "cat-btn unit-btn";
+    btn.innerHTML = `<span class="cat-right"><span class="cat-emoji">${unit.emoji}</span> ${unitLabel(unit)}${isReview ? ` <span class="mode-tag">${t("modeReviewShort")}</span>` : ""}</span>
+      ${progressBadge(words)}`;
+    btn.onclick = ()=> startSession("u:"+unit.key);
+    const toggle = document.createElement("button");
+    toggle.className = "unit-toggle" + (open ? " open" : "");
+    toggle.setAttribute("aria-label", t("sectionsToggle"));
+    toggle.textContent = "▾";
+    toggle.onclick = ()=>{
+      if(open) expandedUnits.delete(unit.key); else expandedUnits.add(unit.key);
+      renderHome();
+    };
+    row.appendChild(btn);
+    row.appendChild(toggle);
+    list.appendChild(row);
+
+    if(open){
+      const sections = [...new Set(words.map(w=>w.s))];
+      const box = document.createElement("div");
+      box.className = "section-list";
+      sections.forEach(sec=>{
+        const secWords = words.filter(w=>w.s===sec);
+        const sbtn = document.createElement("button");
+        sbtn.className = "cat-btn section-btn";
+        sbtn.innerHTML = `<span>${sec ? sectionLabel(sec) : unitLabel(unit)}</span>${progressBadge(secWords)}`;
+        sbtn.onclick = ()=> startSession("s:"+unit.key+":"+sec);
+        box.appendChild(sbtn);
+      });
+      list.appendChild(box);
+    }
+  });
+
+  const selBtn = document.createElement("button");
+  selBtn.className = "btn btn-ghost select-open-btn";
+  selBtn.textContent = t("selectBtn");
+  selBtn.onclick = openSelectScreen;
+  list.appendChild(selBtn);
+}
+
+/* ---------------- Lernstoff-Auswahl Screen ---------------- */
+function openSelectScreen(){
+  renderSelect();
+  show(screenSelect);
+}
+function renderSelect(){
+  document.getElementById("txt-select-title").textContent = t("selectTitle");
+  document.getElementById("txt-select-intro").innerHTML = t("selectIntro");
+  document.getElementById("txt-select-done").textContent = t("selectDone");
+  const list = document.getElementById("select-list");
+  list.innerHTML = "";
+  UNITS.forEach(unit=>{
+    const words = VOCAB.filter(w=>w.u===unit.key);
+    if(!words.length) return;
+    const started = words.filter(w=>isStarted(w.id)).length;
+    const mastered = words.filter(w=>isMastered(w.id)).length;
+    const mode = unitMode(unit.key);
+    const row = document.createElement("div");
+    row.className = "select-row mode-" + mode;
+    row.innerHTML = `<div class="select-head">
+        <span class="select-name"><span class="cat-emoji">${unit.emoji}</span> ${unitLabel(unit)}</span>
+        <span class="select-stats">${t("unitStats", words.length, started, mastered)}</span>
+      </div>
+      <div class="seg">
+        <button data-mode="active" class="${mode==='active'?'on':''}">${t("modeActive")}</button>
+        <button data-mode="review" class="${mode==='review'?'on':''}">${t("modeReview")}</button>
+        <button data-mode="off" class="${mode==='off'?'on':''}">${t("modeOff")}</button>
+      </div>`;
+    row.querySelectorAll(".seg button").forEach(b=>{
+      b.onclick = async ()=>{
+        selection[unit.key] = b.dataset.mode;
+        await saveSelection();
+        renderSelect();
+      };
+    });
+    list.appendChild(row);
   });
 }
 
@@ -1127,9 +2328,17 @@ function shuffle(arr){
   return a;
 }
 
+function wordsForKey(catKey){
+  const pool = playPool();
+  if(catKey.startsWith("u:")){ const u = catKey.slice(2); return pool.filter(w=>w.u===u); }
+  if(catKey.startsWith("s:")){ const [, u, sec] = catKey.split(":"); return pool.filter(w=>w.u===u && w.s===sec); }
+  return pool;
+}
+
 function startSession(catKey, wordsOverride){
   currentCatKey = catKey;
-  let pool = wordsOverride || (catKey==="alle" ? VOCAB : VOCAB.filter(w=>w.cat===catKey));
+  let pool = wordsOverride || wordsForKey(catKey);
+  if(!pool.length){ renderHome(); show(screenHome); return; }
   // Wörter, die noch nicht "gekonnt" sind, zuerst / öfter drankommen
   pool = shuffle(pool);
   session = { words: pool, index:0, correctCount:0, closeCount:0, wrongCount:0, shownCount:0, mistakes:[], revealedIds:new Set(), mode:"normal", remainingIds:null, dailyTotal:0 };
@@ -1151,6 +2360,7 @@ async function handleDailyBtnClick(){
 }
 
 async function startDailySession(isExtra){
+  if(!playPool().length){ window.alert(t("noWordsSelected")); return; }
   let ids;
   if(isExtra){
     const mainIds = await getDailyWordIds();
@@ -1179,7 +2389,10 @@ const quizCounter = document.getElementById("quiz-counter");
 
 function renderQuestion(){
   const w = session.words[session.index];
-  deWordEl.textContent = w.de;
+  const deShown = deText(w);
+  deWordEl.textContent = deShown;
+  deWordEl.classList.toggle("long", deShown.length > 22);
+  deWordEl.classList.toggle("very-long", deShown.length > 40);
   answerInput.value = "";
   answerInput.className = "";
   answerInput.disabled = false;
@@ -1210,6 +2423,22 @@ function submitAnswer(){
   const result = checkAnswer(val, w.en);
   if(result.status === "empty"){ answerInput.focus(); return; }
 
+  if(result.status !== "correct" && sameMeaningMatch(w, val)){
+    // anderes, aber passendes Wort: kein Fehler, Phase bleibt; gesuchtes Wort kommt nochmal
+    answerInput.className = "close";
+    feedbackEl.className = "feedback close";
+    feedbackEl.innerHTML = `<span class="stamp">👍</span> ${t("feedbackAltIntro")} "${answerText(w)}"`;
+    if(session.mode === "daily" || !session.revealedIds.has(w.id)){
+      session.revealedIds.add(w.id);
+      session.words.push({...w});
+    }
+    answerInput.disabled = true;
+    dontknowBtn.disabled = true;
+    checkBtn.textContent = t("nextBtn");
+    awaitingNext = true;
+    return;
+  }
+
   const stat = getStat(w.id);
   stat.seen = (stat.seen||0)+1;
 
@@ -1230,7 +2459,7 @@ function submitAnswer(){
     stat.dueDate = getTodayKey();
     answerInput.className = "close";
     feedbackEl.className = "feedback close";
-    feedbackEl.innerHTML = `<span class="stamp">〜</span> ${t("feedbackCloseIntro")} "${w.en[0]}"`;
+    feedbackEl.innerHTML = `<span class="stamp">〜</span> ${t("feedbackCloseIntro")} "${answerText(w)}"`;
     if(session.mode === "daily"){ session.words.push({...w}); }
   } else {
     applyMistake(stat);
@@ -1239,7 +2468,7 @@ function submitAnswer(){
     stat.mistakeCount = (stat.mistakeCount||0)+1;
     answerInput.className = "wrong";
     feedbackEl.className = "feedback bad";
-    feedbackEl.innerHTML = `<span class="stamp">✗</span> ${t("feedbackWrongIntro")} "${w.en[0]}"${t("feedbackPhaseInline", stat.phase)}`;
+    feedbackEl.innerHTML = `<span class="stamp">✗</span> ${t("feedbackWrongIntro")} "${answerText(w)}"${t("feedbackPhaseInline", stat.phase)}`;
     if(session.mode === "daily"){ session.words.push({...w}); }
   }
   answerInput.disabled = true;
@@ -1305,7 +2534,7 @@ dontknowBtn.addEventListener("click", ()=>{
   answerInput.className = "shown";
   answerInput.disabled = true;
   feedbackEl.className = "feedback shown";
-  feedbackEl.innerHTML = `<span class="stamp">👀</span> ${t("feedbackShownIntro")} "${w.en[0]}". ${t("feedbackShownOutro")}`;
+  feedbackEl.innerHTML = `<span class="stamp">👀</span> ${t("feedbackShownIntro")} "${answerText(w)}". ${t("feedbackShownOutro")}`;
 
   checkBtn.textContent = (session.index < session.words.length-1) ? t("nextBtn") : t("doneBtn");
   dontknowBtn.disabled = true;
@@ -1327,7 +2556,7 @@ async function finishSession(){
     list.innerHTML = "";
     const counts = {};
     session.mistakes.forEach(w=>{
-      if(!counts[w.id]){ counts[w.id] = {de:w.de, en:w.en, n:0}; }
+      if(!counts[w.id]){ counts[w.id] = {de:deText(w), en:answerText(w), n:0}; }
       counts[w.id].n++;
     });
     Object.values(counts).sort((a,b)=>b.n-a.n).forEach(item=>{
@@ -1335,7 +2564,7 @@ async function finishSession(){
       el.className = "mistake-item close";
       el.innerHTML = `<span class="de">${item.de}</span>
         <span class="tag-label close">${t("practicedTimes", item.n)}</span>
-        <span class="en">${item.en[0]}</span>`;
+        <span class="en">${item.en}</span>`;
       list.appendChild(el);
     });
     document.getElementById("retry-mistakes").classList.add("hidden");
@@ -1378,9 +2607,9 @@ async function finishSession(){
       const item = document.createElement("div");
       item.className = "mistake-item " + w._tag;
       const tagLabel = w._tag === "close" ? t("tagClose") : (w._tag === "shown" ? t("tagShown") : t("tagWrong"));
-      item.innerHTML = `<span class="de"><span class="dot ${w._tag}"></span>${w.de}</span>
+      item.innerHTML = `<span class="de"><span class="dot ${w._tag}"></span>${deText(w)}</span>
         <span class="tag-label ${w._tag}">${tagLabel}</span>
-        <span class="en">${w.en[0]}</span>`;
+        <span class="en">${answerText(w)}</span>`;
       list.appendChild(item);
     });
   }
@@ -1402,6 +2631,9 @@ document.getElementById("back-home").addEventListener("click", ()=>{
   await loadUiLang();
   applyStaticLabels();
   await loadProgress();
+  await migrateLegacyProgress();
+  await loadSelection();
+  document.getElementById("select-done").addEventListener("click", ()=>{ renderHome(); show(screenHome); });
   await evaluateMissedDays();
   renderHome();
   show(screenHome);
