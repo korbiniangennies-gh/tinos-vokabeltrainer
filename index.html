@@ -147,17 +147,24 @@
     font-weight:700; color:var(--ink-soft); font-size:12px;
     cursor:pointer; text-decoration:underline; text-decoration-style:dotted; text-underline-offset:2px;
   }
+  .super-score{ cursor:pointer; }
   .super-history{
-    position:relative; z-index:1; background:#fff; border-radius:12px; padding:8px 14px;
+    position:relative; z-index:1; background:#fff; border-radius:12px; padding:6px 14px 8px;
     margin: -10px 0 16px; box-shadow: inset 0 0 0 1px rgba(31,58,95,0.1);
-    max-height:160px; overflow-y:auto;
+    max-height:45vh; overflow-y:auto; -webkit-overflow-scrolling:touch;
   }
   .super-history-row{
-    display:flex; justify-content:space-between; gap:10px;
+    display:grid; grid-template-columns: 1.3fr 1fr 0.6fr; gap:10px;
     font-size:13px; padding:5px 0; color:var(--ink); font-weight:700;
   }
+  .super-history-row .s{ text-align:right; color:var(--ink-soft); }
+  .super-history-row.head{ position:sticky; top:-6px; background:#fff; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:var(--ink-soft); }
+  .super-history-row.plus .n{ color: var(--good); }
+  .super-history-row.minus .n{ color: var(--bad); }
+  .super-history-row.zero .n{ color: var(--ink-soft); font-weight:600; }
+  .super-history-note{ font-size:11px; color:var(--ink-soft); padding-top:6px; }
   .super-history-row + .super-history-row{ border-top:1px solid var(--paper-line); }
-  .super-history-row .n{ color:var(--gold); }
+
 
   /* QUIZ SCREEN */
   .quiz-topbar{
@@ -299,6 +306,40 @@
   .select-row.mode-review .seg button.on{ background: var(--gold); }
   .select-row.mode-off .seg button.on{ background: var(--ink-soft); }
 
+  .direction-box{ position:relative; z-index:1; margin: -4px 0 16px; }
+  .direction-label{ font-size:11px; font-weight:800; color:var(--ink-soft); text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; text-align:center; }
+  .direction-box .seg{ background:#fff; box-shadow: inset 0 0 0 1px rgba(31,58,95,0.08); }
+  .select-sec-toggle{
+    margin-top:8px; background:none; border:none; padding:4px 2px; cursor:pointer;
+    font-family:'Nunito'; font-weight:800; font-size:13px; color:var(--ink-soft); text-decoration:underline;
+  }
+  .select-sections{ display:flex; flex-direction:column; gap:8px; margin-top:6px; }
+  .select-sec-row{ border-top:1px dashed var(--paper-line); padding-top:8px; }
+  .select-sec-row.mode-off{ opacity:0.75; }
+  .select-sec-head{ display:flex; justify-content:space-between; align-items:baseline; font-weight:800; font-size:14px; color:var(--ink); margin-bottom:5px; }
+  .select-sec-row .seg button{ padding:6px 4px; font-size:12px; }
+  .select-sec-row.mode-review .seg button.on{ background: var(--gold); }
+  .select-sec-row.mode-off .seg button.on{ background: var(--ink-soft); }
+  .select-row.mode-mixed .seg button.on{ background: var(--ink); }
+
+  /* Ruhigeres Layout */
+  h1.title{ font-size:32px; margin-bottom:12px; }
+  .home-intro{ display:none; }
+  .stats-row{ margin: 0 0 16px; }
+  .stat-pill{ padding:7px 6px; }
+  .stat-pill .num{ font-size:22px; }
+  .daily-sub{ font-size:11px; margin: 4px 0 12px; }
+  body.focus-mode .lang-switch, body.focus-mode .eyebrow, body.focus-mode h1.title{ display:none; }
+  body.focus-mode{ padding-top:12px; }
+  #screen-quiz .notebook{ padding-top:22px; }
+  #screen-quiz .de-word-wrap{ margin: 34px 0 6px; }
+  .de-word{ font-size:50px; }
+  .speak-btn{
+    margin-top:8px; border:none; background:#fff; border-radius:50%; width:46px; height:46px;
+    font-size:22px; cursor:pointer; box-shadow: inset 0 0 0 1px rgba(31,58,95,0.15);
+  }
+  .speak-btn:active{ transform: scale(0.94); }
+
   .de-word.long{ font-size:34px; }
   .de-word.very-long{ font-size:27px; }
 
@@ -341,8 +382,16 @@
         <span class="cat-right"><span class="cat-progress" id="txt-daily-badge">20 Vokabeln</span></span>
       </button>
       <p class="daily-sub" id="txt-daily-sub">Meist Vokabeln, die noch wackeln – dazu ein paar sichere zur Auffrischung. Üben, bis alle 20 auf Grün stehen!</p>
-      <p class="super-score"><span id="txt-super-label">⭐ Superpunkte:</span> <span id="super-score-num">0</span> <span id="super-score-date" class="super-score-date"></span></p>
+      <p class="super-score" id="super-score-line"><span id="txt-super-label">⭐ Superpunkte:</span> <span id="super-score-num">0</span> <span id="super-score-date" class="super-score-date"></span></p>
       <div id="super-score-history" class="super-history hidden"></div>
+      <div class="direction-box">
+        <div class="direction-label" id="txt-direction-label">Abfrage</div>
+        <div class="seg" id="direction-seg">
+          <button data-dir="de-en">DE → EN</button>
+          <button data-dir="en-de">EN → DE</button>
+          <button data-dir="mixed" id="txt-dir-mixed">🔀 Gemischt</button>
+        </div>
+      </div>
       <div class="cat-list" id="cat-list"></div>
     </div>
   </div>
@@ -360,6 +409,7 @@
       <div class="de-word-wrap">
         <div class="de-label" id="txt-de-label">Deutsch</div>
         <div class="de-word" id="de-word">Wort</div>
+        <button class="speak-btn hidden" id="speak-btn" aria-label="Vorlesen">🔊</button>
       </div>
 
       <div class="answer-row">
@@ -1549,7 +1599,7 @@ function unitLabel(u){ return uiLang === "en" ? u.labelEn : u.label; }
 function sectionLabel(s){ const l = SECTION_LABELS[s]; return l ? l[uiLang] : s; }
 
 // Anzeige: Buch trennt Bedeutungen mit ";" -> für Tino lesbarer mit " / "
-function deText(w){ return w.de.replace(/\s*;\s*/g, " / "); }
+function deText(w){ return w.de.replace(/\s*;\s*/g, " / ").replace(/\/-/g, "/"); }
 function answerText(w){ return w.show || w.en[0]; }
 
 /* ---------------- Oberflächen-Sprache (Deutsch/Englisch) ----------------
@@ -1608,10 +1658,14 @@ const STRINGS = {
     lastPoint: (d)=>`(zuletzt: ${d})`,
     lastPointNone: "(noch keiner)",
     historyEmpty: "Noch keine Superpunkte",
+    historyDate: "Tag", historyDay: "Punkte", historyTotal: "Stand",
+    historyOpen: "heute offen",
+    historyMissedNoLoss: "verpasst (±0)",
+    historyEstimated: "* nachträglich ermittelt (aus der Zeit, bevor Abzüge einzeln gespeichert wurden)",
     pointsCount: (n)=> n===1 ? `${n} Punkt` : `${n} Punkte`,
     selectBtn: "📚 Lernstoff wählen",
     selectTitle: "Lernstoff wählen",
-    selectIntro: "<b>Aktiv</b>: neue Vokabeln + Wiederholung.<br><b>Wiederholen</b>: nur schon geübte Vokabeln kommen wieder dran, wenn sie fällig sind – nichts Neues.<br><b>Aus</b>: ausgeblendet. Der Lernstand bleibt gespeichert und geht beim Einschalten weiter.",
+    selectIntro: "<b>Aktiv</b>: neue Vokabeln + Wiederholung.<br><b>Wiederholen</b>: nur schon geübte Vokabeln kommen wieder dran, wenn sie fällig sind – nichts Neues.<br><b>Aus</b>: ausgeblendet. Der Lernstand bleibt gespeichert und geht beim Einschalten weiter.<br>Über „Kapitel einzeln wählen“ lässt sich das auch pro Station einstellen.",
     selectDone: "Fertig",
     modeActive: "Aktiv", modeReview: "Wiederholen", modeOff: "Aus",
     modeReviewShort: "Wdh.",
@@ -1619,6 +1673,11 @@ const STRINGS = {
     noWordsSelected: "Noch kein Lernstoff ausgewählt – unten auf „Lernstoff wählen“ tippen.",
     sectionsToggle: "Abschnitte anzeigen",
     feedbackAltIntro: "Auch richtig! Hier wird aber ein anderes Wort gesucht:",
+    modeMixed: "gemischt",
+    chooseSections: "Kapitel einzeln wählen",
+    sectionStats: (n,m)=>`${n} Wörter · ${m} gekonnt`,
+    directionLabel: "Abfrage-Richtung",
+    directionMixed: "🔀 Gemischt",
   },
   en: {
     eyebrow: "English Vocabulary Notebook",
@@ -1668,10 +1727,14 @@ const STRINGS = {
     lastPoint: (d)=>`(last: ${d})`,
     lastPointNone: "(none yet)",
     historyEmpty: "No super points yet",
+    historyDate: "Day", historyDay: "Points", historyTotal: "Total",
+    historyOpen: "today: open",
+    historyMissedNoLoss: "missed (±0)",
+    historyEstimated: "* reconstructed (from before deductions were saved individually)",
     pointsCount: (n)=> n===1 ? `${n} point` : `${n} points`,
     selectBtn: "📚 Choose what to learn",
     selectTitle: "Choose what to learn",
-    selectIntro: "<b>Active</b>: new words + review.<br><b>Review</b>: only words you've already practiced come back when due – nothing new.<br><b>Off</b>: hidden. Your progress is kept and continues when you switch it back on.",
+    selectIntro: "<b>Active</b>: new words + review.<br><b>Review</b>: only words you've already practiced come back when due – nothing new.<br><b>Off</b>: hidden. Your progress is kept and continues when you switch it back on.<br>Use “Choose chapters individually” to set this per station.",
     selectDone: "Done",
     modeActive: "Active", modeReview: "Review", modeOff: "Off",
     modeReviewShort: "review",
@@ -1679,6 +1742,11 @@ const STRINGS = {
     noWordsSelected: "Nothing selected yet – tap “Choose what to learn” below.",
     sectionsToggle: "Show sections",
     feedbackAltIntro: "Also right! But a different word is wanted here:",
+    modeMixed: "mixed",
+    chooseSections: "Choose chapters individually",
+    sectionStats: (n,m)=>`${n} words · ${m} mastered`,
+    directionLabel: "Direction",
+    directionMixed: "🔀 Mixed",
   }
 };
 function t(key, ...args){
@@ -1738,6 +1806,30 @@ function setUiLang(lang){
 document.getElementById("lang-btn-de").addEventListener("click", ()=>setUiLang("de"));
 document.getElementById("lang-btn-en").addEventListener("click", ()=>setUiLang("en"));
 
+// Tagesweise Historie: Pluspunkte, Abzüge für verpasste Tage und der Punktestand am Tagesende
+function buildScoreHistory(data){
+  const today = getTodayKey();
+  const known = Object.keys(data.dailyPoints).concat(Object.keys(data.minusDays));
+  if(!known.length) return [];
+  const first = known.sort()[0];
+  const rows = [];
+  for(let d = first; d <= today; d = addDaysToKey(d, 1)){
+    const plus = data.dailyPoints[d] || 0;
+    let minus = 0, estimated = false;
+    if(!plus && d < today){
+      if(data.minusDays[d] !== undefined) minus = data.minusDays[d];
+      else if(d < data.minusSince && (!data.lastEvaluatedDate || d <= data.lastEvaluatedDate)){ minus = 1; estimated = true; }
+    }
+    rows.push({date:d, plus, minus, estimated, open: d === today && !plus});
+  }
+  // Stand am Tagesende, rückwärts vom aktuellen Punktestand gerechnet
+  let stand = data.superScore || 0;
+  for(let i = rows.length-1; i >= 0; i--){
+    rows[i].stand = Math.max(0, stand);
+    stand = stand - rows[i].plus + rows[i].minus;
+  }
+  return rows.reverse();
+}
 async function toggleSuperHistory(){
   const panel = document.getElementById("super-score-history");
   if(!panel.classList.contains("hidden")){
@@ -1745,21 +1837,37 @@ async function toggleSuperHistory(){
     return;
   }
   const data = await loadScoreData();
-  const dates = Object.keys(data.dailyPoints||{}).sort().reverse();
+  const rows = buildScoreHistory(data);
   panel.innerHTML = "";
-  if(!dates.length){
+  if(!rows.length){
     panel.innerHTML = `<div class="super-history-row"><span>${t("historyEmpty")}</span></div>`;
   } else {
-    dates.forEach(d=>{
+    const head = document.createElement("div");
+    head.className = "super-history-row head";
+    head.innerHTML = `<span>${t("historyDate")}</span><span>${t("historyDay")}</span><span>${t("historyTotal")}</span>`;
+    panel.appendChild(head);
+    rows.forEach(r=>{
       const row = document.createElement("div");
-      row.className = "super-history-row";
-      row.innerHTML = `<span>${formatDateKey(d)}</span><span class="n">${t("pointsCount", data.dailyPoints[d])}</span>`;
+      let cls = "zero", txt = "±0";
+      if(r.plus){ cls = "plus"; txt = "+" + r.plus + " ⭐"; }
+      else if(r.open){ cls = "zero"; txt = t("historyOpen"); }
+      else if(r.minus){ cls = "minus"; txt = "−" + r.minus + (r.estimated ? "*" : ""); }
+      else { txt = t("historyMissedNoLoss"); }
+      row.className = "super-history-row " + cls;
+      row.innerHTML = `<span>${formatDateKey(r.date)}</span><span class="n">${txt}</span><span class="s">${r.stand}</span>`;
       panel.appendChild(row);
     });
+    if(rows.some(r=>r.estimated)){
+      const note = document.createElement("div");
+      note.className = "super-history-note";
+      note.textContent = t("historyEstimated");
+      panel.appendChild(note);
+    }
   }
   panel.classList.remove("hidden");
 }
-document.getElementById("super-score-date").addEventListener("click", toggleSuperHistory);
+document.getElementById("super-score-line").addEventListener("click", toggleSuperHistory);
+
 
 /* ---------------- Fortschritt (persistent storage) ----------------
    Zwei Speicherwege, je nachdem wie die App geöffnet wird:
@@ -1870,13 +1978,29 @@ async function saveSelection(){
   try{ if(window.storage){ await window.storage.set(SELECTION_KEY, json, false); } }catch(e){}
   try{ localStorage.setItem(SELECTION_KEY, json); }catch(e){}
 }
-function unitMode(unitKey){ return selection[unitKey] || "off"; }
+// Auswahl gilt pro Unit ("U2") und kann pro Kapitel überschrieben werden ("U2.S1").
+function sectionMode(unitKey, sec){
+  return selection[unitKey+"."+sec] || selection[unitKey] || "off";
+}
+function unitSections(unitKey){ return [...new Set(VOCAB.filter(w=>w.u===unitKey).map(w=>w.s))]; }
+// "active" / "review" / "off", oder "mixed", wenn die Kapitel unterschiedlich eingestellt sind
+function unitMode(unitKey){
+  const modes = new Set(unitSections(unitKey).map(sec=>sectionMode(unitKey, sec)));
+  return modes.size === 1 ? [...modes][0] : "mixed";
+}
+function setUnitMode(unitKey, mode){
+  selection[unitKey] = mode;
+  Object.keys(selection).forEach(k=>{ if(k.startsWith(unitKey+".")) delete selection[k]; });
+}
+function setSectionMode(unitKey, sec, mode){
+  selection[unitKey+"."+sec] = mode;
+}
 function isStarted(id){
   const raw = progress[id];
   return !!raw && ((raw.seen||0) > 0 || rawPhase(raw) > 1);
 }
 function isInPlay(w){
-  const mode = unitMode(w.u);
+  const mode = sectionMode(w.u, w.s);
   return mode === "active" || (mode === "review" && isStarted(w.id));
 }
 // Alle Vokabeln, die aktuell zum Lernstoff gehören (Basis für Tages-Herausforderung, Statistik, Übungen)
@@ -2048,6 +2172,9 @@ async function loadScoreData(){
   }
   if(!stored){ stored = {superScore:0, dailyPoints:{}, lastEvaluatedDate:null}; }
   if(!stored.dailyPoints || typeof stored.dailyPoints !== "object") stored.dailyPoints = {};
+  if(!stored.minusDays || typeof stored.minusDays !== "object") stored.minusDays = {};
+  // Ab wann Abzüge einzeln mitgeschrieben werden; ältere Fehltage werden in der Historie rekonstruiert
+  if(!stored.minusSince) stored.minusSince = getTodayKey();
   if(typeof stored.superScore !== "number") stored.superScore = 0;
   return stored;
 }
@@ -2055,6 +2182,7 @@ async function saveScoreData(data){
   // alte Einträge (älter als ~120 Tage) aufräumen, damit die Liste nicht unbegrenzt wächst
   const cutoff = addDaysToKey(getTodayKey(), -120);
   Object.keys(data.dailyPoints).forEach(d=>{ if(d < cutoff) delete data.dailyPoints[d]; });
+  Object.keys(data.minusDays||{}).forEach(d=>{ if(d < cutoff) delete data.minusDays[d]; });
   const json = JSON.stringify(data);
   try{ if(window.storage){ await window.storage.set(SCORE_KEY, json, false); } }catch(e){}
   try{ localStorage.setItem(SCORE_KEY, json); }catch(e){}
@@ -2078,7 +2206,10 @@ async function evaluateMissedDays(){
     // (markRoundCompleted) - hier NICHT nochmal addieren, sonst Doppelzählung!
     // Nur echte Fehltage (0 Punkte) werden hier nachträglich bestraft.
     if((data.dailyPoints[cursor]||0) === 0){
-      data.superScore = Math.max(0, (data.superScore||0)-1);
+      const before = data.superScore||0;
+      data.superScore = Math.max(0, before-1);
+      // für die Historie merken, ob wirklich abgezogen wurde (bei 0 Punkten geht nichts mehr ab)
+      data.minusDays[cursor] = before - data.superScore;
     }
     cursor = addDaysToKey(cursor, 1);
   }
@@ -2140,6 +2271,115 @@ function checkAnswer(input, accepted){
   return {status:"wrong"};
 }
 
+/* ---------------- Aussprache (Englisch vorlesen) ----------------
+   Nutzt die im Gerät eingebaute Sprachausgabe (britisches Englisch, falls vorhanden).
+   Bei DE->EN erst nach der Antwort sichtbar, damit die Lösung nicht verraten wird.
+------------------------------------------------------------------- */
+const canSpeak = typeof window !== "undefined" && "speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined";
+function pickEnglishVoice(){
+  const voices = window.speechSynthesis.getVoices() || [];
+  return voices.find(v=>/^en[-_]GB/i.test(v.lang)) || voices.find(v=>/^en/i.test(v.lang)) || null;
+}
+function speakEnglish(w){
+  if(!canSpeak || !w) return;
+  const text = answerText(w).replace(/\(.*?\)/g, " ").replace(/…|\.\.\./g, " ")
+    .replace(/\b(sb|sth)\b/g, " ").replace(/\//g, " or ").replace(/\s+/g, " ").trim();
+  try{
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    const voice = pickEnglishVoice();
+    if(voice) u.voice = voice;
+    u.lang = voice ? voice.lang : "en-GB";
+    u.rate = 0.9;
+    window.speechSynthesis.speak(u);
+  }catch(e){ /* keine Sprachausgabe verfügbar */ }
+}
+if(canSpeak){ try{ window.speechSynthesis.getVoices(); window.speechSynthesis.onvoiceschanged = ()=>{}; }catch(e){} }
+function setSpeakVisible(on){
+  document.getElementById("speak-btn").classList.toggle("hidden", !(canSpeak && on));
+}
+
+/* ---------------- Abfragerichtung ----------------
+   "de-en" = Standard (deutsches Wort -> englisch schreiben, so lernen es die Kinder)
+   "en-de" = andersrum, "mixed" = pro Vokabel zufällig.
+   Rückwärts-Antworten werden GETRENNT gespeichert (Schlüssel "<id>#r"), damit der
+   eigentliche Lernstand (Phasen DE->EN, "gekonnt") davon unberührt bleibt.
+------------------------------------------------------------------- */
+const DIRECTION_KEY = "vokabel-direction-v1";
+let direction = "de-en";
+async function loadDirection(){
+  let stored = null;
+  try{ if(window.storage){ const res = await window.storage.get(DIRECTION_KEY, false); if(res && res.value) stored = res.value; } }catch(e){}
+  if(!stored){ try{ stored = localStorage.getItem(DIRECTION_KEY); }catch(e){} }
+  if(["de-en","en-de","mixed"].includes(stored)) direction = stored;
+}
+async function saveDirection(){
+  try{ if(window.storage){ await window.storage.set(DIRECTION_KEY, direction, false); } }catch(e){}
+  try{ localStorage.setItem(DIRECTION_KEY, direction); }catch(e){}
+}
+function statKey(w, reverse){ return reverse ? w.id+"#r" : w.id; }
+
+// Für Vergleiche auf Deutsch: Umlaute dürfen auch als ae/oe/ue/ss getippt werden
+function foldGerman(str){
+  return normalize(str).replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss");
+}
+function expandSlashTokens(str){
+  let out = [""];
+  for(const tok of str.split(" ")){
+    const alts = tok.includes("/") ? tok.split("/").filter(Boolean) : [tok];
+    out = out.flatMap(o=> alts.map(a=> (o+" "+a).trim()));
+    if(out.length > 24) break;
+  }
+  return out;
+}
+// Akzeptierte deutsche Antworten, abgeleitet aus dem Buch-Eintrag, z.B.
+// "Freund/-in" -> freund, freundin, freund/in · "Komm(t) schon!" -> komm schon, kommt schon
+function germanAnswers(w){
+  if(w._deAns) return w._deAns;
+  const out = new Set();
+  w.de.split(";").forEach(part=>{
+    const p = part.replace(/…|\.\.\./g, " ").replace(/[.!?]/g, " ").trim();
+    [p.replace(/\(.*?\)/g, " "), p.replace(/[()]/g, "")].forEach(v=>{
+      v = v.replace(/\s+/g, " ").trim();
+      if(!v) return;
+      out.add(v);
+      out.add(v.replace(/\/-/g, "/"));
+      if(v.includes("/-")){
+        const [base, ...suffixes] = v.split("/-");
+        out.add(base);
+        suffixes.forEach(suf=> out.add(base + suf));
+      } else if(v.includes("/")){
+        expandSlashTokens(v).forEach(x=> out.add(x));
+      }
+    });
+  });
+  w._deAns = [...out].map(x=>x.trim()).filter(Boolean);
+  return w._deAns;
+}
+function checkGermanAnswer(input, w){
+  const res = checkAnswer(foldGerman(input), germanAnswers(w).map(foldGerman));
+  if(res.status === "correct" || res.status === "empty") return res;
+  // Sätze mit Alternativen ("Woher kommst du/kommt ihr/kommen Sie?"): eine der Lesarten genügt,
+  // d.h. die getippten Wörter kommen der Reihe nach im Satz vor und der Satzanfang stimmt.
+  const typed = foldGerman(input).split(" ");
+  for(const part of w.de.split(";")){
+    if(!part.includes("/") || part.includes("/-")) continue;
+    const words = foldGerman(part.replace(/\(.*?\)/g, " ").replace(/…|\.\.\./g, " ")).split(/[\s\/]+/).filter(Boolean);
+    const minWords = Math.max(2, Math.ceil(words.length / ((part.match(/\//g) || []).length + 1)));
+    if(typed.length < minWords || typed[0] !== words[0]) continue;
+    let i = 0;
+    for(const wd of words){ if(wd === typed[i]) i++; }
+    if(i === typed.length) return {status:"correct"};
+  }
+  return res;
+}
+// rückwärts: gleiche englische Vokabel mit anderer deutscher Bedeutung (z.B. "year")
+function sameMeaningMatchReverse(w, input){
+  const folded = foldGerman(input);
+  const mine = new Set(w.en.map(normalize));
+  return VOCAB.find(v=> v.id !== w.id && v.en.some(a=> mine.has(normalize(a))) && germanAnswers(v).some(a=> foldGerman(a) === folded)) || null;
+}
+
 /* ---------------- Gleiche Bedeutung, anderes Wort ----------------
    Beispiel: "gut" -> gesucht ist "good", Tino schreibt "fine" (steht im Buch auch bei "gut").
    Das ist nicht falsch - es zählt nicht als Fehler, die gesuchte Vokabel kommt aber
@@ -2177,6 +2417,9 @@ const screenSelect = document.getElementById("screen-select");
 
 function show(screen){
   [screenHome, screenQuiz, screenSummary, screenSelect].forEach(s=>s.classList.add("hidden"));
+  // außerhalb der Startseite Kopfbereich ausblenden, damit die Vokabel im Mittelpunkt steht
+  document.body.classList.toggle("focus-mode", screen !== screenHome);
+  if(canSpeak && screen !== screenQuiz){ try{ window.speechSynthesis.cancel(); }catch(e){} }
   screen.classList.remove("hidden");
 }
 
@@ -2216,6 +2459,12 @@ function renderHome(){
   list.innerHTML = "";
 
   document.getElementById("daily-btn").onclick = handleDailyBtnClick;
+  document.getElementById("txt-direction-label").textContent = t("directionLabel");
+  document.getElementById("txt-dir-mixed").textContent = t("directionMixed");
+  document.querySelectorAll("#direction-seg button").forEach(b=>{
+    b.classList.toggle("on", b.dataset.dir === direction);
+    b.onclick = async ()=>{ direction = b.dataset.dir; await saveDirection(); renderHome(); };
+  });
 
   if(!total){
     const empty = document.createElement("p");
@@ -2264,7 +2513,8 @@ function renderHome(){
         const secWords = words.filter(w=>w.s===sec);
         const sbtn = document.createElement("button");
         sbtn.className = "cat-btn section-btn";
-        sbtn.innerHTML = `<span>${sec ? sectionLabel(sec) : unitLabel(unit)}</span>${progressBadge(secWords)}`;
+        const secReview = sectionMode(unit.key, sec) === "review";
+        sbtn.innerHTML = `<span>${sec ? sectionLabel(sec) : unitLabel(unit)}${secReview && !isReview ? ` <span class="mode-tag">${t("modeReviewShort")}</span>` : ""}</span>${progressBadge(secWords)}`;
         sbtn.onclick = ()=> startSession("s:"+unit.key+":"+sec);
         box.appendChild(sbtn);
       });
@@ -2284,6 +2534,14 @@ function openSelectScreen(){
   renderSelect();
   show(screenSelect);
 }
+const expandedSelectUnits = new Set();
+function segHtml(mode){
+  return `<div class="seg">
+        <button data-mode="active" class="${mode==='active'?'on':''}">${t("modeActive")}</button>
+        <button data-mode="review" class="${mode==='review'?'on':''}">${t("modeReview")}</button>
+        <button data-mode="off" class="${mode==='off'?'on':''}">${t("modeOff")}</button>
+      </div>`;
+}
 function renderSelect(){
   document.getElementById("txt-select-title").textContent = t("selectTitle");
   document.getElementById("txt-select-intro").innerHTML = t("selectIntro");
@@ -2296,24 +2554,51 @@ function renderSelect(){
     const started = words.filter(w=>isStarted(w.id)).length;
     const mastered = words.filter(w=>isMastered(w.id)).length;
     const mode = unitMode(unit.key);
+    const sections = unitSections(unit.key).filter(Boolean);
+    const open = expandedSelectUnits.has(unit.key);
     const row = document.createElement("div");
     row.className = "select-row mode-" + mode;
     row.innerHTML = `<div class="select-head">
-        <span class="select-name"><span class="cat-emoji">${unit.emoji}</span> ${unitLabel(unit)}</span>
+        <span class="select-name"><span class="cat-emoji">${unit.emoji}</span> ${unitLabel(unit)}${mode==="mixed" ? ` <span class="mode-tag">${t("modeMixed")}</span>` : ""}</span>
         <span class="select-stats">${t("unitStats", words.length, started, mastered)}</span>
       </div>
-      <div class="seg">
-        <button data-mode="active" class="${mode==='active'?'on':''}">${t("modeActive")}</button>
-        <button data-mode="review" class="${mode==='review'?'on':''}">${t("modeReview")}</button>
-        <button data-mode="off" class="${mode==='off'?'on':''}">${t("modeOff")}</button>
-      </div>`;
-    row.querySelectorAll(".seg button").forEach(b=>{
+      ${segHtml(mode)}
+      ${sections.length > 1 ? `<button class="select-sec-toggle">${open ? "▴" : "▾"} ${t("chooseSections")}</button>` : ""}
+      <div class="select-sections"></div>`;
+    row.querySelectorAll(":scope > .seg button").forEach(b=>{
       b.onclick = async ()=>{
-        selection[unit.key] = b.dataset.mode;
+        setUnitMode(unit.key, b.dataset.mode);
         await saveSelection();
         renderSelect();
       };
     });
+    const tog = row.querySelector(".select-sec-toggle");
+    if(tog){
+      tog.onclick = ()=>{
+        if(open) expandedSelectUnits.delete(unit.key); else expandedSelectUnits.add(unit.key);
+        renderSelect();
+      };
+    }
+    if(open && sections.length > 1){
+      const box = row.querySelector(".select-sections");
+      sections.forEach(sec=>{
+        const secWords = words.filter(w=>w.s===sec);
+        const sm = sectionMode(unit.key, sec);
+        const srow = document.createElement("div");
+        srow.className = "select-sec-row mode-" + sm;
+        srow.innerHTML = `<div class="select-sec-head"><span>${sectionLabel(sec)}</span>
+            <span class="select-stats">${t("sectionStats", secWords.length, secWords.filter(w=>isMastered(w.id)).length)}</span></div>
+          ${segHtml(sm)}`;
+        srow.querySelectorAll(".seg button").forEach(b=>{
+          b.onclick = async ()=>{
+            setSectionMode(unit.key, sec, b.dataset.mode);
+            await saveSelection();
+            renderSelect();
+          };
+        });
+        box.appendChild(srow);
+      });
+    }
     list.appendChild(row);
   });
 }
@@ -2388,9 +2673,14 @@ const progressFill = document.getElementById("progress-fill");
 const quizCounter = document.getElementById("quiz-counter");
 
 function renderQuestion(){
+  awaitingNext = false; // falls die vorige Runde mitten in einer Rückmeldung verlassen wurde
   const w = session.words[session.index];
-  const deShown = deText(w);
+  session.reverse = direction === "en-de" || (direction === "mixed" && Math.random() < 0.5);
+  const deShown = session.reverse ? answerText(w) : deText(w);
+  document.getElementById("txt-de-label").textContent = session.reverse ? t("enLabel") : t("deLabel");
+  document.getElementById("txt-en-label").textContent = session.reverse ? t("deLabel") : t("enLabel");
   deWordEl.textContent = deShown;
+  setSpeakVisible(session.reverse);
   deWordEl.classList.toggle("long", deShown.length > 22);
   deWordEl.classList.toggle("very-long", deShown.length > 40);
   answerInput.value = "";
@@ -2420,14 +2710,16 @@ function submitAnswer(){
   const val = answerInput.value;
   if(!val.trim()) { answerInput.focus(); return; }
 
-  const result = checkAnswer(val, w.en);
+  const rev = !!session.reverse;
+  const result = rev ? checkGermanAnswer(val, w) : checkAnswer(val, w.en);
   if(result.status === "empty"){ answerInput.focus(); return; }
+  const solution = rev ? deText(w) : answerText(w);
 
-  if(result.status !== "correct" && sameMeaningMatch(w, val)){
+  if(result.status !== "correct" && (rev ? sameMeaningMatchReverse(w, val) : sameMeaningMatch(w, val))){
     // anderes, aber passendes Wort: kein Fehler, Phase bleibt; gesuchtes Wort kommt nochmal
     answerInput.className = "close";
     feedbackEl.className = "feedback close";
-    feedbackEl.innerHTML = `<span class="stamp">👍</span> ${t("feedbackAltIntro")} "${answerText(w)}"`;
+    feedbackEl.innerHTML = `<span class="stamp">👍</span> ${t("feedbackAltIntro")} "${solution}"`;
     if(session.mode === "daily" || !session.revealedIds.has(w.id)){
       session.revealedIds.add(w.id);
       session.words.push({...w});
@@ -2436,10 +2728,11 @@ function submitAnswer(){
     dontknowBtn.disabled = true;
     checkBtn.textContent = t("nextBtn");
     awaitingNext = true;
+    setSpeakVisible(true);
     return;
   }
 
-  const stat = getStat(w.id);
+  const stat = getStat(statKey(w, rev));
   stat.seen = (stat.seen||0)+1;
 
   if(result.status === "correct"){
@@ -2448,7 +2741,7 @@ function submitAnswer(){
     session.correctCount++;
     answerInput.className = "correct";
     feedbackEl.className = "feedback good";
-    feedbackEl.innerHTML = `<span class="stamp">✓</span> ${t("feedbackCorrect")}` + (stat.phase>=6 ? t("feedbackMastered") : t("feedbackPhase", stat.phase));
+    feedbackEl.innerHTML = `<span class="stamp">✓</span> ${t("feedbackCorrect")}` + (rev ? "" : (stat.phase>=6 ? t("feedbackMastered") : t("feedbackPhase", stat.phase)));
     if(session.mode === "daily"){ session.remainingIds.delete(w.id); }
   } else if(result.status === "close"){
     // Phase bleibt unverändert: zählt weder als Fehler noch als sichere Beherrschung,
@@ -2459,7 +2752,7 @@ function submitAnswer(){
     stat.dueDate = getTodayKey();
     answerInput.className = "close";
     feedbackEl.className = "feedback close";
-    feedbackEl.innerHTML = `<span class="stamp">〜</span> ${t("feedbackCloseIntro")} "${answerText(w)}"`;
+    feedbackEl.innerHTML = `<span class="stamp">〜</span> ${t("feedbackCloseIntro")} "${solution}"`;
     if(session.mode === "daily"){ session.words.push({...w}); }
   } else {
     applyMistake(stat);
@@ -2468,16 +2761,17 @@ function submitAnswer(){
     stat.mistakeCount = (stat.mistakeCount||0)+1;
     answerInput.className = "wrong";
     feedbackEl.className = "feedback bad";
-    feedbackEl.innerHTML = `<span class="stamp">✗</span> ${t("feedbackWrongIntro")} "${answerText(w)}"${t("feedbackPhaseInline", stat.phase)}`;
+    feedbackEl.innerHTML = `<span class="stamp">✗</span> ${t("feedbackWrongIntro")} "${solution}"${rev ? "" : t("feedbackPhaseInline", stat.phase)}`;
     if(session.mode === "daily"){ session.words.push({...w}); }
   }
   answerInput.disabled = true;
   dontknowBtn.disabled = true;
-  progress[w.id] = stat;
+  progress[statKey(w, rev)] = stat;
   saveProgress();
 
   checkBtn.textContent = (session.index < session.words.length-1) ? t("nextBtn") : t("doneBtn");
   awaitingNext = true;
+  setSpeakVisible(true);
 }
 
 function nextQuestion(){
@@ -2511,11 +2805,12 @@ answerInput.addEventListener("keydown", (e)=>{
 dontknowBtn.addEventListener("click", ()=>{
   if(awaitingNext) return;
   const w = session.words[session.index];
-  const stat = getStat(w.id);
+  const rev = !!session.reverse;
+  const stat = getStat(statKey(w, rev));
   stat.seen = (stat.seen||0)+1;
   applyMistake(stat);
   stat.mistakeCount = (stat.mistakeCount||0)+1;
-  progress[w.id] = stat;
+  progress[statKey(w, rev)] = stat;
   saveProgress();
 
   session.shownCount++;
@@ -2534,11 +2829,17 @@ dontknowBtn.addEventListener("click", ()=>{
   answerInput.className = "shown";
   answerInput.disabled = true;
   feedbackEl.className = "feedback shown";
-  feedbackEl.innerHTML = `<span class="stamp">👀</span> ${t("feedbackShownIntro")} "${answerText(w)}". ${t("feedbackShownOutro")}`;
+  feedbackEl.innerHTML = `<span class="stamp">👀</span> ${t("feedbackShownIntro")} "${rev ? deText(w) : answerText(w)}". ${t("feedbackShownOutro")}`;
 
   checkBtn.textContent = (session.index < session.words.length-1) ? t("nextBtn") : t("doneBtn");
   dontknowBtn.disabled = true;
   awaitingNext = true;
+  setSpeakVisible(true);
+});
+document.getElementById("speak-btn").addEventListener("click", ()=>{
+  speakEnglish(session.words[session.index]);
+  // nach dem Vorlesen den Fokus zurück ins Eingabefeld, damit man direkt weitertippen kann
+  if(!awaitingNext) answerInput.focus();
 });
 document.getElementById("quiz-exit").addEventListener("click", ()=>{
   show(screenHome);
@@ -2633,6 +2934,7 @@ document.getElementById("back-home").addEventListener("click", ()=>{
   await loadProgress();
   await migrateLegacyProgress();
   await loadSelection();
+  await loadDirection();
   document.getElementById("select-done").addEventListener("click", ()=>{ renderHome(); show(screenHome); });
   await evaluateMissedDays();
   renderHome();
