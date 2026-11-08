@@ -21,7 +21,7 @@ CSV_PATH = os.path.join(ROOT, "daten", "vokabeln_greenline1.csv")
 HTML_PATH = os.path.join(ROOT, "index.html")
 START = "/* VOCAB-DATA:START (generiert aus daten/vokabeln_greenline1.csv - nicht von Hand bearbeiten) */"
 END = "/* VOCAB-DATA:END */"
-FIELDS = ["id", "unit", "station", "englisch", "deutsch", "weitere_antworten", "quelle"]
+FIELDS = ["id", "unit", "station", "englisch", "deutsch", "weitere_antworten", "quelle", "lautschrift"]
 
 # Kurzformen ohne Apostroph, die echte andere Wörter wären (we're -> "were")
 BAD_SHORT = {"were", "well", "shell", "wed", "hed", "id", "ill", "shed"}
@@ -135,6 +135,8 @@ def main():
     for r in rows:
         entry = {"id": r["id"], "u": r["unit"], "s": r["station"], "de": r["deutsch"],
                  "en": answers(r["englisch"], r["weitere_antworten"]), "show": show_text(r["englisch"])}
+        if r["lautschrift"]:
+            entry["ph"] = r["lautschrift"]
         lines.append("  " + json.dumps(entry, ensure_ascii=False, separators=(",", ":")) + ",")
     block = START + "\nconst VOCAB = [\n" + "\n".join(lines) + "\n];\n" + END
 

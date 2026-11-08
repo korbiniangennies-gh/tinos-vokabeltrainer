@@ -13,6 +13,7 @@
 | `deutsch` | Bedeutungen mit `;` trennen – in der App erscheint `/`. |
 | `weitere_antworten` | Zusätzlich akzeptierte Antworten, mit `\|` getrennt (z. B. `soccer\|bicycle`). |
 | `quelle` | `Green Line 1` oder `eigene` |
+| `lautschrift` | Aussprache in Lautschrift, z. B. `[helˈəʊ]` (aus der Klett-Liste übernommen). Darf leer bleiben. |
 
 ## Ändern / ergänzen
 
